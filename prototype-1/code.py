@@ -97,13 +97,14 @@ class EyeLids:
         return tuple([(channel_1 + channel_2) // 2 for channel_1, channel_2 in zip(self.color_1, self.color_2)])
     
 def get_eye_image(joystick_x, joystick_y):
+    # Select the correct image file for the current joystick position
     eye_x = convert_sensor_to_5(joystick_x)
     eye_y = convert_sensor_to_5(joystick_y)
     return 'eye' + str(eye_x) + str(eye_y)
 
 # Setup for main loop
-current_color = random_color()
-current_eye_image = 'eye00'
+current_color = random_color() # first pupil color
+current_eye_image = 'eye00' # centered eye
 draw_eye(current_eye_image, current_color)
 
 # Keep track when to draw next blink frame
@@ -116,19 +117,20 @@ while True:
     # Check if eye has moved
     new_eye_image = get_eye_image(x_joystick.value, y_joystick.value)
     if new_eye_image != current_eye_image:
+        # Only draw new eye if it has changed, speeds up code
         current_eye_image = new_eye_image
         draw_eye(current_eye_image, current_color)
         eye_lids.paint_frame()
+        # Show pixels only after all is drawn
         pixels.show()
 
-    # Check if eye should start blinking
+    # Check if eye should start blinking, check if joystick is pressed and currently not blinking
     if x_joystick.value > 65_000 and eye_lids.current_frame == 0:
-        # current_color = (random.randint(0, 128), random.randint(0, 128), random.randint(0, 128))
-        # draw_eye(current_eye_image, current_color)
         last_blink_time = time.monotonic()
         eye_lids.next_frame()
         pixels.show()
 
+    # Draw next blink frame if already blinking
     if time.monotonic() - last_blink_time > BLINK_FRAME_INTERVAL and eye_lids.current_frame != 0:
         if eye_lids.current_frame == 7:
             current_color = random_color()
