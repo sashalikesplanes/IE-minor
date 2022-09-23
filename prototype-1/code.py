@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2018 Kattni Rembor for Adafruit Industries
-#
-# SPDX-License-Identifier: MIT
-
 """CircuitPython Essentials NeoPixel example"""
 import time
 import board
@@ -10,31 +6,30 @@ import random
 import math
 import json
 import analogio
-from color_misc import WHITE
+from color_misc import WHITE, random_color
 
-
+# Setup joystick input axis
 x_joystick = analogio.AnalogIn(board.A4)
 y_joystick = analogio.AnalogIn(board.A5)
 
+# Setup 16x16 LED matrix, auto_write=False is needed to allow us to update several
+# LEDs at a time
 pixel_pin = board.D5
 num_pixels = 256
-pixels = neopixel.NeoPixel(pixel_pin, num_pixels, brightness=0.25, auto_write=False)
-
+pixels = neopixel.NeoPixel(pixel_pin, num_pixels, brightness=0.1, auto_write=False)
 
 def draw_eye(file_name, current_color):
+    # Load an image stored in a text file, as a list of pixels
     with open('images/' +  file_name + '.json', 'r') as f:
         image_pixels = json.load(f)
     for i in range(0, 256):
         pixels[i] = tuple(image_pixels[i])
+        # (55, 137, 230) is the default eye color, replace it with custom eye color
         if tuple(image_pixels[i]) == (55, 137, 230):
             pixels[i] = current_color
 
-    pixels.show()
-
-def random_color():
-    return (random.randint(0, 128), random.randint(0, 128), random.randint(0, 128))
-
 def convert_sensor_to_5(sensor_value):
+# Scale the continuos value of joystick into 5 discrete levels
     if sensor_value < 24_000:
         return -2
     elif sensor_value < 30_000:
@@ -47,6 +42,8 @@ def convert_sensor_to_5(sensor_value):
         return 2
 
 class EyeLids:
+    # Store current state of eye lid and draw them
+    # Consists of 8 key frames
     def __init__(self, pixels):
         self.pixels = pixels
         self.current_frame = 0 # 0 - completely open, 7 completely closed
@@ -55,11 +52,11 @@ class EyeLids:
         self.color_2 = random_color()
 
         # Number of pixels not part of the eye, per step of blink
-        self.PIXEL_OFFSET = [6, 6, 4, 3, 2, 2, 1, 1]
+        self.PIXEL_OFFSET = [6, 6, 4, 3, 2, 2, 1, 1, 1, 1, 2, 2, 3, 4, 6, 6]
 
 
     def next_frame(self):
-        # Calculate the next frame
+        # Calculate which should be the next frame
         if self.current_frame == 7:
             self.increasing_frame = False
         elif self.current_frame == 0:
@@ -70,33 +67,34 @@ class EyeLids:
         else:
             self.current_frame -= 1
 
-        self._paint_frame()
+        self.paint_frame()
 
-    def _paint_frame(self):
-        # paint the white dash
-        upper_lid_idx = self.current_frame
-        lower_lid_idx = 15 - self.current_frame
+    def paint_frame(self):
+        # Paint the current state of eyelids on top of the eye
+        upper_lid_rows = range(0, self.current_frame + 1)
+        lower_lid_rows = range(15, 15 - self.current_frame - 1, -1)
 
-        upper_pixel_idx = range(upper_lid_idx * 16 + self.PIXEL_OFFSET[self.current_frame], (upper_lid_idx + 1) * 16 - self.PIXEL_OFFSET[self.current_frame] + 1)
-        lower_pixel_idx = range(lower_lid_idx * 16 + self.PIXEL_OFFSET[self.current_frame], (lower_lid_idx + 1) * 16 - self.PIXEL_OFFSET[self.current_frame] + 1)
+        # Select pixels to be colored for the upper lid
+        upper_pixel_idx = []
+        for row_idx in upper_lid_rows:
+            for pixel in range(row_idx * 16 + self.PIXEL_OFFSET[row_idx], (row_idx + 1) * 16 - self.PIXEL_OFFSET[row_idx] + 1):
+                upper_pixel_idx.append(pixel)
+
+        # Same but for lower lid
+        lower_pixel_idx = []
+        for row_idx in lower_lid_rows:
+            for pixel in range(row_idx * 16 + self.PIXEL_OFFSET[row_idx], (row_idx + 1) * 16 - self.PIXEL_OFFSET[row_idx] + 1):
+                lower_pixel_idx.append(pixel)
+
         for i in upper_pixel_idx:
             self.pixels[i] = WHITE
         for i in lower_pixel_idx:
             self.pixels[i] = WHITE
 
-        pixels.show()
-
-
     @property
     def color_mix(self):
+        # Store the combo of the two eyelid colors
         return tuple([(channel_1 + channel_2) // 2 for channel_1, channel_2 in zip(self.color_1, self.color_2)])
-        
-
-def blink():
-    for i in range(10):
-        pixels[i] = (255, 255, 255)
-        pixels.show()
-
     
 def get_eye_image(joystick_x, joystick_y):
     eye_x = convert_sensor_to_5(joystick_x)
@@ -110,7 +108,7 @@ draw_eye(current_eye_image, current_color)
 
 # Keep track when to draw next blink frame
 last_blink_time = time.monotonic()
-BLINK_FRAME_INTERVAL = 0.1 # seconds
+BLINK_FRAME_INTERVAL = 0.0001 # seconds
 eye_lids = EyeLids(pixels)
 
 # Main loop
@@ -120,6 +118,8 @@ while True:
     if new_eye_image != current_eye_image:
         current_eye_image = new_eye_image
         draw_eye(current_eye_image, current_color)
+        eye_lids.paint_frame()
+        pixels.show()
 
     # Check if eye should start blinking
     if x_joystick.value > 65_000 and eye_lids.current_frame == 0:
@@ -127,8 +127,12 @@ while True:
         # draw_eye(current_eye_image, current_color)
         last_blink_time = time.monotonic()
         eye_lids.next_frame()
+        pixels.show()
 
     if time.monotonic() - last_blink_time > BLINK_FRAME_INTERVAL and eye_lids.current_frame != 0:
+        if eye_lids.current_frame == 7:
+            current_color = random_color()
         draw_eye(current_eye_image, current_color)
         eye_lids.next_frame()
+        pixels.show()
         last_blink_time = time.monotonic()

@@ -1,4 +1,6 @@
+import random
 from rainbowio import colorwheel
+
 
 RED = (255, 0, 0)
 MINUS_RED = (-255, 0, 0)
@@ -9,6 +11,9 @@ BLUE = (0, 0, 255)
 MINUS_BLUE = (0, 0, -255)
 PURPLE = (180, 0, 255)
 WHITE = (255, 255, 255)
+
+def random_color():
+    return (random.randint(0, 128), random.randint(0, 128), random.randint(0, 128))
 
 def clear_pixels(pixels, num_pixels):
     for i in range(0, num_pixels):
