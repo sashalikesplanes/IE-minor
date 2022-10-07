@@ -1,6 +1,4 @@
-"""
-Psike - interactive eye creature by Tazmin and Sasha - no copyrights restircted
-"""
+"""CircuitPython Essentials NeoPixel example"""
 import time
 import board
 import neopixel
@@ -9,6 +7,8 @@ import math
 import json
 import analogio
 from color_misc import WHITE, random_color
+import pwmio
+from adafruit_motor import servo
 
 # Setup joystick input axis
 x_joystick = analogio.AnalogIn(board.A4)
@@ -19,6 +19,10 @@ y_joystick = analogio.AnalogIn(board.A5)
 pixel_pin = board.D5
 num_pixels = 256
 pixels = neopixel.NeoPixel(pixel_pin, num_pixels, brightness=0.1, auto_write=False)
+
+# Setup servo
+pwm = pwmio.PWMOut(board.D13, duty_cycle=2**15, frequency=50)
+finger_servo = servo.Servo(pwm)
 
 def draw_eye(file_name, current_color):
     # Load an image stored in a text file, as a list of pixels
@@ -99,19 +103,25 @@ class EyeLids:
         return tuple([(channel_1 + channel_2) // 2 for channel_1, channel_2 in zip(self.color_1, self.color_2)])
     
 def get_eye_image(joystick_x, joystick_y):
-    # Select the correct image file for the current joystick position
     eye_x = convert_sensor_to_5(joystick_x)
     eye_y = convert_sensor_to_5(joystick_y)
     return 'eye' + str(eye_x) + str(eye_y)
 
+def joystick_to_angle(joystick_value):
+    # Convert a value between 18k and 48k into a value between 0 and 180
+    new_angle = (joystick_value - 18_000) / 166.67
+    return min(180, max(0, new_angle))
+
 # Setup for main loop
-current_color = random_color() # first pupil color
-current_eye_image = 'eye00' # centered eye
+current_color = random_color()
+current_eye_image = 'eye00'
 draw_eye(current_eye_image, current_color)
 
 # Keep track when to draw next blink frame
 last_blink_time = time.monotonic()
 BLINK_FRAME_INTERVAL = 0.0001 # seconds
+last_servo_update = time.monotonic()
+SERVO_UPDATE_INTERVAL = 0.1 # seconds, how often to update servo position
 eye_lids = EyeLids(pixels)
 
 # Main loop
@@ -119,20 +129,25 @@ while True:
     # Check if eye has moved
     new_eye_image = get_eye_image(x_joystick.value, y_joystick.value)
     if new_eye_image != current_eye_image:
-        # Only draw new eye if it has changed, speeds up code
         current_eye_image = new_eye_image
         draw_eye(current_eye_image, current_color)
         eye_lids.paint_frame()
-        # Show pixels only after all is drawn
         pixels.show()
 
-    # Check if eye should start blinking, check if joystick is pressed and currently not blinking
+    # Update the servo angle occasionally
+    if time.monotonic() - last_servo_update > SERVO_UPDATE_INTERVAL:
+        last_servo_update = time.monotonic()
+        new_servo_angle = joystick_to_angle(x_joystick.value)
+        finger_servo.angle = new_servo_angle
+
+    # Check if eye should start blinking
     if x_joystick.value > 65_000 and eye_lids.current_frame == 0:
+        # current_color = (random.randint(0, 128), random.randint(0, 128), random.randint(0, 128))
+        # draw_eye(current_eye_image, current_color)
         last_blink_time = time.monotonic()
         eye_lids.next_frame()
         pixels.show()
 
-    # Draw next blink frame if already blinking
     if time.monotonic() - last_blink_time > BLINK_FRAME_INTERVAL and eye_lids.current_frame != 0:
         if eye_lids.current_frame == 7:
             current_color = random_color()
