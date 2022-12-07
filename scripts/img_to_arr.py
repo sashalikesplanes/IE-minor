@@ -5,12 +5,16 @@ import imageio.v3 as iio
 import sys
 import os
 
-image_files = os.listdir()
+print(sys.argv) 
+image_files = []
 
-for file in image_files:
-    if file[0:3] != 'eye':
+for file in sys.argv[1:]:
+
+    try:
+        im = iio.imread(file)
+    except Exception as e:
+        print('error: ', e)
         continue
-    im = iio.imread(file)
     im_no_transparency = im[:, :, 0:3]
 
 # Flip every other row to allign with pattern of LEDs
