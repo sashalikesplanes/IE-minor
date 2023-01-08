@@ -1,90 +1,101 @@
-import time
-import board
-import analogio
-import digitalio
 import neopixel
-import random
-from analogio import AnalogIn
-from components.button import Button
-import usb_cdc
+from configs import (
+    NODE_PASSIVE_COLOR,
+    SIGNAL_COLOR,
+    SIGNAL_DURATION,
+    SIGNAL_PACE,
+    SIGNAL_WIDTH,
+    node_map,
+    strip_configs,
+)
+from blocks import Pixel, Node, StripSegment
+from path_finding import get_segments
+import board
 import time
-import json
+import random
+from components.button import Button
+from kinect import Camera
 
-dataPort = usb_cdc.data
-
-RED = (255, 0, 0)
-YELLOW = (255, 150, 0)
-PINK = (255, 51, 153)
-GREEN = (0, 255, 0)
-CYAN = (0, 255, 255)
-BLUE = (0, 0, 255)
-PURPLE = (180, 0, 255)
-PINK = (255, 51, 153)
-WHITE = (255, 255, 255)
-OFF = (0, 0, 0)
+but = Button(port=board.A0)
 
 
 class Pulse:
-    def __init__(self, start_idx, num_pixels, pace_pixels_per_second, width, color):
+    def __init__(self, segment: StripSegment, pace, duration, width, color):
+        self.on_pixels: list[Pixel] = []
         self.start_time = time.monotonic()
-        self.start_idx = start_idx
-        self.pos_peak = start_idx
-        self.neg_peak = start_idx
-        self.pace_pixels_per_second = pace_pixels_per_second
-        self.num_pixels = num_pixels
-        self.width = width
-        self.color = color
-
+        self.segment = segment
+        self.duration = duration
         self.is_done = False
+        self.width = width
+        self.pace = pace
+        self.color = color
+        self.pos = self.segment.start_idx
 
     def update(self):
-        # based on the difference between start time, current time and pace
-        # Calculate the new values for the pos and neg peaks
-
-        self.pos_peak = self.start_idx + self.pace_pixels_per_second * (
-            time.monotonic() - self.start_time
-        )
-        self.neg_peak = self.start_idx - self.pace_pixels_per_second * (
-            time.monotonic() - self.start_time
-        )
-
-        if (
-            self.neg_peak - self.width / 2 < 1
-            and self.pos_peak + self.width / 2 > self.num_pixels - 2
-        ):
+        # Expire the pulse
+        time_since_start = time.monotonic() - self.start_time
+        if time_since_start > self.duration:
             self.is_done = True
-            return
+
+        # Calculate new pulse center
+        if self.segment.is_positive:
+            self.pos = self.segment.start_idx + self.pace * time_since_start
+            while self.pos > self.segment.end_idx:
+                self.pos -= self.segment.length
+        else:
+            self.pos = self.segment.start_idx - self.pace * time_since_start
+            while self.pos < self.segment.end_idx:
+                self.pos += self.segment.length
+
+        self.on_pixels = []  # Remove the previously lit pixels
+
+        # Convert center position into pixels to be turned on
+        for i in range(int(self.pos - self.width / 2), int(self.pos + self.width / 2)):
+            # Check if the pixel is inside the strip segment
+            if self.segment.is_positive and (
+                i < self.segment.start_idx or i > self.segment.end_idx
+            ):
+                continue
+            elif not self.segment.is_positive and (
+                i < self.segment.end_idx or i > self.segment.start_idx
+            ):
+                continue
+
+            self.on_pixels.append(Pixel(i, self.color))
 
 
 class Strip:
-    def __init__(self, pin, num_pixels):
+    def __init__(self, strip_config):
         self.pixels = neopixel.NeoPixel(
-            pin, num_pixels, brightness=1, auto_write=False, pixel_order=neopixel.RGB
+            strip_config["pin"],
+            strip_config["num_pixels"],
+            brightness=1,
+            auto_write=False,
         )
-        self.pixels.fill(OFF)
+        self.passive_color = strip_config["passive_color"]
+        self.exp_const = strip_config["exp_const"]
+        self.pixels_to_turn_on = []
+
+    def show(self):
+        # Here we will paint all the pixels and reset it
+        # self.pixels_to_turn_on = [Pixel(i, (i, 0, 0)) for i in range(5, 30)]
+
+        for i, _ in enumerate(self.pixels):
+            self.pixels[i] = self._exp_color_mix(
+                self.passive_color, self.pixels[i], self.exp_const
+            )
+        for p in self.pixels_to_turn_on:
+            if p.idx < 0 or p.idx > len(self.pixels) - 1:
+                continue
+            self.pixels[p.idx] = self._exp_color_mix(
+                p.color, self.pixels[p.idx], self.exp_const
+            )
+
         self.pixels.show()
 
-        self.pixel_pace_per_second = 20
-        self.width = 4
-        self.exp_const = 0.5
+        self.pixels_to_turn_on = []
 
-        self.num_pixels = num_pixels
-        self.color = WHITE
-
-        self.current_pulses = []
-
-    def start_pulse(self, start_idx, color):
-        self.current_pulses.append(
-            Pulse(
-                start_idx,
-                self.num_pixels,
-                self.pixel_pace_per_second,
-                self.width,
-                color,
-            )
-        )
-
-    def exp_color_mix(self, color1, color2, exp_const):
+    def _exp_color_mix(self, color1, color2, exp_const):
         return tuple(
             [
                 int(c1 * exp_const + c2 * (1 - exp_const))
@@ -92,113 +103,65 @@ class Strip:
             ]
         )
 
-    def update(self):
-        self.current_pulses = list(
-            filter(lambda pulse: not pulse.is_done, self.current_pulses)
-        )
 
-        pixels_to_turn_on = set()
-        for p in self.current_pulses:
+class StripManager:
+    def __init__(self, strip_configs):
+        self.strips = [Strip(strip_config) for strip_config in strip_configs]
+        self.pulses: list[Pulse] = []
+        self.nodes: list[Node] = []
+
+        for node in node_map:
+            for strip_idx, start_idx in enumerate(node):
+                if start_idx is None:
+                    continue
+                self.nodes.append(Node(strip_idx, start_idx, NODE_PASSIVE_COLOR))
+
+    def update(self):
+        for p in self.pulses:
             p.update()
+
             if p.is_done:
                 continue
-            neg_peak_pixels = range(
-                int(p.neg_peak - p.width / 2), int(p.neg_peak + p.width / 2)
-            )
-            pos_peak_pixels = range(
-                int(p.pos_peak - p.width / 2), int(p.pos_peak + p.width / 2)
-            )
-            pixels_to_turn_on.update([(i, p.color) for i in neg_peak_pixels])
-            pixels_to_turn_on.update([(i, p.color) for i in pos_peak_pixels])
 
-        self.pixels.fill(OFF)
+            self.append_pulse_pixels(p)
 
-        for pix in pixels_to_turn_on:
-            if pix[0] < 0 or pix[0] > 99:
-                continue
-            self.pixels[pix[0]] = self.exp_color_mix(
-                # tuple([random.randint(0, 255) for i in range(3)]),
-                pix[1],
-                self.pixels[pix[0]],
-                self.exp_const,
-            )
+        for n in self.nodes:
+            n.update()
+            self.append_node_pixels(n)
 
-        self.pixels.show()
+        self.pulses = list(filter(lambda p: not p.is_done, self.pulses))
+
+        for s in self.strips:
+            s.show()
+
+    def start_signal(self, start, end, color, pace, width, duration):
+        segments = get_segments(start, end)
+        for s in segments:
+            self.pulses.append(Pulse(s, pace, duration, width, color))
+        # Create an appropriate pulse in each segment
+
+    def append_pulse_pixels(self, pulse: Pulse):
+        # Convert the state of the pixel into pixels to turn on
+        # Here we wanna
+        for p in pulse.on_pixels:
+            self.strips[pulse.segment.strip_idx].pixels_to_turn_on.append(p)
+
+    def append_node_pixels(self, node: Node):
+        for p in node.on_pixels:
+            self.strips[node.strip_idx].pixels_to_turn_on.append(p)
 
 
-strips = [
-    Strip(board.D1, 100),
-    Strip(board.D3, 100),
-    Strip(board.D2, 100),
-    Strip(board.D7, 100),
-]
+stripManager = StripManager(strip_configs)
+camera = Camera()
 
-buttons = [
-    Button(port=board.D10),
-    # Button(port=board.D13),
-    # Button(port=board.D7),
-    # Button(port=board.A0),
-    # Button(port=board.A2),
-    # Button(port=board.A4),
-    # Button(port=board.D1),
-]
-
-button_start_map = [
-    (None, 10),  # button 0
-    (None, 20),  # button 1
-    (None, 25),  # button 2
-    (None, 28),  # button 3
-    (None, 64),  # button 4
-    (15, 70),  # button 5
-    (6, None),  # button 6
-    # (33, None),  # button 7
-]
-
-# --- Main loop
-TIMEOUT = 2  # seconds
-last_trigger = time.monotonic() - TIMEOUT
-
-# Maps a node index onto its position on each strip
-nodeMap = [(None, None, None, None), (None, None, None, None)]
 while True:
-    if time.monotonic() - last_trigger > TIMEOUT:
-        strips[0].start_pulse(10, WHITE)
-        last_trigger = time.monotonic()
-    data = None
-    activeNodes = []
-    if dataPort.in_waiting > 0:
-        data = dataPort.readline()
-
-    activeNodes = json.loads(data) if data else []
-
-    for node in activeNodes:
-        for strip_idx, start_idx in enumerate(nodeMap[node]):
-            strips[strip_idx].start_pulse(start_idx, WHITE)
-        print(node)
-
-    for s in strips:
-        s.update()
-
-    # for i, b in enumerate(buttons):
-    #     if b.sense_release():
-    #         last_trigger = time.monotonic()
-    #         # start a random pulse in each strip
-    #         strips[0].start_pulse(30, WHITE)
-    #         strips[3].start_pulse(50, WHITE)
-    #         for s in strips:
-    #             for p in s.current_pulses:
-    #                 p.color = WHITE
-
-    #     for s in strips:
-    #         if random.random() < 0.02:
-    #             print("light")
-    #             if time.monotonic() - last_trigger > TIMEOUT:
-    #                 s.start_pulse(random.randint(20, 80), RED)
-    #             else:
-    #                 s.start_pulse(random.randint(20, 80), WHITE)
-    # if b.sense_release() or random.random() < 0.01:
-    #     start_pixs = button_start_map[i]
-    #     for j, start_pix in enumerate(start_pixs):
-    #         if start_pix is None:
-    #             continue
-    #         strips[j].start_pulse(start_pix)
+    if but.sense_release():
+        start = random.randint(0, 19)
+        start = 8
+        end = random.randint(0, 19)
+        end = 14
+        stripManager.start_signal(
+            start, end, SIGNAL_COLOR, SIGNAL_PACE, SIGNAL_WIDTH, SIGNAL_DURATION
+        )
+    camera.update()
+    stripManager.update()
