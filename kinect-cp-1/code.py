@@ -1,15 +1,20 @@
 import neopixel
 from configs import (
+    DIM_WHITE,
     NODE_PASSIVE_COLOR,
     SIGNAL_COLOR,
     SIGNAL_DURATION,
     SIGNAL_PACE,
     SIGNAL_WIDTH,
+    SINGLE_SIGNAL_COLOR,
+    SINGLE_SIGNAL_DURATION,
+    SINGLE_SIGNAL_PACE,
+    SINGLE_SIGNAL_WIDTH,
     node_map,
     strip_configs,
 )
 from blocks import Pixel, Node, StripSegment
-from path_finding import get_segments
+from path_finding import get_segments, edges
 import board
 import time
 import random
@@ -20,9 +25,17 @@ but = Button(port=board.A0)
 
 
 class Pulse:
-    def __init__(self, segment: StripSegment, pace, duration, width, color):
+    def __init__(
+        self,
+        segment: StripSegment,
+        pace,
+        duration,
+        width,
+        color,
+        start_time=time.monotonic(),
+    ):
         self.on_pixels: list[Pixel] = []
-        self.start_time = time.monotonic()
+        self.start_time = start_time
         self.segment = segment
         self.duration = duration
         self.is_done = False
@@ -110,11 +123,17 @@ class StripManager:
         self.pulses: list[Pulse] = []
         self.nodes: list[Node] = []
 
-        for node in node_map:
+        for i, node in enumerate(node_map):
             for strip_idx, start_idx in enumerate(node):
                 if start_idx is None:
                     continue
-                self.nodes.append(Node(strip_idx, start_idx, NODE_PASSIVE_COLOR))
+
+                if i == 13 or i == 8:
+                    self.nodes.append(
+                        Node(strip_idx, start_idx, NODE_PASSIVE_COLOR, wall_node=True)
+                    )
+                else:
+                    self.nodes.append(Node(strip_idx, start_idx, NODE_PASSIVE_COLOR))
 
     def update(self):
         for p in self.pulses:
@@ -136,9 +155,16 @@ class StripManager:
 
     def start_signal(self, start, end, color, pace, width, duration):
         segments = get_segments(start, end)
-        for s in segments:
-            self.pulses.append(Pulse(s, pace, duration, width, color))
-        # Create an appropriate pulse in each segment
+        for i, s in enumerate(segments):
+            start_time = time.monotonic()
+            # If it isnt the first segment then delay the pulse
+            if i > 0:
+                for s2 in segments[0:i]:
+                    start_time += s2.length / pace
+
+            self.pulses.append(
+                Pulse(s, pace, duration, width, color, start_time=start_time)
+            )
 
     def append_pulse_pixels(self, pulse: Pulse):
         # Convert the state of the pixel into pixels to turn on
@@ -151,17 +177,65 @@ class StripManager:
             self.strips[node.strip_idx].pixels_to_turn_on.append(p)
 
 
-stripManager = StripManager(strip_configs)
+strip_manager = StripManager(strip_configs)
 camera = Camera()
 
 while True:
+    camera.update()
+    # Here we do the single behaviour
+    if camera.connections_to_trigger is not None and isinstance(
+        camera.connections_to_trigger, int
+    ):
+        # Trigger single behaviour
+        neighbor_nodes = list(
+            map(
+                lambda node: node.end_node,
+                filter(
+                    lambda seg: seg.start_node == camera.connections_to_trigger, edges
+                ),
+            )
+        )
+        for n in neighbor_nodes:
+            strip_manager.start_signal(
+                camera.connections_to_trigger,
+                n,
+                SINGLE_SIGNAL_COLOR,
+                SINGLE_SIGNAL_PACE,
+                SINGLE_SIGNAL_WIDTH,
+                SINGLE_SIGNAL_DURATION,
+            )
+    elif camera.connections_to_trigger is not None:
+        for con in camera.connections_to_trigger:
+            strip_manager.start_signal(
+                con["n1"],
+                con["n2"],
+                SIGNAL_COLOR,
+                SIGNAL_PACE,
+                SIGNAL_WIDTH,
+                SIGNAL_DURATION,
+            )
+    else:
+        if random.random() < 0.1:
+            strip_manager.start_signal(
+                random.randint(0, len(node_map) - 1),
+                random.randint(0, len(node_map) - 1),
+                DIM_WHITE,
+                SINGLE_SIGNAL_PACE,
+                SINGLE_SIGNAL_WIDTH,
+                SINGLE_SIGNAL_DURATION,
+            )
+
+    camera.connections_to_trigger = None
+
+    # If we have one node we do one behaviour
+
+    strip_manager.update()
+
     if but.sense_release():
         start = random.randint(0, 19)
         start = 8
         end = random.randint(0, 19)
         end = 14
-        stripManager.start_signal(
+        strip_manager.start_signal(
             start, end, SIGNAL_COLOR, SIGNAL_PACE, SIGNAL_WIDTH, SIGNAL_DURATION
         )
-    camera.update()
-    stripManager.update()

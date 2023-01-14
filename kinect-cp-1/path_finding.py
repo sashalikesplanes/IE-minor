@@ -77,9 +77,9 @@ def shortest_path(start, end):
 
     while len(Q) > 0:
         dists_in_Q = [(u, dist[u]) for u in Q]
-        min_dist = 10000000
-        u = None
-        for cur_u, cur_dist in dists_in_Q:
+        min_dist = dists_in_Q[0][1]
+        u = dists_in_Q[0][0]
+        for cur_u, cur_dist in dists_in_Q[1:]:
             if cur_dist < min_dist:
                 min_dist = cur_dist
                 u = cur_u
@@ -108,13 +108,14 @@ def shortest_path(start, end):
     # Otherwise it is neighbor
 
 
-def path_to_segments(path):
+def path_to_segments(path) -> list[StripSegment]:
     segments = []
     for i, node in enumerate(path):
         if i == len(path) - 1:
-            return segments
+            break
         segments.append(find_edge(node, path[i + 1]))
+    return segments
 
 
-def get_segments(start, end):
+def get_segments(start, end) -> list[StripSegment]:
     return path_to_segments(shortest_path(start, end))

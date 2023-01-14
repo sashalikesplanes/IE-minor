@@ -16,12 +16,16 @@ class StripSegment:
 
 
 class Node:
-    def __init__(self, strip_idx, start_idx, color):
+    def __init__(self, strip_idx, start_idx, color, wall_node=False):
         self.strip_idx = strip_idx
-        self.on_pixels = [Pixel(start_idx, color)]
+        self.on_pixels = []
+        self.start_idx = start_idx
+        self.color = color
+
+        self.is_wall_node = wall_node
 
     def update(self):
-        pass
+        self.on_pixels = [Pixel(self.start_idx + i, self.color) for i in range(-2, 3)]
 
 
 class Pixel:
