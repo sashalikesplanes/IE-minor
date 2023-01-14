@@ -3,4 +3,5 @@ __pycache__
 .vscode
 .python-version
 .ipynb_checkpoints
+node_modules
 ```
