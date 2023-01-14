@@ -8,8 +8,8 @@ from math import ceil
 
 chars_per_message = 60_000 # max limit for shiftr.io is 64kb
 
-INTERVAL = 2
-QOS = 0
+INTERVAL = 0.001
+QOS = 2
 
 def make_msg_payload():
     sleep(INTERVAL)
