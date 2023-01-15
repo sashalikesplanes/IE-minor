@@ -1,0 +1,3 @@
+/Users/sasha/Documents/code/repos/ncnn-webassembly-nanodet/build/CMakeFiles/nanodet-simd-omp.dir
+/Users/sasha/Documents/code/repos/ncnn-webassembly-nanodet/build/CMakeFiles/edit_cache.dir
+/Users/sasha/Documents/code/repos/ncnn-webassembly-nanodet/build/CMakeFiles/rebuild_cache.dir

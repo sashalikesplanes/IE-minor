@@ -1,0 +1,1 @@
+/Users/sasha/Documents/code/repos/emsdk/upstream/emscripten/em++  -s FORCE_FILESYSTEM=1 -s INITIAL_MEMORY=256MB -s EXIT_RUNTIME=1 -sEXPORTED_FUNCTIONS=['_nanodet_ncnn'] --preload-file /Users/sasha/Documents/code/repos/ncnn-webassembly-nanodet/assets@. -O3 -DNDEBUG @CMakeFiles/nanodet-simd.dir/objects1 -o nanodet-simd.js @CMakeFiles/nanodet-simd.dir/linkLibs.rsp
