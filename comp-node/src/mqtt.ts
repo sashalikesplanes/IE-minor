@@ -2,16 +2,17 @@ import { connect } from "mqtt";
 import { ImageChunk } from "./types";
 const TOPIC_CAM_0 = "unitv2-cam0";
 const TOPIC_CAM_1 = "unitv2-cam1";
+const BROKER_URL = "127.0.0.1";
 
-const client = connect("172.23.4.99");
-
+const client = connect(BROKER_URL);
 
 client.on("connect", () => {
 	client.subscribe(TOPIC_CAM_0);
+	client.subscribe(TOPIC_CAM_1);
 });
 
 let imageChunks: ImageChunk[] = [];
-client.on("message", (topic, message) => {
+client.on("message", async (topic, message) => {
 	if (topic === TOPIC_CAM_0 || topic === TOPIC_CAM_1) {
 		imageChunks.push(JSON.parse(message.toString()) as ImageChunk);
 		if (imageChunks.length < imageChunks[0].total_chunks) {
@@ -26,6 +27,7 @@ client.on("message", (topic, message) => {
 		}, "");
 
 		const imageBuffer = Buffer.from(imageBinaryString, "base64");
+		console.log('got image buffer')
     
     // Now we get the buffer onto the heap
     // buffer is free to have next image loaded
@@ -34,3 +36,9 @@ client.on("message", (topic, message) => {
 		imageChunks = [];
 	}
 });
+
+
+export function messageStream() {
+
+}
+

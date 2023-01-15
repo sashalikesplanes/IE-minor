@@ -9,6 +9,7 @@ CHARS_PER_MESSAGE = 60_000 # max limit for shiftr.io is 64kb
 TOPIC = "unitv2-cam0"
 
 QOS = 2
+INTERVAL = 2
 
 class VideoCapture:
 
@@ -51,7 +52,7 @@ def publish_multiple(client, chunks):
       client.publish(TOPIC, c, qos=QOS)
       
 def on_connect(client, userdata, flags, rc):
-    client.subscribe(TOPIC)
+    # client.subscribe(TOPIC)
     print('connected')
     
 def on_message(client, userdata, msg):
@@ -67,11 +68,12 @@ if __name__ == "__main__":
     client = mqtt.Client('sasha-test')
     client.on_connect = on_connect
     client.on_message = on_message
-    client.connect("172.23.4.99")
+    client.connect("127.0.0.1")
     client.loop_start()
     
     frame_count = 0
     while True:
         chunks = make_img_payload(capture)
         publish_multiple(client, chunks)
-        time.sleep(0.5)
+        print('publishing')
+        time.sleep(INTERVAL)

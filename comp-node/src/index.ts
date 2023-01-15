@@ -1,2 +1,1 @@
-import { Module } from "./nanodet-wrapper";
-console.log(Module)
+import { Nanodet } from "./nanodet-wrapper";
