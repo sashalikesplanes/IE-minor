@@ -43,7 +43,7 @@ if __name__ == "__main__":
     frame_count = 0
     while True:
         with requests.Session() as s:
-            files= {'image': ('cam0_frame' + str(frame_count),capture.read(),'multipart/form-data',{'Expires': '0'}) }
+            files= {'image': ('cam0_frame' + str(frame_count) + '.jpg', capture.read(), 'multipart/form-data', {'Expires': '0'}) }
             r = s.post('http://localhost:3000/cam0',files=files)
             frame_count += 1
             time.sleep(INTERVAL)

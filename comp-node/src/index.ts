@@ -1,19 +1,24 @@
 import { imageBuffer, imageBuffer$ } from "./express";
 import { Nanodet } from "./nanodet-wrapper";
 import * as fs from "fs";
-import { map } from "rxjs";
+import { map, tap } from "rxjs";
 import { join } from "path";
 const sizeOf = require("image-size");
 
-imageBuffer$.subscribe((img) => {
+imageBuffer$.pipe(tap(saveImage)).subscribe((img) => {
   console.log("got image");
 });
 
 function saveImage(img: imageBuffer) {
   console.log(__dirname);
-  fs.writeFile(join(__dirname, "test.jpg"), img.buffer, "binary", () => {
-    console.log("image saved sucesffully");
-  });
+  fs.writeFile(
+    join(__dirname, "..", "..", "images", "17-01-morning", img.name),
+    img.buffer,
+    "binary",
+    () => {
+      console.log("image saved sucesffully");
+    }
+  );
 }
 
 // Nanodet.then((nanodet) => {
