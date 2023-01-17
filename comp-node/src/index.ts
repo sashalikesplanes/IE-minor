@@ -3,8 +3,8 @@ import * as fs from "fs";
 import { ArgumentOutOfRangeError, map, tap } from "rxjs";
 import { join } from "path";
 const sizeOf = require("image-size");
-const sashaString = require("addon");
-console.log(sashaString("sasha"));
+const NanoDet = require("nanodet");
+console.log(NanoDet);
 
 function saveImage(img: imageBuffer) {
   console.log(__dirname);
