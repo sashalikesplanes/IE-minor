@@ -72,7 +72,7 @@ static int draw_fps(cv::Mat& rgba)
 
 static NanoDet* g_nanodet = 0;
 
-static void on_image_render(cv::Mat& rgba)
+static std::vector<Object> on_image_render(cv::Mat& rgba)
 {
     if (!g_nanodet)
     {
@@ -86,6 +86,8 @@ static void on_image_render(cv::Mat& rgba)
     g_nanodet->draw(rgba, objects);
 
     draw_fps(rgba);
+    
+    return objects;
 }
 
 #ifdef __EMSCRIPTEN_PTHREADS__
@@ -160,11 +162,30 @@ void nanodet_ncnn(unsigned char* _rgba_data, int _w, int _h)
 
 extern "C" {
 
-void nanodet_ncnn(unsigned char* rgba_data, int w, int h)
+    const char* nanodet_ncnn(unsigned char* rgba_data, int w, int h)
     {
-    cv::Mat rgba(h, w, CV_8UC4, (void*)rgba_data);
+        cv::Mat rgba(h, w, CV_8UC4, (void*)rgba_data);
 
-        on_image_render(rgba);
+        std::vector<Object> objects = on_image_render(rgba);
+        
+        // convert objects to json string
+        std::string json = "[";
+        for (size_t i = 0; i < objects.size(); i++)
+        {
+            const Object& obj = objects[i];
+
+            char text[256];
+            sprintf(text, "{\"label\":\"%d\",\"prob\":%.5f,\"rect\":[%f,%f,%f,%f]}", obj.label, obj.prob, obj.rect.x, obj.rect.y, obj.rect.width, obj.rect.height);
+
+            if (i != 0)
+                json += ",";
+            json += text;
+        }
+        json += "]";
+        
+        const char* return_str = json.c_str();
+        
+        return return_str;
     }
 
 }

@@ -1,13 +1,10 @@
 import { imageBuffer, imageBuffer$ } from "./express";
-import { Nanodet } from "./nanodet-wrapper";
 import * as fs from "fs";
-import { map, tap } from "rxjs";
+import { ArgumentOutOfRangeError, map, tap } from "rxjs";
 import { join } from "path";
 const sizeOf = require("image-size");
-
-imageBuffer$.pipe(tap(saveImage)).subscribe((img) => {
-  console.log("got image");
-});
+const sashaString = require("addon");
+console.log(sashaString("sasha"));
 
 function saveImage(img: imageBuffer) {
   console.log(__dirname);
@@ -21,28 +18,4 @@ function saveImage(img: imageBuffer) {
   );
 }
 
-// Nanodet.then((nanodet) => {
-//   const detection$ = imageBuffer$
-//     .pipe(
-//       map(({ buffer, name }) => {
-//         const imageInfo = sizeOf(buffer);
-
-//         buffer.BYTES_PER_ELEMENT;
-//         console.log("about to go in");
-//         const pointer = nanodet._malloc(
-//           buffer.length * buffer.BYTES_PER_ELEMENT
-//         );
-//         nanodet.HEAPU8.set(buffer, pointer);
-//         nanodet._nanodet_ncnn(pointer, imageInfo.width, imageInfo.height);
-
-//         const result = nanodet.HEAPU8.subarray(
-//           pointer,
-//           pointer + buffer.length
-//         );
-//         console.log("got result from ncnn", result);
-//       })
-//     )
-//     .subscribe((detections) => {
-//       console.log(detections);
-//     });
-// });
+const detection$ = imageBuffer$.pipe(tap(saveImage));
