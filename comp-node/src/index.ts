@@ -1,21 +1,9 @@
-import { imageBuffer, imageBuffer$ } from "./express";
-import * as fs from "fs";
-import { ArgumentOutOfRangeError, map, tap } from "rxjs";
-import { join } from "path";
-const sizeOf = require("image-size");
-const NanoDet = require("nanodet");
-console.log(NanoDet);
+import { map, take } from "rxjs";
+import { detection$Factory } from "./freenect";
 
-function saveImage(img: imageBuffer) {
-  console.log(__dirname);
-  fs.writeFile(
-    join(__dirname, "..", "..", "images", "17-01-morning", img.name),
-    img.buffer,
-    "binary",
-    () => {
-      console.log("image saved sucesffully");
-    }
-  );
-}
+const SAVE_RESULTS = true;
 
-const detection$ = imageBuffer$.pipe(tap(saveImage));
+const detection$ = detection$Factory(SAVE_RESULTS);
+detection$.subscribe(console.log);
+// .pipe(map(detectionToNodeActivation), nodeActivationsToEvents)
+// .subscribe(eventsToBehaviours);
