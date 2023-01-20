@@ -45,7 +45,7 @@ node_map = [
 ]
 
 
-strip_configs = [
+strip_configs_old = [
     {
         "pin": board.A2,
         "num_pixels": 100,
@@ -77,3 +77,6 @@ strip_configs = [
         "exp_const": EXP_CONST,
     },
 ]
+
+strip_configs = [{'pin': s['pin'], 'num_pixels': s['num_pixels']}
+                 for s in strip_configs_old]
