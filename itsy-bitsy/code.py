@@ -19,17 +19,16 @@ for s in strips:
 
 
 behaviours = []
-behaviours.append(create_message_behaviour(strips, behaviours,
-                                           monotonic(), first_event))
+# behaviours.append(create_message_behaviour(strips, behaviours,
+#    monotonic(), first_event))
 data_port.reset_input_buffer()
 
 while True:
     if data_port.in_waiting > 0:
         data = data_port.readline()
-        event = json.loads(data)
-        print(data, event)
+        event = json.loads(data[:-1])
 
-        if event['event_type'] == 'message':
+        if event['type'] == 'message':
             behaviours.append(create_message_behaviour(strips, behaviours,
                                                        monotonic(), event))
 

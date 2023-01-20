@@ -33,16 +33,16 @@ def create_message_behaviour(strips, behaviours, start_time, message_config):
             strips[message_config["strip_idx"]][pixel_idx] = (
                 message_config["color"][0] * intensity,
                 message_config["color"][1] * intensity,
-                message_config["color"][2] * intensity,
+                message_config["color"][2] * intensity
             )
 
         if elapsed_time > duration:
             for pixel_idx in pixel_range:
                 strips[message_config["strip_idx"]][pixel_idx] = (0, 0, 0)
 
-            if message_config["next_event"] is not None:
+            if message_config["next"] is not None:
                 behaviours.append(create_message_behaviour(
-                    strips, behaviours, monotonic(), message_config["next_event"]))
+                    strips, behaviours, monotonic(), message_config["next"]))
 
             return False
         return True
