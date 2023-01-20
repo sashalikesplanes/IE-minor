@@ -1,15 +1,11 @@
 import { interval, map, take } from "rxjs";
+import { MESSAGE_COLOR, MESSAGE_PACE, MESSAGE_WIDTH } from "./config";
 import {
   getLinkedMessagesDurationInMs,
-  getMessageDurationInMs,
   linkEvents,
-  message1,
-  message2,
-  message3,
   MessageEvent,
-  reverseMessage,
 } from "./events";
-import { detection$Factory } from "./freenect";
+import { getSegments, StripSegment } from "./path-finding";
 import { dispatchEvent } from "./serial";
 
 const SAVE_RESULTS = true;
@@ -19,17 +15,49 @@ const SAVE_RESULTS = true;
 // .pipe(map(detectionToNodeActivation), nodeActivationsToEvents)
 // .subscribe(eventsToBehaviours);
 //
-const testEvents = [
-  message1,
-  message2,
-  message3,
-  reverseMessage(message3),
-  reverseMessage(message2),
-  reverseMessage(message1),
-];
+function stripSegmentsToEvent(segments: StripSegment[]): MessageEvent[] {
+  const forwardMessages = segments.map((segment) => ({
+    type: "message" as MessageEvent["type"],
+    ...segment,
+    color: MESSAGE_COLOR,
+    message_width: MESSAGE_WIDTH,
+    pace: MESSAGE_PACE,
+    next: null,
+  }));
 
-const firstLinkedEvent = linkEvents(testEvents);
+  const backwardMessages = segments
+    .map((segment) => ({
+      type: "message" as MessageEvent["type"],
+      start_node: segment.end_node,
+      end_node: segment.start_node,
+      strip_idx: segment.strip_idx,
+      start_idx: segment.end_idx,
+      end_idx: segment.start_idx,
+      color: MESSAGE_COLOR,
+      message_width: MESSAGE_WIDTH,
+      pace: MESSAGE_PACE,
+      next: null,
+    }))
+    .reverse();
 
-interval(getLinkedMessagesDurationInMs(firstLinkedEvent)).subscribe(() => {
+  return forwardMessages.concat(backwardMessages);
+}
+
+function nodesToEvent(startNode: number, endNode: number): MessageEvent {
+  console.log("statrtNode", startNode);
+  const segments = getSegments(startNode, endNode);
+  console.log("segments", segments);
+  const events = stripSegmentsToEvent(segments);
+  console.log("events", events);
+  return linkEvents(events);
+}
+
+const firstLinkedEvent = nodesToEvent(0, 8);
+console.log("first linked event", firstLinkedEvent);
+const firstLinkedEventDuration =
+  getLinkedMessagesDurationInMs(firstLinkedEvent);
+console.log(firstLinkedEventDuration);
+
+interval(firstLinkedEventDuration).subscribe(() => {
   dispatchEvent(firstLinkedEvent);
 });

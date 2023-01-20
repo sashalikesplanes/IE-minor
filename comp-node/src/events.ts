@@ -1,24 +1,25 @@
+import { StripSegment } from "./path-finding";
+
 export interface AbstractEvent {
   type: string;
   next: AbstractEvent | null;
 }
 
-export interface MessageEvent extends AbstractEvent {
+export type MessageEvent = {
   type: "message";
-  strip_idx: number;
-  start_idx: number;
-  end_idx: number;
-  color: [number, number, number];
+  color: number[];
   message_width: number;
   pace: number;
   next: MessageEvent | null;
-}
+} & StripSegment;
 
 export function linkEvents(events: MessageEvent[]): MessageEvent;
 export function linkEvents(events: AbstractEvent[]): AbstractEvent {
-  for (let i = 0; i < events.length - 1; i++) {
-    events[i].next = events[i + 1];
-  }
+  events.reduce((prev, curr) => {
+    prev.next = curr;
+    return curr;
+  });
+
   return events[0];
 }
 
@@ -53,6 +54,8 @@ export function reverseMessage(message: MessageEvent): MessageEvent {
 const TEST_PACE = 20;
 export const message1: MessageEvent = {
   type: "message",
+  start_node: 0,
+  end_node: 1,
   strip_idx: 0,
   start_idx: 40,
   end_idx: 46,
@@ -64,6 +67,8 @@ export const message1: MessageEvent = {
 
 export const message2: MessageEvent = {
   type: "message",
+  start_node: 0,
+  end_node: 1,
   strip_idx: 1,
   start_idx: 26,
   end_idx: 17,
@@ -75,6 +80,8 @@ export const message2: MessageEvent = {
 
 export const message3: MessageEvent = {
   type: "message",
+  start_node: 0,
+  end_node: 1,
   strip_idx: 3,
   start_idx: 74,
   end_idx: 68,
