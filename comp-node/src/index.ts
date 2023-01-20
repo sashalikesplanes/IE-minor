@@ -52,12 +52,29 @@ function nodesToEvent(startNode: number, endNode: number): MessageEvent {
   return linkEvents(events);
 }
 
-const firstLinkedEvent = nodesToEvent(0, 8);
+let firstLinkedEvent = nodesToEvent(0, 8);
 console.log("first linked event", firstLinkedEvent);
-const firstLinkedEventDuration =
-  getLinkedMessagesDurationInMs(firstLinkedEvent);
+let firstLinkedEventDuration = getLinkedMessagesDurationInMs(firstLinkedEvent);
 console.log(firstLinkedEventDuration);
 
 interval(firstLinkedEventDuration).subscribe(() => {
   dispatchEvent(firstLinkedEvent);
 });
+
+const firstLinkedEvent2 = nodesToEvent(3, 14);
+console.log("first linked event", firstLinkedEvent);
+const firstLinkedEventDuration2 =
+  getLinkedMessagesDurationInMs(firstLinkedEvent);
+console.log(firstLinkedEventDuration2);
+
+interval(firstLinkedEventDuration2).subscribe(() => {
+  dispatchEvent(firstLinkedEvent2);
+});
+// firstLinkedEvent = nodesToEvent(15, 2);
+// console.log("first linked event", firstLinkedEvent);
+// firstLinkedEventDuration = getLinkedMessagesDurationInMs(firstLinkedEvent);
+// console.log(firstLinkedEventDuration);
+
+// interval(firstLinkedEventDuration).subscribe(() => {
+//   dispatchEvent(firstLinkedEvent);
+// });
