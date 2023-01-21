@@ -13,6 +13,10 @@ export type MessageEvent = {
   next: MessageEvent | null;
 } & StripSegment;
 
+export type ClearEvent = {
+  type: "clear";
+};
+
 export function linkEvents(events: MessageEvent[]): MessageEvent;
 export function linkEvents(events: AbstractEvent[]): AbstractEvent {
   events.reduce((prev, curr) => {

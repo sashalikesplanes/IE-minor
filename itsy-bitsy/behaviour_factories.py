@@ -31,8 +31,11 @@ def create_message_behaviour(strips, behaviours, start_time, message_config):
 
             intensity = get_intensity(elapsed_time, pixel_offset)
             strips[message_config["strip_idx"]][pixel_idx] = (
+                strips[message_config["strip_idx"]][pixel_idx][0] +
                 message_config["color"][0] * intensity,
+                strips[message_config["strip_idx"]][pixel_idx][1] +
                 message_config["color"][1] * intensity,
+                strips[message_config["strip_idx"]][pixel_idx][2] +
                 message_config["color"][2] * intensity
             )
 

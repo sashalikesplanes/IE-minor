@@ -1,4 +1,10 @@
-import { nodeToStripsMap } from "./config";
+import {
+  MESSAGE_COLOR,
+  MESSAGE_PACE,
+  MESSAGE_WIDTH,
+  nodeToStripsMap,
+} from "./config";
+import { linkEvents, MessageEvent } from "./events";
 
 export interface StripSegment {
   strip_idx: number;
@@ -127,4 +133,40 @@ export function getSegments(
 ): StripSegment[] {
   const path = getShortestPath(startNode, endNode);
   return pathToSegments(path);
+}
+
+export function stripSegmentsToEvents(
+  segments: StripSegment[]
+): MessageEvent[] {
+  const forwardMessages = segments.map((segment) => ({
+    type: "message" as MessageEvent["type"],
+    ...segment,
+    color: MESSAGE_COLOR,
+    message_width: MESSAGE_WIDTH,
+    pace: MESSAGE_PACE,
+    next: null,
+  }));
+
+  const backwardMessages = segments
+    .map((segment) => ({
+      type: "message" as MessageEvent["type"],
+      start_node: segment.end_node,
+      end_node: segment.start_node,
+      strip_idx: segment.strip_idx,
+      start_idx: segment.end_idx,
+      end_idx: segment.start_idx,
+      color: MESSAGE_COLOR,
+      message_width: MESSAGE_WIDTH,
+      pace: MESSAGE_PACE,
+      next: null,
+    }))
+    .reverse();
+
+  return forwardMessages.concat(backwardMessages);
+}
+
+export function nodesToEvent(startNode: number, endNode: number): MessageEvent {
+  const segments = getSegments(startNode, endNode);
+  const events = stripSegmentsToEvents(segments);
+  return linkEvents(events);
 }
