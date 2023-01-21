@@ -11,9 +11,13 @@ const SAVE_RESULTS = true;
 
 const detection$ = detection$Factory(SAVE_RESULTS, false)
   .pipe(bufferTime(DETECTION_BUFFER_TIME), map(mapDetectionsToNodeList))
-  .subscribe((nodeToActivate) => {
-    console.log(nodeToActivate);
-    const events = mapNodeListToSolidEvents(nodeToActivate);
+  .subscribe((nodesToActivate) => {
+    // if it is single, then trigger single behaviour
+    // otherwise get all pair permutations
+    // group by pair key
+    // for each group, trigger refresh the behaviour observable
+    console.log(nodesToActivate);
+    const events = mapNodeListToSolidEvents(nodesToActivate);
     dispatchEvents(events);
   });
 
