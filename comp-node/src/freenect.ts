@@ -10,7 +10,7 @@ export type Detection = {
   y2: number;
 };
 
-export const detection$Factory = (saveResults: boolean) => {
+export const detection$Factory = (saveResults: boolean, silent = false) => {
   const detector = spawn(
     "/Users/sasha/Documents/code/repos/libfreenect2/build/bin/Protonect",
     [
@@ -26,7 +26,7 @@ export const detection$Factory = (saveResults: boolean) => {
 
   return new Observable<Detection>((subscriber) => {
     detector.stdout.on("data", (data) => {
-      console.log(data.toString());
+      if (!silent) console.log(data.toString());
       const stringData = data.toString();
       if (stringData.split("$$$")[0] === "JSON") {
         const jsonData = JSON.parse(stringData.split("$$$")[1]) as Detection[];

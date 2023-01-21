@@ -1,5 +1,17 @@
 import { StripSegment } from "./path-finding";
 
+export interface Pixel {
+  strip_idx: number;
+  pixel_idx: number;
+}
+
+export type SolidEvent = {
+  type: "solid";
+  color: number[];
+  duration: number;
+  pixels: Pixel[];
+};
+
 export interface AbstractEvent {
   type: string;
   next: AbstractEvent | null;
@@ -16,6 +28,8 @@ export type MessageEvent = {
 export type ClearEvent = {
   type: "clear";
 };
+
+export type EventUnion = MessageEvent | ClearEvent | SolidEvent;
 
 export function linkEvents(events: MessageEvent[]): MessageEvent;
 export function linkEvents(events: AbstractEvent[]): AbstractEvent {

@@ -1,26 +1,46 @@
-export const MESSAGE_COLOR = [255, 0, 0];
-export const MESSAGE_WIDTH = 10;
-export const MESSAGE_PACE = 20;
+import { readFileSync, writeFileSync } from "fs";
+import { join } from "path";
+import { askQuestion } from "./calibrate";
 
-export const nodeToStripsMap = [
-  [null, 79, null, 17, 37],
-  [null, null, 27, null, 48],
-  [null, 88, 39, 66, null],
-  [70, 66, null, null, null],
-  [null, 15, null, 76, null],
-  [47, 25, null, null, null],
-  [17, null, null, null, 98],
-  [38, null, null, 87, null],
-  [27, null, null, null, null],
-  [null, null, 80, 99, null],
-  [null, null, null, null, 78],
-  [null, null, null, null, 25],
-  [null, null, null, 40, null],
-  [null, null, 53, null, null],
-  [99, null, null, null, null],
-  [59, null, null, null, null],
-  [0, 0, null, null, 0],
-  [null, null, null, 2, null],
-  [null, 44, null, null, null],
-  [null, null, 11, null, null],
-];
+export const CALIBRATION_SOLID_DURATION = 100_000; // ms
+export const MIN_PIXEL_INDEX = 0;
+export const MAX_PIXEL_INDEX = 99;
+
+export const DETECTION_BUFFER_TIME = 100; // ms
+
+export const NODE_COLOR = [255, 255, 255]; // green, blue, red
+export const NODE_SOLID_DURATION = 500; // ms
+export const NODE_SOLID_WIDTH = 1; // pixels
+export const MESSAGE_COLOR = [255, 0, 0]; // green, blue, red
+export const MESSAGE_WIDTH = 10; // pixels
+export const MESSAGE_PACE = 20; // pixels per second
+
+export const NODE_TO_STRIPS_MAP_NAME = "node-to-strips-map.json";
+export const NODE_TO_CAMERA_MAP_NAME = "node-to-camera-map.json";
+export const nodeToStripsMap = loadJson(NODE_TO_STRIPS_MAP_NAME) as number[][];
+export const nodeToCameraMap = loadJson(NODE_TO_CAMERA_MAP_NAME) as {
+  windowCam: { x: number; y: number }[];
+};
+
+export function loadJson(name: string) {
+  return JSON.parse(readFileSync(join(__dirname, name)).toString());
+}
+
+export async function saveJson(name: string, object: any) {
+  const data = JSON.stringify(object);
+  let answer = await askQuestion(
+    `Are you sure sure sure you wanna save the following JSON as ${name}?\n` +
+      data +
+      " (y/n): \n"
+  );
+  while (answer !== "y" && answer !== "n") {
+    answer = await askQuestion("Please enter y or n: ");
+  }
+
+  if (answer === "y") {
+    writeFileSync(join(__dirname, name), data);
+    console.log("file has been saved");
+    return;
+  }
+  return;
+}

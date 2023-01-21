@@ -1,40 +1,37 @@
-import { bufferTime, interval, map, take } from "rxjs";
-import { MESSAGE_COLOR, MESSAGE_PACE, MESSAGE_WIDTH } from "./config";
-import {
-  getLinkedMessagesDurationInMs,
-  linkEvents,
-  MessageEvent,
-} from "./events";
+import { bufferTime, map } from "rxjs";
+import { DETECTION_BUFFER_TIME } from "./config";
 import { detection$Factory } from "./freenect";
-import { getSegments, nodesToEvent, StripSegment } from "./path-finding";
-import { dispatchEvent } from "./serial";
+import {
+  mapDetectionsToNodeList,
+  mapNodeListToSolidEvents,
+} from "./mapNodeListToSolidEvents";
+import { dispatchEvents } from "./serial";
 
 const SAVE_RESULTS = true;
 
-const detection$ = detection$Factory(SAVE_RESULTS);
-detection$.pipe(bufferTime(250)).subscribe((v) => console.log(v.length));
-// detection$.pipe(
-//    map(detectionsToDetectionEvents), map bounding boxes and cam id onto a node id
-//    bufferTime() group a bunch of node ids
-//    map(deduplicate)
-//    mergeMap(listOfNodesToAllPairs)
-//    groupBy(pairToPairKey)
-//    mergeMap(o => {
-//      return o.pipe(
-//      )
-//  .subscribe(nodeListToBehaviour)
-//
-// We want to take the node list and emit all the possible pairs
-// Then for each pair, we have a dedicated observable
-// this observable will keep emitting the message at the correct interval as long as during that interval it has recieved anotehr pair
+const detection$ = detection$Factory(SAVE_RESULTS, false)
+  .pipe(bufferTime(DETECTION_BUFFER_TIME), map(mapDetectionsToNodeList))
+  .subscribe((nodeToActivate) => {
+    console.log(nodeToActivate);
+    const events = mapNodeListToSolidEvents(nodeToActivate);
+    dispatchEvents(events);
+  });
 
-let firstLinkedEvent = nodesToEvent(0, 8);
-let firstLinkedEventDuration = getLinkedMessagesDurationInMs(firstLinkedEvent);
+// interval(NODE_SOLID_DURATION).subscribe(() => {
+//   mapNodeListToSolidEvents(0).forEach((event) => {
+//     dispatchEvent(event);
+//   });
+// });
 
-dispatchEvent({ type: "clear" });
-interval(firstLinkedEventDuration).subscribe(() => {
-  dispatchEvent(firstLinkedEvent);
-});
+// TESTS FOR PATH FINDING
+
+// let firstLinkedEvent = nodesToEvent(0, 8);
+// let firstLinkedEventDuration = getLinkedMessagesDurationInMs(firstLinkedEvent);
+
+// dispatchEvent({ type: "clear" });
+// interval(firstLinkedEventDuration).subscribe(() => {
+//   dispatchEvent(firstLinkedEvent);
+// });
 
 // const firstLinkedEvent2 = nodesToEvent(3, 14);
 // console.log("first linked event", firstLinkedEvent);

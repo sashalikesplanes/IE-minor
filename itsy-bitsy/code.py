@@ -1,4 +1,4 @@
-from behaviour_factories import create_message_behaviour
+from behaviour_factories import create_message_behaviour, create_solid_behaviour
 from configs import strip_configs
 from time import monotonic, sleep
 from neopixel import NeoPixel
@@ -20,14 +20,23 @@ behaviours = []
 
 while True:
     # Read incoming events and create behaviours
+    event = None
     if data_port.in_waiting > 0:
         data = data_port.readline()
-        event = json.loads(data[:-1])
+        print(data)
+        try:
+            event = json.loads(data)
+        except:
+            event = None
 
+    if event is not None:
         if event['type'] == 'message':
             behaviours.append(create_message_behaviour(strips, behaviours,
                                                        monotonic(), event))
-        if event['type'] == 'clear':
+        elif event['type'] == 'solid':
+            behaviours.append(create_solid_behaviour(strips, behaviours,
+                                                     monotonic(), event))
+        elif event['type'] == 'clear':
             behaviours = []
             for s in strips:
                 s.fill((0, 0, 0))
