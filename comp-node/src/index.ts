@@ -20,7 +20,7 @@ import { dispatchEvents } from "./serial";
 
 dispatchEvents({ type: "clear" });
 
-const SAVE_RESULTS = true;
+const SAVE_RESULTS = false;
 const SILENT = false;
 
 const detectNodeList$ = detection$Factory(SAVE_RESULTS, SILENT).pipe(

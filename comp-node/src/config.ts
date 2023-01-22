@@ -2,6 +2,9 @@ import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 import { askQuestion } from "./calibrate";
 
+export const NMS_THRESHOLD = 0.9; // higher allows for more detectins of same hand
+export const SCORE_THRESHOLD = 0.3; // lower allows for less confident detections
+
 export const CALIBRATION_SOLID_DURATION = 100_000; // ms
 export const MIN_PIXEL_INDEX = 0;
 export const MAX_PIXEL_INDEX = 99;

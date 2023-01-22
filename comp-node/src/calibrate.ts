@@ -1,18 +1,5 @@
-// run the camera getting results in
-// per node in node list
-//
-// per strip in that node
-// light up the node pixels for that strip
-// prompt user for an offset which can be positive or negative
-// save the offset to nodemap
-// light up the node pixels for that strip again
-// if a user presses enter then continue to the next strip
-//
-// open up the latest picture
-// prompt the user for coordinates
-// save the coordinates to nodeCameraMap
-// continue to the next node
-
+import Jimp from "jimp";
+import { join } from "path";
 import readline from "readline";
 import {
   CALIBRATION_SOLID_DURATION,
@@ -70,25 +57,54 @@ async function calibrateCameraMap() {
     dispatchEvents({ type: "clear" });
     dispatchEvents(events);
 
+    await drawCurrentNodeLocation(i);
+    const currentPosition = [
+      nodeToCameraMap["windowCam"][nodeIdx].x,
+      nodeToCameraMap["windowCam"][nodeIdx].y,
+    ].join(",");
     let answer = (await askQuestion(
-      "Enter the x and y coordinates separated by a comma (NO SPACE!) (eg. 157,254) or enter to skip: "
+      `Enter the x and y coordinates separated by a comma (NO SPACE!) (currently ${currentPosition}) or enter to skip: `
     )) as string;
     if (answer === "") continue;
     while (!answer.includes(",")) {
       answer = (await askQuestion(
-        "Please enter the x and y coordinates separated by a comma (NO SPACE!) (eg. 157,254): "
+        `Please enter the x and y coordinates separated by a comma (NO SPACE!) (currentyl ${currentPosition}): `
       )) as string;
+      await drawCurrentNodeLocation(i);
     }
 
     const [x, y] = answer.split(",").map((v) => parseInt(v));
     nodeToCameraMap["windowCam"][nodeIdx] = { x, y };
   }
   saveJson(NODE_TO_CAMERA_MAP_NAME, nodeToCameraMap);
+
+  async function drawCurrentNodeLocation(nodeIdx: number) {
+    // try to open the latest result image
+    const currentX = nodeToCameraMap["windowCam"][nodeIdx].x;
+    const currentY = nodeToCameraMap["windowCam"][nodeIdx].y;
+    const basePath = join(__dirname, "..", "..", "images");
+    let image;
+
+    while (!image) {
+      try {
+        image = await Jimp.read(join(basePath, "result.jpg"));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    const font = await Jimp.loadFont(Jimp.FONT_SANS_32_WHITE);
+    image
+      .print(font, currentX + 10, currentY + 10, nodeIdx.toString())
+      .setPixelColour(0x00ff00ff, currentX, currentY)
+      .setPixelColour(0x00ff00ff, currentX + 1, currentY)
+      .setPixelColor(0x00ff00ff, currentX, currentY + 1)
+      .setPixelColor(0x00ff00ff, currentX - 1, currentY)
+      .setPixelColor(0x00ff00ff, currentX, currentY - 1)
+      .write(join(basePath, "resultWithColor.jpg"));
+    // use jimp to draw a green circle at the current node location
+    // save the image
+  }
 }
-// prompt user for reading the camera
-// grab the latest image
-// use opencv.js to paint the current node location in green
-// prompt user for coordinates, or enter to skip
 
 async function calibrateStripsMap() {
   if ((await askQuestion("Press 0 to skip strip map calibration: ")) === "0")

@@ -1112,7 +1112,7 @@ isarray@~1.0.0:
 
 jimp@^0.16.2:
   version "0.16.2"
-  resolved "https://registry.npmjs.org/jimp/-/jimp-0.16.2.tgz"
+  resolved "https://registry.yarnpkg.com/jimp/-/jimp-0.16.2.tgz#c03e296381ae37586e27f209d134d4596d112f7b"
   integrity sha512-UpItBk81a92f8oEyoGYbO3YK4QcM0hoIyuGHmShoF9Ov63P5Qo7Q/X2xsAgnODmSuDJFOtrPtJd5GSWW4LKdOQ==
   dependencies:
     "@babel/runtime" "^7.7.2"

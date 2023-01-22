@@ -1,5 +1,6 @@
-import { execFile, spawn } from "node:child_process";
+import { spawn } from "node:child_process";
 import { Observable } from "rxjs";
+import { NMS_THRESHOLD, SCORE_THRESHOLD } from "./config";
 
 export type Detection = {
   label: number;
@@ -18,6 +19,8 @@ export const detection$Factory = (saveResults: boolean, silent = false) => {
       saveResults ? "1" : "0",
       "0",
       "/Users/sasha/Documents/code/repos/IE-minor/images",
+      SCORE_THRESHOLD.toString(),
+      NMS_THRESHOLD.toString(),
     ],
     {
       cwd: "/Users/sasha/Documents/code/repos/libfreenect2/build/bin",
