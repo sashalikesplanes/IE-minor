@@ -13,6 +13,7 @@
 // save the coordinates to nodeCameraMap
 // continue to the next node
 
+import readline from "readline";
 import {
   CALIBRATION_SOLID_DURATION,
   nodeToCameraMap,
@@ -27,10 +28,6 @@ import {
   mapNodeStripPixelToSolidEvent,
 } from "./mapNodeListToSolidEvents";
 import { dispatchEvents } from "./serial";
-import readline from "readline";
-import { exec, execSync } from "child_process";
-import { join } from "path";
-import { bufferTime } from "rxjs";
 
 export function askQuestion(query: string) {
   const rl = readline.createInterface({
