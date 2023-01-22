@@ -1,7 +1,3 @@
-import { readFileSync, writeFileSync } from "fs";
-import { join } from "path";
-import { askQuestion } from "./calibrate";
-
 export const NMS_THRESHOLD = 0.9; // higher allows for more detectins of same hand
 export const SCORE_THRESHOLD = 0.3; // lower allows for less confident detections
 
@@ -30,30 +26,3 @@ export const SINGLE_INCLUDE_BACKWARDS = false;
 
 export const NODE_TO_STRIPS_MAP_NAME = "node-to-strips-map.json";
 export const NODE_TO_CAMERA_MAP_NAME = "node-to-camera-map.json";
-export const nodeToStripsMap = loadJson(NODE_TO_STRIPS_MAP_NAME) as number[][];
-export const nodeToCameraMap = loadJson(NODE_TO_CAMERA_MAP_NAME) as {
-  windowCam: { x: number; y: number }[];
-};
-
-export function loadJson(name: string) {
-  return JSON.parse(readFileSync(join(__dirname, name)).toString());
-}
-
-export async function saveJson(name: string, object: any) {
-  const data = JSON.stringify(object);
-  let answer = await askQuestion(
-    `Are you sure sure sure you wanna save the following JSON as ${name}?\n` +
-      data +
-      " (y/n): \n"
-  );
-  while (answer !== "y" && answer !== "n") {
-    answer = await askQuestion("Please enter y or n: ");
-  }
-
-  if (answer === "y") {
-    writeFileSync(join(__dirname, name), data);
-    console.log("file has been saved");
-    return;
-  }
-  return;
-}

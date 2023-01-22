@@ -1,11 +1,8 @@
-// A hash map of observables to emit a message per node pair
-
 import {
   MESSAGE_COLOR,
   MESSAGE_INCLUDE_BACKWARDS,
   MESSAGE_PACE,
   MESSAGE_WIDTH,
-  nodeToStripsMap,
   SINGLE_COLOR,
   SINGLE_DURATION,
   SINGLE_INCLUDE_BACKWARDS,
@@ -13,18 +10,19 @@ import {
 } from "./config";
 import { getLinkedMessagesDurationInMs } from "./events";
 import {
-  edges,
   mapNodesToEventsWithDuration,
   mapNodesToEventsWithPace,
-} from "./path-finding";
+} from "./mappers";
+import { edges } from "./path-finding";
 import { dispatchEvents } from "./serial";
+import { loadStripsMap } from "./utils";
 
 export const singleBehaviourHandlers = new Map<
   number,
   (nodeList: number[]) => void
 >();
 
-nodeToStripsMap.forEach((_, nodeIdx) => {
+loadStripsMap().forEach((_, nodeIdx) => {
   singleBehaviourHandlers.set(nodeIdx, createSingleBehaviourHandler(nodeIdx));
 });
 
@@ -34,8 +32,8 @@ export const messageBehaviourHandlers = new Map<
 >();
 
 // for each pair of nodes, create a handler
-nodeToStripsMap.forEach((_, nodeIdx) => {
-  nodeToStripsMap.forEach((_, otherNodeIdx) => {
+loadStripsMap().forEach((_, nodeIdx) => {
+  loadStripsMap().forEach((_, otherNodeIdx) => {
     if (otherNodeIdx <= nodeIdx) return;
     const key =
       nodeIdx < otherNodeIdx
@@ -101,70 +99,3 @@ function createSingleBehaviourHandler(
     dispatchEvents(events);
   };
 }
-
-/*
-      mergeMap((group) => {
-      switch (group.key) {
-        case "passive":
-          return new Observable();
-        case "multiple":
-          return new Observable();
-        default:
-          console.log("single", group.key);
-          return group.pipe(
-            map((nodes) => {
-              const node = nodes[0];
-              const events = connectedEdges.map((edge) =>
-                mapNodesToEvents(node, edge.end_node)
-              );
-              events.forEach((event) => {
-                const duration = getMessageDurationInMs(event);
-                if (duration > maxDuration) maxDuration = duration;
-              });
-              return events;
-            }),
-            sampleTime(maxDuration)
-          );
-      }
-    })
-*/
-
-// fill the map
-// export function createOrGetSingleBehaviour$(
-//   nodeIdx: number
-// ): Observable<MessageEvent> {
-//   let observable = singleBehvaiourObservables.get(nodeIdx);
-//   if (observable) {
-//     return observable;
-//   }
-//   // get the neighbours
-//   // create an event per neighbour
-//   // get the longest duration
-//   const longestDuration = 1000;
-//   observable = timer(0, longestDuration);
-//   // save the observable
-//   singleBehvaiourObservables.set(nodeIdx, observable);
-//   return observable;
-// }
-
-// export function getMessageObservable(
-//   startNode: number,
-//   endNode: number
-// ): Observable<MessageEvent> {
-//   const key =
-//     endNode > startNode ? `${startNode}-${endNode}` : `${endNode}-${startNode}`;
-//   let observable = map.get(key);
-//   if (observable) {
-//     return observable;
-//   }
-//   // create the observable
-//   observable = new Observable<MessageEvent>((subscriber) => {
-//     const segments = getSegments(startNode, endNode);
-//     const events = stripSegmentsToEvents(segments);
-//     events.forEach((event) => subscriber.next(event));
-//     subscriber.complete();
-//   });
-//   // save the observable
-//   map.set(key, observable);
-//   return observable;
-// }

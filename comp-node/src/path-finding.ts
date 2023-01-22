@@ -1,5 +1,5 @@
-import { MAX_PIXEL_INDEX, MIN_PIXEL_INDEX, nodeToStripsMap } from "./config";
-import { linkEvents, MessageEvent, setPaceForADuration } from "./events";
+import { MAX_PIXEL_INDEX, MIN_PIXEL_INDEX } from "./config";
+import { loadStripsMap } from "./utils";
 
 export interface StripSegment {
   strip_idx: number;
@@ -10,6 +10,9 @@ export interface StripSegment {
 }
 
 export const edges: StripSegment[] = [];
+
+const nodeToStripsMap = loadStripsMap();
+
 nodeToStripsMap.forEach((startPixelIndices, nodeIndex) => {
   startPixelIndices.forEach((startPixelIndex, stripIndex) => {
     if (startPixelIndex === null) return;
@@ -69,9 +72,9 @@ function findEdge(startNode: number, endNode: number): StripSegment | null {
 }
 
 function getShortestPath(startNode: number, endNode: number): number[] {
-  const dist = new Array<number>(nodeToStripsMap.length).fill(1_000_000);
-  const prev = new Array<number | null>(nodeToStripsMap.length).fill(null);
-  const Q = new Array<number>(nodeToStripsMap.length).fill(0).map((_, i) => i);
+  const dist = new Array<number>(loadStripsMap().length).fill(1_000_000);
+  const prev = new Array<number | null>(loadStripsMap().length).fill(null);
+  const Q = new Array<number>(loadStripsMap().length).fill(0).map((_, i) => i);
 
   dist[startNode] = 0;
 
@@ -133,79 +136,4 @@ export function getSegments(
 ): StripSegment[] {
   const path = getShortestPath(startNode, endNode);
   return pathToSegments(path);
-}
-
-export function stripSegmentsToEvents(
-  segments: StripSegment[],
-  color: number[],
-  width: number,
-  pace: number,
-  includeBackwards: boolean
-): MessageEvent[] {
-  const forwardMessages = segments.map((segment) => ({
-    type: "message" as MessageEvent["type"],
-    ...segment,
-    color,
-    message_width: width,
-    pace: pace,
-    next: null,
-  }));
-
-  if (!includeBackwards) return forwardMessages;
-
-  const backwardMessages = segments
-    .map((segment) => ({
-      type: "message" as MessageEvent["type"],
-      start_node: segment.end_node,
-      end_node: segment.start_node,
-      strip_idx: segment.strip_idx,
-      start_idx: segment.end_idx,
-      end_idx: segment.start_idx,
-      color: color,
-      message_width: width,
-      pace: pace,
-      next: null,
-    }))
-    .reverse();
-
-  return forwardMessages.concat(backwardMessages);
-}
-
-export function mapNodesToEventsWithPace(
-  startNode: number,
-  endNode: number,
-  color: number[],
-  width: number,
-  pace: number,
-  includeBackwards: boolean
-): MessageEvent {
-  const segments = getSegments(startNode, endNode);
-  const events = stripSegmentsToEvents(
-    segments,
-    color,
-    width,
-    pace,
-    includeBackwards
-  );
-  return linkEvents(events);
-}
-
-export function mapNodesToEventsWithDuration(
-  startNode: number,
-  endNode: number,
-  color: number[],
-  width: number,
-  duration: number,
-  includeBackwards: boolean
-): MessageEvent {
-  const segments = getSegments(startNode, endNode);
-  let events = stripSegmentsToEvents(
-    segments,
-    color,
-    width,
-    1,
-    includeBackwards
-  );
-  events = events.map((event) => setPaceForADuration(event, duration));
-  return linkEvents(events);
 }

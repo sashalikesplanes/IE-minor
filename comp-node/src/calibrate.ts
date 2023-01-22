@@ -1,37 +1,20 @@
 import Jimp from "jimp";
 import { join } from "path";
-import readline from "readline";
 import {
   CALIBRATION_SOLID_DURATION,
-  nodeToCameraMap,
-  nodeToStripsMap,
   NODE_COLOR,
   NODE_SOLID_DURATION,
   NODE_SOLID_WIDTH,
   NODE_TO_CAMERA_MAP_NAME,
   NODE_TO_STRIPS_MAP_NAME,
-  saveJson,
 } from "./config";
 import { detection$Factory } from "./freenect";
 import {
   mapNodeListToSolidEvents,
   mapNodeStripPixelToSolidEvent,
-} from "./mapNodeListToSolidEvents";
+} from "./mappers";
 import { dispatchEvents } from "./serial";
-
-export function askQuestion(query: string) {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-
-  return new Promise((resolve) =>
-    rl.question(query, (ans) => {
-      rl.close();
-      resolve(ans);
-    })
-  );
-}
+import { askQuestion, loadCameraMap, loadStripsMap, saveJson } from "./utils";
 
 async function calibrate() {
   await calibrateStripsMap();
@@ -45,7 +28,9 @@ async function calibrateCameraMap() {
   if ((await askQuestion("Press 0 to skip camera map calibration: ")) === "0")
     return;
 
-  for (let i = 0; i < nodeToStripsMap.length; i++) {
+  const nodeToCameraMap = loadCameraMap();
+
+  for (let i = 0; i < loadStripsMap().length; i++) {
     const nodeIdx = i;
     const events = mapNodeListToSolidEvents(
       nodeIdx,
@@ -113,6 +98,7 @@ async function calibrateStripsMap() {
   console.log("Calibrating strip map");
 
   dispatchEvents({ type: "clear" });
+  const nodeToStripsMap = loadStripsMap();
   for (let i = 0; i < nodeToStripsMap.length; i++) {
     const stripPixels = nodeToStripsMap[i];
     const nodeIdx = i;
@@ -150,7 +136,3 @@ async function calibrateStripsMap() {
 if (require.main === module) {
   calibrate();
 }
-
-// await for user input
-// if user presses enter then continue to the next strip
-// if user presses escape then exit the program
