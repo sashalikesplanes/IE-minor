@@ -17,7 +17,7 @@ export function mapDetectionsToNodeList(
       nodeList.push(nodeIdx);
     }
   });
-  return nodeList;
+  return [...new Set(nodeList)];
 }
 
 function mapDetectionToNode(detection: NanodetDetection): number | null {

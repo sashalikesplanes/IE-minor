@@ -1,22 +1,79 @@
 // A hash map of observables to emit a message per node pair
 
 import {
+  MESSAGE_COLOR,
+  MESSAGE_INCLUDE_BACKWARDS,
+  MESSAGE_PACE,
+  MESSAGE_WIDTH,
   nodeToStripsMap,
   SINGLE_COLOR,
   SINGLE_DURATION,
   SINGLE_INCLUDE_BACKWARDS,
   SINGLE_WIDTH,
 } from "./config";
-import { edges, mapNodesToEventsWithDuration } from "./path-finding";
+import { getLinkedMessagesDurationInMs } from "./events";
+import {
+  edges,
+  mapNodesToEventsWithDuration,
+  mapNodesToEventsWithPace,
+} from "./path-finding";
 import { dispatchEvents } from "./serial";
 
 export const singleBehaviourHandlers = new Map<
   number,
   (nodeList: number[]) => void
 >();
+
 nodeToStripsMap.forEach((_, nodeIdx) => {
   singleBehaviourHandlers.set(nodeIdx, createSingleBehaviourHandler(nodeIdx));
 });
+
+export const messageBehaviourHandlers = new Map<
+  string,
+  (nodePair: number[]) => void
+>();
+
+// for each pair of nodes, create a handler
+nodeToStripsMap.forEach((_, nodeIdx) => {
+  nodeToStripsMap.forEach((_, otherNodeIdx) => {
+    if (otherNodeIdx <= nodeIdx) return;
+    const key =
+      nodeIdx < otherNodeIdx
+        ? `${nodeIdx}-${otherNodeIdx}`
+        : `${otherNodeIdx}-${nodeIdx}`;
+    messageBehaviourHandlers.set(key, createMessageBehaviourHandler(key));
+  });
+});
+
+console.log(messageBehaviourHandlers.keys());
+
+function createMessageBehaviourHandler(key: string) {
+  // create all the events to be dispatched and record the duration
+  const startNode = parseInt(key.split("-")[0]);
+  const endNode = parseInt(key.split("-")[1]);
+  const firstEvent = mapNodesToEventsWithPace(
+    startNode,
+    endNode,
+    MESSAGE_COLOR,
+    MESSAGE_WIDTH,
+    MESSAGE_PACE,
+    MESSAGE_INCLUDE_BACKWARDS
+  );
+
+  const totalDuration = getLinkedMessagesDurationInMs(firstEvent);
+
+  let lastDispatchTime = new Date().getTime() - totalDuration - 1;
+  return function (nodePair: number[]): void {
+    const currentKey =
+      nodePair[0] < nodePair[1]
+        ? `${nodePair[0]}-${nodePair[1]}`
+        : `${nodePair[1]}-${nodePair[0]}`;
+    if (currentKey !== key) return;
+    if (new Date().getTime() - lastDispatchTime < totalDuration) return;
+    lastDispatchTime = new Date().getTime();
+    dispatchEvents(firstEvent);
+  };
+}
 
 function createSingleBehaviourHandler(
   nodeIdx: number

@@ -1,7 +1,11 @@
-import { bufferTime, map, share, timer } from "rxjs";
-import { singleBehaviourHandlers } from "./behaviour-handlers";
+import { bufferTime, from, map, mergeMap, share, tap, timer } from "rxjs";
 import {
-  DETECTION_BUFFER_TIME,
+  messageBehaviourHandlers,
+  singleBehaviourHandlers,
+} from "./behaviour-handlers";
+import {
+  DETECTION_BUFFER_CREATION_INTERVAL,
+  DETECTION_BUFFER_TIME_SPAN,
   nodeToStripsMap,
   NODE_COLOR,
   NODE_SOLID_DURATION,
@@ -17,15 +21,44 @@ import { dispatchEvents } from "./serial";
 dispatchEvents({ type: "clear" });
 
 const SAVE_RESULTS = true;
+const SILENT = false;
 
-const detection$ = detection$Factory(SAVE_RESULTS, false).pipe(
-  bufferTime(DETECTION_BUFFER_TIME),
+const detectNodeList$ = detection$Factory(SAVE_RESULTS, SILENT).pipe(
+  bufferTime(DETECTION_BUFFER_TIME_SPAN, DETECTION_BUFFER_CREATION_INTERVAL),
   map(mapDetectionsToNodeList),
   share()
 );
 
 singleBehaviourHandlers.forEach((handler) => {
-  detection$.subscribe(handler);
+  detectNodeList$.subscribe(handler);
+});
+
+const detectedNodePair$ = detectNodeList$.pipe(
+  mergeMap((nodeList) => {
+    // create a list of all possible pairs
+    if (nodeList.length < 2) {
+      return [];
+    }
+
+    const pairs = [...nodeList].flatMap((node, idx) => {
+      return [...nodeList].slice(idx + 1).map((otherNode) => {
+        if (node < otherNode) {
+          return [node, otherNode];
+        } else {
+          return [otherNode, node];
+        }
+      });
+    });
+    return from(pairs);
+  }),
+  tap((pairs) => {
+    console.warn("pairs in pair$", pairs);
+  }),
+  share()
+);
+
+messageBehaviourHandlers.forEach((handler) => {
+  detectedNodePair$.subscribe(handler);
 });
 
 // Create the constantly on behaviour
