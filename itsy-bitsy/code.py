@@ -8,9 +8,11 @@ import usb_cdc
 data_port = usb_cdc.data
 data_port.reset_input_buffer()
 
+BRIGHTNESS = 0.7
+
 # Setup strips
 strips = [NeoPixel(strip_config["pin"], strip_config["num_pixels"],
-                   brightness=1, auto_write=False) for strip_config in strip_configs]
+                   brightness=BRIGHTNESS, auto_write=False) for strip_config in strip_configs]
 for s in strips:
     s.fill((0, 0, 0))
     s.show()
@@ -20,16 +22,16 @@ behaviours = []
 
 while True:
     # Read incoming events and create behaviours
-    event = None
-    if data_port.in_waiting > 0:
+    events = []
+    while data_port.in_waiting > 0:
         data = data_port.readline()
         print(data)
         try:
-            event = json.loads(data)
+            events.append(json.loads(data))
         except:
-            event = None
+            pass
 
-    if event is not None:
+    for event in events:
         if event['type'] == 'message':
             behaviours.append(create_message_behaviour(strips, behaviours,
                                                        monotonic(), event))

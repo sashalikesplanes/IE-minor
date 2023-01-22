@@ -9,7 +9,9 @@ export const MAX_PIXEL_INDEX = 99;
 export const DETECTION_BUFFER_TIME = 100; // ms
 
 export const NODE_COLOR = [255, 255, 255]; // green, blue, red
-export const NODE_SOLID_DURATION = 500; // ms
+export const NODE_SOLID_DURATION = 1_000_000; // ms
+export const NODE_SOLID_DURATION_TEST = 500; // ms
+export const NODE_SOLID_DURATION_DELAY = 1_000; // ms
 export const NODE_SOLID_WIDTH = 1; // pixels
 export const MESSAGE_COLOR = [255, 0, 0]; // green, blue, red
 export const MESSAGE_WIDTH = 10; // pixels

@@ -1,6 +1,8 @@
 from math import sin, pi
 from time import monotonic
 
+from configs import INTENSITY_UPDATE_THRESHOLD
+
 
 def create_solid_behaviour(strips, behaviours, start_time, solid_config):
     duration = (solid_config["duration"]) / 990
@@ -55,6 +57,20 @@ def create_message_behaviour(strips, behaviours, start_time, message_config):
                 pixel_offset = message_config["start_idx"] - pixel_idx
 
             intensity = get_intensity(elapsed_time, pixel_offset)
+
+            # If the intensity is 0, don't bother updating the strip
+            if intensity < INTENSITY_UPDATE_THRESHOLD:
+                continue
+
+            # If the color at the pixel is NODE_COLOR, then reset it
+            if strips[message_config["strip_idx"]][pixel_idx] == (0, 0, 0):
+                strips[message_config["strip_idx"]][pixel_idx] = (
+                    message_config["color"][0] * intensity,
+                    message_config["color"][1] * intensity,
+                    message_config["color"][2] * intensity
+                )
+                continue
+
             strips[message_config["strip_idx"]][pixel_idx] = (
                 strips[message_config["strip_idx"]][pixel_idx][0] +
                 message_config["color"][0] * intensity,

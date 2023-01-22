@@ -1,5 +1,5 @@
 import { bufferTime, map } from "rxjs";
-import { DETECTION_BUFFER_TIME } from "./config";
+import { DETECTION_BUFFER_TIME, NODE_SOLID_DURATION_TEST } from "./config";
 import { detection$Factory } from "./freenect";
 import {
   mapDetectionsToNodeList,
@@ -18,12 +18,15 @@ const detection$ = detection$Factory(SAVE_RESULTS, false)
     // for each group, trigger refresh the behaviour observable
     console.log(nodesToActivate);
     const events = mapNodeListToSolidEvents(nodesToActivate);
+    events.forEach((e) => (e.duration = NODE_SOLID_DURATION_TEST));
     dispatchEvents(events);
   });
 
+// Create the constantly on behaviour
 // interval(NODE_SOLID_DURATION).subscribe(() => {
-//   mapNodeListToSolidEvents(0).forEach((event) => {
-//     dispatchEvent(event);
+//   const listOfAllNodes = Array.from(Array(nodeToStripsMap.length).keys());
+//   mapNodeListToSolidEvents(listOfAllNodes).forEach((event) => {
+//     dispatchEvents(event);
 //   });
 // });
 
@@ -32,9 +35,9 @@ const detection$ = detection$Factory(SAVE_RESULTS, false)
 // let firstLinkedEvent = nodesToEvent(0, 8);
 // let firstLinkedEventDuration = getLinkedMessagesDurationInMs(firstLinkedEvent);
 
-// dispatchEvent({ type: "clear" });
+// dispatchEvents({ type: "clear" });
 // interval(firstLinkedEventDuration).subscribe(() => {
-//   dispatchEvent(firstLinkedEvent);
+//   dispatchEvents(firstLinkedEvent);
 // });
 
 // const firstLinkedEvent2 = nodesToEvent(3, 14);
