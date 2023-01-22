@@ -1,0 +1,11 @@
+{
+  "cmake.sourceDirectory": "${workspaceFolder}/nanodet-wasm",
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.formatOnSave": true,
+      "source.organizeImports": true,
+      "source.fixAll": true
+    }
+  },
+}
