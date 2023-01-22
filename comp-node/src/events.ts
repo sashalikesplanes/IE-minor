@@ -51,6 +51,17 @@ export function getMessageDurationInMs(message: MessageEvent) {
   );
 }
 
+export function setPaceForADuration(message: MessageEvent, duration: number) {
+  return {
+    ...message,
+    pace:
+      (Math.abs(message.end_idx - message.start_idx) +
+        1 +
+        message.message_width / 2) /
+      (duration / 1000),
+  };
+}
+
 export function getLinkedMessagesDurationInMs(message: MessageEvent | null) {
   let duration = 0;
   while (message) {

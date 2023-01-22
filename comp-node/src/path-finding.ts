@@ -1,10 +1,5 @@
-import {
-  MESSAGE_COLOR,
-  MESSAGE_PACE,
-  MESSAGE_WIDTH,
-  nodeToStripsMap,
-} from "./config";
-import { linkEvents, MessageEvent } from "./events";
+import { MAX_PIXEL_INDEX, MIN_PIXEL_INDEX, nodeToStripsMap } from "./config";
+import { linkEvents, MessageEvent, setPaceForADuration } from "./events";
 
 export interface StripSegment {
   strip_idx: number;
@@ -19,6 +14,10 @@ nodeToStripsMap.forEach((startPixelIndices, nodeIndex) => {
   startPixelIndices.forEach((startPixelIndex, stripIndex) => {
     if (startPixelIndex === null) return;
 
+    if (startPixelIndex < MIN_PIXEL_INDEX) startPixelIndex = MIN_PIXEL_INDEX;
+    else if (startPixelIndex > MAX_PIXEL_INDEX)
+      startPixelIndex = MAX_PIXEL_INDEX;
+
     let closestPositiveDistance = 1_000_000;
     let closestNegativeDistance = -1_000_000;
     let shortestPositiveSegment: StripSegment | null = null;
@@ -27,8 +26,10 @@ nodeToStripsMap.forEach((startPixelIndices, nodeIndex) => {
     nodeToStripsMap.forEach((endPixelIndices, otherNodeIdx) => {
       if (otherNodeIdx === nodeIndex) return;
 
-      const endIndex = endPixelIndices[stripIndex];
+      let endIndex = endPixelIndices[stripIndex];
       if (endIndex === null) return;
+      if (endIndex < MIN_PIXEL_INDEX) endIndex = MIN_PIXEL_INDEX;
+      else if (endIndex > MAX_PIXEL_INDEX) endIndex = MAX_PIXEL_INDEX;
 
       const distance = endIndex - startPixelIndex;
       if (distance > 0 && distance < closestPositiveDistance) {
@@ -53,7 +54,6 @@ nodeToStripsMap.forEach((startPixelIndices, nodeIndex) => {
         };
       }
     });
-
     if (shortestPositiveSegment) edges.push(shortestPositiveSegment);
     if (shortestNegativeSegment) edges.push(shortestNegativeSegment);
   });
@@ -136,16 +136,22 @@ export function getSegments(
 }
 
 export function stripSegmentsToEvents(
-  segments: StripSegment[]
+  segments: StripSegment[],
+  color: number[],
+  width: number,
+  pace: number,
+  includeBackwards: boolean
 ): MessageEvent[] {
   const forwardMessages = segments.map((segment) => ({
     type: "message" as MessageEvent["type"],
     ...segment,
-    color: MESSAGE_COLOR,
-    message_width: MESSAGE_WIDTH,
-    pace: MESSAGE_PACE,
+    color,
+    message_width: width,
+    pace: pace,
     next: null,
   }));
+
+  if (!includeBackwards) return forwardMessages;
 
   const backwardMessages = segments
     .map((segment) => ({
@@ -155,9 +161,9 @@ export function stripSegmentsToEvents(
       strip_idx: segment.strip_idx,
       start_idx: segment.end_idx,
       end_idx: segment.start_idx,
-      color: MESSAGE_COLOR,
-      message_width: MESSAGE_WIDTH,
-      pace: MESSAGE_PACE,
+      color: color,
+      message_width: width,
+      pace: pace,
       next: null,
     }))
     .reverse();
@@ -165,8 +171,41 @@ export function stripSegmentsToEvents(
   return forwardMessages.concat(backwardMessages);
 }
 
-export function nodesToEvent(startNode: number, endNode: number): MessageEvent {
+export function mapNodesToEventsWithPace(
+  startNode: number,
+  endNode: number,
+  color: number[],
+  width: number,
+  pace: number,
+  includeBackwards: boolean
+): MessageEvent {
   const segments = getSegments(startNode, endNode);
-  const events = stripSegmentsToEvents(segments);
+  const events = stripSegmentsToEvents(
+    segments,
+    color,
+    width,
+    pace,
+    includeBackwards
+  );
+  return linkEvents(events);
+}
+
+export function mapNodesToEventsWithDuration(
+  startNode: number,
+  endNode: number,
+  color: number[],
+  width: number,
+  duration: number,
+  includeBackwards: boolean
+): MessageEvent {
+  const segments = getSegments(startNode, endNode);
+  let events = stripSegmentsToEvents(
+    segments,
+    color,
+    width,
+    1,
+    includeBackwards
+  );
+  events = events.map((event) => setPaceForADuration(event, duration));
   return linkEvents(events);
 }

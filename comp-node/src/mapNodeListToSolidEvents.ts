@@ -3,9 +3,6 @@ import {
   MIN_PIXEL_INDEX,
   nodeToCameraMap,
   nodeToStripsMap,
-  NODE_COLOR,
-  NODE_SOLID_DURATION,
-  NODE_SOLID_WIDTH,
 } from "./config";
 import { Pixel, SolidEvent } from "./events";
 import { NanodetDetection } from "./types";
@@ -53,33 +50,41 @@ function mapDetectionToNode(detection: NanodetDetection): number | null {
 // For each node in node map, send a solid event
 
 export function mapNodeListToSolidEvents(
-  nodes: number[] | number
+  nodes: number[] | number,
+  color: number[],
+  duration: number,
+  width: number
 ): SolidEvent[] {
   if (!Array.isArray(nodes)) {
     nodes = [nodes];
   }
   return nodes.flatMap((nodeIdx) => {
     const pixelIdxPerStrip = nodeToStripsMap[nodeIdx];
-    return pixelIdxPerStrip.map(mapNodeStripPixelToSolidEvent);
+    return pixelIdxPerStrip.map((pixelIdx, stripIdx) =>
+      mapNodeStripPixelToSolidEvent(pixelIdx, stripIdx, color, duration, width)
+    );
   });
 }
 
 export function mapNodeStripPixelToSolidEvent(
   pixelIdx: number | null,
-  stripIdx: number
+  stripIdx: number,
+  color: number[],
+  duration: number,
+  width: number
 ): SolidEvent {
   if (pixelIdx === null) {
     return {
       type: "solid",
-      color: NODE_COLOR,
-      duration: NODE_SOLID_DURATION,
+      color: color,
+      duration: duration,
       pixels: [],
     };
   }
 
   // create an array of pixels based on node_width
   const pixels: Pixel[] = [];
-  for (let i = -NODE_SOLID_WIDTH; i <= NODE_SOLID_WIDTH; i++) {
+  for (let i = -width; i <= width; i++) {
     const currentPixelIdx = pixelIdx + i;
     if (
       currentPixelIdx < MIN_PIXEL_INDEX ||
@@ -92,8 +97,8 @@ export function mapNodeStripPixelToSolidEvent(
 
   return {
     type: "solid",
-    color: NODE_COLOR,
-    duration: NODE_SOLID_DURATION,
+    color: color,
+    duration: duration,
     pixels,
   };
 }

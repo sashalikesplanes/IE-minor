@@ -18,6 +18,9 @@ import {
   CALIBRATION_SOLID_DURATION,
   nodeToCameraMap,
   nodeToStripsMap,
+  NODE_COLOR,
+  NODE_SOLID_DURATION,
+  NODE_SOLID_WIDTH,
   NODE_TO_CAMERA_MAP_NAME,
   NODE_TO_STRIPS_MAP_NAME,
   saveJson,
@@ -57,7 +60,12 @@ async function calibrateCameraMap() {
 
   for (let i = 0; i < nodeToStripsMap.length; i++) {
     const nodeIdx = i;
-    const events = mapNodeListToSolidEvents(nodeIdx);
+    const events = mapNodeListToSolidEvents(
+      nodeIdx,
+      NODE_COLOR,
+      NODE_SOLID_DURATION,
+      NODE_SOLID_WIDTH
+    );
     events.forEach((e) => (e.duration = CALIBRATION_SOLID_DURATION));
     dispatchEvents({ type: "clear" });
     dispatchEvents(events);
@@ -99,8 +107,13 @@ async function calibrateStripsMap() {
 
       if (pixelIdx === null) continue;
 
-      const solidEvent = mapNodeStripPixelToSolidEvent(pixelIdx, stripIdx);
-      solidEvent.duration = CALIBRATION_SOLID_DURATION;
+      const solidEvent = mapNodeStripPixelToSolidEvent(
+        pixelIdx,
+        stripIdx,
+        NODE_COLOR,
+        CALIBRATION_SOLID_DURATION,
+        NODE_SOLID_WIDTH
+      );
       dispatchEvents({ type: "clear" });
       dispatchEvents(solidEvent);
 
@@ -117,7 +130,10 @@ async function calibrateStripsMap() {
 
   saveJson(NODE_TO_STRIPS_MAP_NAME, nodeToStripsMap);
 }
-calibrate();
+// calibrate();
+if (require.main === module) {
+  calibrate();
+}
 
 // await for user input
 // if user presses enter then continue to the next strip

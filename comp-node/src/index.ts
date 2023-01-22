@@ -1,5 +1,12 @@
-import { bufferTime, map } from "rxjs";
-import { DETECTION_BUFFER_TIME, NODE_SOLID_DURATION_TEST } from "./config";
+import { bufferTime, map, share, timer } from "rxjs";
+import { singleBehaviourHandlers } from "./behaviour-handlers";
+import {
+  DETECTION_BUFFER_TIME,
+  nodeToStripsMap,
+  NODE_COLOR,
+  NODE_SOLID_DURATION,
+  NODE_SOLID_WIDTH,
+} from "./config";
 import { detection$Factory } from "./freenect";
 import {
   mapDetectionsToNodeList,
@@ -7,28 +14,32 @@ import {
 } from "./mapNodeListToSolidEvents";
 import { dispatchEvents } from "./serial";
 
+dispatchEvents({ type: "clear" });
+
 const SAVE_RESULTS = true;
 
-const detection$ = detection$Factory(SAVE_RESULTS, false)
-  .pipe(bufferTime(DETECTION_BUFFER_TIME), map(mapDetectionsToNodeList))
-  .subscribe((nodesToActivate) => {
-    // if it is single, then trigger single behaviour
-    // otherwise get all pair permutations
-    // group by pair key
-    // for each group, trigger refresh the behaviour observable
-    console.log(nodesToActivate);
-    const events = mapNodeListToSolidEvents(nodesToActivate);
-    events.forEach((e) => (e.duration = NODE_SOLID_DURATION_TEST));
-    dispatchEvents(events);
-  });
+const detection$ = detection$Factory(SAVE_RESULTS, false).pipe(
+  bufferTime(DETECTION_BUFFER_TIME),
+  map(mapDetectionsToNodeList),
+  share()
+);
+
+singleBehaviourHandlers.forEach((handler) => {
+  detection$.subscribe(handler);
+});
 
 // Create the constantly on behaviour
-// interval(NODE_SOLID_DURATION).subscribe(() => {
-//   const listOfAllNodes = Array.from(Array(nodeToStripsMap.length).keys());
-//   mapNodeListToSolidEvents(listOfAllNodes).forEach((event) => {
-//     dispatchEvents(event);
-//   });
-// });
+timer(0, NODE_SOLID_DURATION).subscribe(() => {
+  const listOfAllNodes = Array.from(Array(nodeToStripsMap.length).keys());
+  mapNodeListToSolidEvents(
+    listOfAllNodes,
+    NODE_COLOR,
+    NODE_SOLID_DURATION,
+    NODE_SOLID_WIDTH
+  ).forEach((event) => {
+    dispatchEvents(event);
+  });
+});
 
 // TESTS FOR PATH FINDING
 

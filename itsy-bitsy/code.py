@@ -8,7 +8,7 @@ import usb_cdc
 data_port = usb_cdc.data
 data_port.reset_input_buffer()
 
-BRIGHTNESS = 0.7
+BRIGHTNESS = 0.5
 
 # Setup strips
 strips = [NeoPixel(strip_config["pin"], strip_config["num_pixels"],
@@ -33,11 +33,11 @@ while True:
 
     for event in events:
         if event['type'] == 'message':
-            behaviours.append(create_message_behaviour(strips, behaviours,
-                                                       monotonic(), event))
+            behaviours.append({'type': 'message', 'fn': create_message_behaviour(strips, behaviours,
+                                                                                 monotonic(), event)})
         elif event['type'] == 'solid':
-            behaviours.append(create_solid_behaviour(strips, behaviours,
-                                                     monotonic(), event))
+            behaviours.append({'type': 'solid', 'fn': create_solid_behaviour(strips, behaviours,
+                                                                             monotonic(), event)})
         elif event['type'] == 'clear':
             behaviours = []
             for s in strips:
@@ -48,10 +48,17 @@ while True:
     for s in strips:
         s.fill((0, 0, 0))
 
-    # Apply behaviours to strips
+    # Apply solid behaviours
     for behaviour in behaviours:
-        if not behaviour(monotonic()):
-            behaviours.remove(behaviour)
+        if behaviour['type'] == 'solid':
+            if not behaviour['fn'](monotonic()):
+                behaviours.remove(behaviour)
+
+    # Apply message behaviours
+    for behaviour in behaviours:
+        if behaviour['type'] == 'message':
+            if not behaviour['fn'](monotonic()):
+                behaviours.remove(behaviour)
 
     # Push changes to strips
     for s in strips:
