@@ -28,6 +28,7 @@ export const loadStripsMap = () => {
 export function loadCameraMap() {
   return loadJson(NODE_TO_CAMERA_MAP_NAME) as {
     windowCam: { x: number; y: number }[];
+    corridorCam: { x: number; y: number }[];
   };
 }
 

@@ -9,7 +9,8 @@ import {
 import { getSegments, StripSegment } from "./path-finding";
 import { loadCameraMap, loadStripsMap } from "./utils";
 
-interface NanodetDetection {
+export interface NanodetDetection {
+  source: "windowCam" | "corridorCam";
   label: number;
   score: number;
   x1: number;
@@ -33,7 +34,7 @@ export function mapDetectionsToNodeList(
 
 function mapDetectionToNode(detection: NanodetDetection): number | null {
   let nodeIdxToReturn = null;
-  loadCameraMap().windowCam.forEach((node, nodeIdx) => {
+  loadCameraMap()[detection.source].forEach((node, nodeIdx) => {
     if (
       node.x > detection.x1 &&
       node.x < detection.x2 &&
