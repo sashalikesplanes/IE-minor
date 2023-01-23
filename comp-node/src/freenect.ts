@@ -10,7 +10,7 @@ export const detection$Factory = (saveResults: boolean, silent = false) => {
       "1",
       saveResults ? "1" : "0",
       "0",
-      "/Users/sasha/Documents/code/repos/IE-minor/images",
+      "/Users/sasha/Documents/code/repos/IE-minor/images/23-01-pm",
       SCORE_THRESHOLD.toString(),
       NMS_THRESHOLD.toString(),
     ],
