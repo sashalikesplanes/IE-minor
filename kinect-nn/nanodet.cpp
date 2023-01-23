@@ -2,6 +2,8 @@
 // Create by RangiLyu
 // 2020 / 10 / 2
 //
+// Modified by Alexander Kiselev for Interactive Environments Minor 2022-2023
+// 2023 / 01 / 23
 
 #include "nanodet.h"
 #include <cpu.h>
