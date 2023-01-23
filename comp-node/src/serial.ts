@@ -1,14 +1,8 @@
 import { SerialPort } from "serialport";
-import {
-  AbstractEvent,
-  ClearEvent,
-  EventUnion,
-  MessageEvent,
-  SolidEvent,
-} from "./events";
+import { EventUnion } from "./events";
 
 const port = new SerialPort({
-  path: "/dev/cu.usbmodem14203",
+  path: "/dev/cu.usbmodem141103",
   baudRate: 9600,
 });
 
