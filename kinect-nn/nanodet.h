@@ -101,7 +101,7 @@ typedef struct HeadInfo
     std::string cls_layer;
     std::string dis_layer;
     int stride;
-};
+} HeadInfo;
 
 struct CenterPrior
 {

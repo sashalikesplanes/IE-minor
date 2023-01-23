@@ -1,8 +1,6 @@
-cmake_minimum_required(VERSION 3.4.1)
-set(CMAKE_CXX_STANDARD 17)
+project(KinectNN)
 
-project(nanodet_demo)
-
+set(OpenCV_DIR "/usr/local/lib/cmake/opencv4/")
 find_package(OpenCV REQUIRED)
 
 set(ncnn_DIR "/Users/sasha/Documents/code/repos/ncnn/build/install/lib/cmake/ncnn/")
@@ -13,17 +11,24 @@ else()
     message("ncnn FOUND ")
 endif()
 
+set(freenect2_DIR "/usr/local/lib/cmake/freenect2/")
+find_package(freenect2 REQUIRED)
+
 include_directories(
     ${OpenCV_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
+    ${freenect2_INCLUDE_DIR}
+    ${libfreenect_INCLUDE_DIR}
 )
 
-
-add_executable(nanodet_demo main.cpp nanodet.cpp)
+add_executable(KinectNN main.cpp nanodet.cpp)
 
 target_link_libraries(
-    nanodet_demo
+    KinectNN
     ncnn
     ${OpenCV_LIBS}
+    ${freenect2_LIBRARIES}
+    "/usr/local/lib/libfreenect_sync.dylib"
 )
+message(STATUS "libfreenect_LIBRARIES include dir: ${freenect2_LIBRARIES}")
