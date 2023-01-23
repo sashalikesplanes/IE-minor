@@ -1,18 +1,29 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.4.1)
+set(CMAKE_CXX_STANDARD 17)
 
-# set the project name and version
-project(KinectNN VERSION 1.0)
+project(nanodet_demo)
 
-# specify the C++ standard
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+find_package(OpenCV REQUIRED)
 
-#add_subdirectory(MathFunctions)
+set(ncnn_DIR "/Users/sasha/Documents/code/repos/ncnn/build/install/lib/cmake/ncnn/")
+find_package(ncnn REQUIRED)
+if(NOT TARGET ncnn)
+    message(WARNING "ncnn NOT FOUND!  Please set ncnn_DIR environment variable")
+else()
+    message("ncnn FOUND ")
+endif()
 
-add_executable(KinectNN main.cpp)
+include_directories(
+    ${OpenCV_INCLUDE_DIRS}
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
+)
 
-target_include_directories(Tutorial PUBLIC
-                           "${PROJECT_BINARY_DIR}"
-#                           "${PROJECT_SOURCE_DIR}/MathFunctions"
-                           )
 
+add_executable(nanodet_demo main.cpp nanodet.cpp)
+
+target_link_libraries(
+    nanodet_demo
+    ncnn
+    ${OpenCV_LIBS}
+)
