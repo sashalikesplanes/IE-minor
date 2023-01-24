@@ -2,9 +2,11 @@ import {
   MESSAGE_COLOR,
   MESSAGE_DURATION_DIVIDER,
   MESSAGE_FADE_DURATION,
+  MESSAGE_FADE_IN_TIMEOUT_MULTIPLIER,
   MESSAGE_FADE_POWER,
   MESSAGE_INCLUDE_BACKWARDS,
   MESSAGE_PACE,
+  MESSAGE_SOUND_REL_PATH,
   MESSAGE_WIDTH,
   NODE_SOLID_WIDTH,
   SINGLE_COLOR,
@@ -20,9 +22,9 @@ import {
   mapNodesToEventsWithDuration,
   mapNodesToEventsWithPace,
 } from "./mappers";
-import { edges, getSegments } from "./path-finding";
+import { edges } from "./path-finding";
 import { dispatchEvents } from "./serial";
-import { playSound } from "./sounds";
+import { playSound, playSoundPerEvent } from "./sounds";
 import { loadStripsMap } from "./utils";
 
 export const singleBehaviourHandlers = new Map<
@@ -66,25 +68,32 @@ function createMessageBehaviourHandler(key: string) {
     MESSAGE_INCLUDE_BACKWARDS
   );
 
+  playSoundPerEvent(firstMessageEvent, MESSAGE_SOUND_REL_PATH);
+
   const totalDuration =
     getLinkedMessagesDurationInMs(firstMessageEvent) / MESSAGE_DURATION_DIVIDER;
 
-  // Also we want to create solid events with green at each node
-
-  const nodesInMessage = getSegments(startNode, endNode).flatMap((segment) => [
-    segment.start_node,
-    segment.end_node,
-  ]);
-  const fadeInOutMessageEvents = mapNodeListToConstantEvents(
-    // [...new Set(nodesInMessage)],
+  const fadeInMessageEvents = mapNodeListToConstantEvents(
     [startNode, endNode],
     MESSAGE_COLOR,
     totalDuration,
     NODE_SOLID_WIDTH,
     MESSAGE_FADE_DURATION,
-    MESSAGE_FADE_DURATION,
+    0,
     MESSAGE_FADE_POWER
   );
+
+  mapNodeListToConstantEvents(
+    [startNode, endNode],
+    MESSAGE_COLOR,
+    MESSAGE_FADE_DURATION,
+    NODE_SOLID_WIDTH,
+    0,
+    MESSAGE_FADE_DURATION,
+    MESSAGE_FADE_POWER
+  ).forEach((event, eventIdx) => {
+    fadeInMessageEvents[eventIdx].next = event;
+  });
 
   let lastDispatchTime = new Date().getTime() - totalDuration - 1;
 
@@ -95,8 +104,18 @@ function createMessageBehaviourHandler(key: string) {
         : `${nodePair[1]}-${nodePair[0]}`;
     if (currentKey !== key) return;
     if (new Date().getTime() - lastDispatchTime < totalDuration) return;
+    if (
+      new Date().getTime() - lastDispatchTime >
+      totalDuration * MESSAGE_FADE_IN_TIMEOUT_MULTIPLIER
+    ) {
+      dispatchEvents([...fadeInMessageEvents, firstMessageEvent]);
+    } else {
+      dispatchEvents([
+        ...fadeInMessageEvents.map((e) => ({ ...e, fadein_duration: 0 })),
+        firstMessageEvent,
+      ]);
+    }
     lastDispatchTime = new Date().getTime();
-    dispatchEvents([...fadeInOutMessageEvents, firstMessageEvent]);
   };
 }
 
