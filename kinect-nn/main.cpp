@@ -193,6 +193,9 @@ int main(int argc, char **argv)
             corridor_image_lock.unlock();
         }
 
+        if (input_image.empty())
+            continue;
+
         // Get results
         auto results = detector.resize_detect_and_draw(input_image, save_output_image, score_threshold, nms_threshold);
         std::vector<BoxInfo> dets = std::get<0>(results);
