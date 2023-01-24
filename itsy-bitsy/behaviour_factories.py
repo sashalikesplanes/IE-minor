@@ -10,10 +10,10 @@ def create_constant_behaviour(strips, behaviours, start_time, constant_config):
     power = constant_config["fade_power"]
 
     def get_intensity(elapsed_time):
-        if elapsed_time < fadein_duration:
+        if elapsed_time < fadein_duration and fadein_duration > 0:
             return elapsed_time ** power / fadein_duration ** power
-        elif elapsed_time > duration - fadeout_duration:
-            return (duration - elapsed_time) ** power / fadein_duration ** power
+        elif elapsed_time > duration - fadeout_duration and elapsed_time < duration and fadeout_duration > 0:
+            return (duration - elapsed_time) ** power / fadeout_duration ** power
         return 1
 
     def constant_behaviour(current_time):
@@ -30,6 +30,9 @@ def create_constant_behaviour(strips, behaviours, start_time, constant_config):
             )
 
         if elapsed_time > duration:
+            if constant_config["next"] is not None:
+                behaviours.append({'type': constant_config['type'], 'fn': create_constant_behaviour(
+                    strips, behaviours, monotonic(), constant_config["next"])})
             return False
         return True
 

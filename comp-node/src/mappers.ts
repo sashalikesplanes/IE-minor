@@ -93,6 +93,7 @@ export function mapNodeStripPixelToConstantEvent(
     fadein_duration: fadeInDuration,
     fadeout_duration: fadeOutDuration,
     fade_power: fadePower,
+    next: null,
   } satisfies Partial<ConstantEvent>;
 
   if (pixelIdx === null) {
