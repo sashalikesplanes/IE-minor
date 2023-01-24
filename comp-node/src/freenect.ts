@@ -1,21 +1,41 @@
 import { spawn } from "node:child_process";
+import { join } from "node:path";
 import { Observable } from "rxjs";
-import { NMS_THRESHOLD, SCORE_THRESHOLD } from "./config";
+import {
+  NMS_THRESHOLD,
+  SAVE_EACH_OUTPUT_IMAGE,
+  SAVE_OUTPUT_IMAGE,
+  SCORE_THRESHOLD,
+  USE_CORRIDOR_CAM,
+  USE_WINDOW_CAM,
+  WINDOW_CAM_PROBABILITY,
+} from "./config";
 import { NanodetDetection } from "./mappers";
 
-export const detection$Factory = (saveResults: boolean, silent = false) => {
+const KinectNNFlag = {
+  start_corridor: USE_CORRIDOR_CAM,
+  start_window: USE_WINDOW_CAM,
+  save_output_image: SAVE_OUTPUT_IMAGE,
+  save_each_output_image: SAVE_EACH_OUTPUT_IMAGE,
+};
+
+// conver KinectNNFlag to an integer
+const flag = Object.values(KinectNNFlag).reduce(
+  (acc, cur, idx) => (cur ? acc | (1 << idx) : acc),
+  0
+);
+
+export const detection$Factory = (silent: boolean) => {
   const detector = spawn(
-    "/Users/sasha/Documents/code/repos/libfreenect2/build/bin/Protonect",
+    join(__dirname, "..", "..", "kinect-nn", "build", "KinectNN"),
     [
-      "1",
-      saveResults ? "1" : "0",
-      "0",
-      "/Users/sasha/Documents/code/repos/IE-minor/images/23-01-pm",
+      flag.toString(),
       SCORE_THRESHOLD.toString(),
       NMS_THRESHOLD.toString(),
+      WINDOW_CAM_PROBABILITY.toString(),
     ],
     {
-      cwd: "/Users/sasha/Documents/code/repos/libfreenect2/build/bin",
+      cwd: join(__dirname, "..", "..", "kinect-nn", "build"),
     }
   );
 
@@ -38,7 +58,7 @@ export const detection$Factory = (saveResults: boolean, silent = false) => {
     });
 
     return () => {
-      detector.kill();
+      detector.kill("SIGINT"); // SIGINT will be handled in KinectNN
     };
   });
 };

@@ -43,8 +43,6 @@ loadStripsMap().forEach((_, nodeIdx) => {
   });
 });
 
-console.log(messageBehaviourHandlers.keys());
-
 function createMessageBehaviourHandler(key: string) {
   // create all the events to be dispatched and record the duration
   const startNode = parseInt(key.split("-")[0]);

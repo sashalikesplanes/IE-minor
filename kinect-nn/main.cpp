@@ -7,11 +7,13 @@
 #include <libfreenect/libfreenect_sync.h>
 #include <unistd.h>
 #include <iostream>
+#include <signal.h>
 #include <thread>
 #include <mutex>
 #include <random>
 #include "nanodet.h"
 
+// Hardcoded serial number for KinectV2 (window)
 std::string KINECTV2_SERIAL = "255315733947";
 
 // Global matricies for sharing image data between threads
@@ -22,6 +24,11 @@ std::mutex corridor_image_lock;
 
 // Global shutdown flag
 bool shutdown = false;
+void sigint_handler(int s)
+{
+    shutdown = true;
+    exit(0);
+}
 
 // Global Freenect2 objects
 libfreenect2::Freenect2 freenect2;
@@ -116,9 +123,10 @@ std::string make_dets_json(std::vector<BoxInfo> &dets, std::string source)
 int main(int argc, char **argv)
 {
     // [OPTIONS]
-    bool start_corridor = false;    // 0001
-    bool start_window = false;      // 0010
-    bool save_output_image = false; // 0100
+    bool start_corridor = false;         // 0001
+    bool start_window = false;           // 0010
+    bool save_output_image = false;      // 0100
+    bool save_each_output_image = false; // 1000
     float score_threshold = 0.5;
     float nms_threshold = 0.5;
     float window_prob = 0.5; // Probability of using window camera
@@ -137,14 +145,19 @@ int main(int argc, char **argv)
         start_window = true;
     if (flag & 4)
         save_output_image = true;
+    if (flag & 8)
+        save_each_output_image = true;
 
     score_threshold = std::stof(argv[2]);
     nms_threshold = std::stof(argv[3]);
     window_prob = std::stof(argv[4]);
     // [OPTIONS]
 
-    // Start the KinectV2
-    // MUST BE DONE on main thread
+    // Setup interrupt handler
+    shutdown = false;
+    signal(SIGINT, sigint_handler);
+
+    // Start the KinectV2, and attach listeners N.B MUST BE DONE on main thread
     dev = freenect2.openDevice(KINECTV2_SERIAL);
     if (dev == 0)
     {
@@ -161,7 +174,6 @@ int main(int argc, char **argv)
         std::thread corridor_thread(get_corridor_image);
         corridor_thread.detach();
     }
-
     if (start_window)
     {
         std::thread window_thread(get_window_image);
@@ -175,9 +187,11 @@ int main(int argc, char **argv)
     std::default_random_engine generator;
     std::uniform_real_distribution<float> random_probability(0.0, 1.0);
 
+    // Main loop
+    int i = 0;
     while (!shutdown)
     {
-        // Get the input image
+        // Get the input image from one of the cams
         cv::Mat input_image;
         float rand_prob = random_probability(generator);
         if (!latest_window_image.empty() && rand_prob < window_prob)
@@ -193,6 +207,7 @@ int main(int argc, char **argv)
             corridor_image_lock.unlock();
         }
 
+        // Skip if empty to avoid crashing
         if (input_image.empty())
             continue;
 
@@ -201,7 +216,7 @@ int main(int argc, char **argv)
         std::vector<BoxInfo> dets = std::get<0>(results);
         cv::Mat result_img = std::get<1>(results);
 
-        // Optionally save image
+        // Optionally save last image
         if (save_output_image && rand_prob < window_prob)
         {
             cv::imwrite("window_result.jpg", result_img);
@@ -210,6 +225,17 @@ int main(int argc, char **argv)
         {
             cv::imwrite("corridor_result.jpg", result_img);
         }
+
+        // Optionally save each image
+        if (save_each_output_image && rand_prob < window_prob)
+        {
+            cv::imwrite("window_result_" + std::to_string(i) + ".jpg", result_img);
+        }
+        else if (save_each_output_image)
+        {
+            cv::imwrite("corridor_result_" + std::to_string(i) + ".jpg", result_img);
+        }
+        i++;
 
         // Send results
         std::string json_dets;
@@ -226,6 +252,7 @@ int main(int argc, char **argv)
     }
 
     shutdown = true;
+    detector.~NanoDet();
     std::cout << "Shutting down..." << std::endl;
     return 0;
 }
