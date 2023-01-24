@@ -79,6 +79,34 @@ void get_corridor_image()
     freenect_sync_stop();
 }
 
+std::string make_dets_json(std::vector<BoxInfo> &dets, std::string source)
+{
+    std::string json = "JSON$$$[";
+    for (int i = 0; i < dets.size(); i++)
+    {
+        if (i != 0)
+            json += ", ";
+
+        json += "{\"source\": \"";
+        json += source;
+        json += "\", \"label\": ";
+        json += std::to_string(dets[i].label);
+        json += ", \"score\": ";
+        json += std::to_string(dets[i].score);
+        json += ", \"x1\": ";
+        json += std::to_string(dets[i].x1);
+        json += ", \"y1\": ";
+        json += std::to_string(dets[i].y1);
+        json += ", \"x2\": ";
+        json += std::to_string(dets[i].x2);
+        json += ", \"y2\": ";
+        json += std::to_string(dets[i].y2);
+        json += "}";
+    }
+    json += "]$$$";
+    return json;
+}
+
 int main(int argc, char **argv)
 {
     if (argc < 3)
@@ -111,7 +139,12 @@ int main(int argc, char **argv)
         window_thread.detach();
     }
 
-    NanoDet detector = NanoDet("./nanodet-train2.param", "./nanodet-train2.bin", true);
+    NanoDet detector = NanoDet("./nanodet.param", "./nanodet.bin", true);
+
+    auto results = detector.resize_detect_and_draw(stacked_ir_window, output_image, score_threshold, nms_threshold);
+    mat_lock_window.unlock();
+    std::vector<BoxInfo> dets = std::get<0>(results);
+    cv::Mat result_img = std::get<1>(results);
 
     int i = 0;
     while (i < 100)
