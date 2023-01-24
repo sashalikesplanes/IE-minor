@@ -15,6 +15,7 @@ export const AMBIENT_SOUND_REL_PATH = join("..", "assets", "ambient.wav");
 export const SINGLE_SOUND_REL_PATH = join("..", "assets", "fav0.wav");
 export const MESSAGE_SOUND_REL_PATH = join("..", "assets", "message-short.mp3");
 export const AMBIENT_VOLUME = 0.1;
+export const MESSAGE_VOLUME = 0.2;
 
 // Calibration settings
 export const CALIBRATION_SOLID_DURATION = 100_000; // ms

@@ -7,6 +7,7 @@ import {
   MESSAGE_INCLUDE_BACKWARDS,
   MESSAGE_PACE,
   MESSAGE_SOUND_REL_PATH,
+  MESSAGE_VOLUME,
   MESSAGE_WIDTH,
   NODE_SOLID_WIDTH,
   SINGLE_COLOR,
@@ -68,8 +69,6 @@ function createMessageBehaviourHandler(key: string) {
     MESSAGE_INCLUDE_BACKWARDS
   );
 
-  playSoundPerEvent(firstMessageEvent, MESSAGE_SOUND_REL_PATH);
-
   const totalDuration =
     getLinkedMessagesDurationInMs(firstMessageEvent) / MESSAGE_DURATION_DIVIDER;
 
@@ -104,6 +103,7 @@ function createMessageBehaviourHandler(key: string) {
         : `${nodePair[1]}-${nodePair[0]}`;
     if (currentKey !== key) return;
     if (new Date().getTime() - lastDispatchTime < totalDuration) return;
+
     if (
       new Date().getTime() - lastDispatchTime >
       totalDuration * MESSAGE_FADE_IN_TIMEOUT_MULTIPLIER
@@ -115,6 +115,12 @@ function createMessageBehaviourHandler(key: string) {
         firstMessageEvent,
       ]);
     }
+
+    playSoundPerEvent(
+      firstMessageEvent,
+      MESSAGE_SOUND_REL_PATH,
+      MESSAGE_VOLUME
+    );
     lastDispatchTime = new Date().getTime();
   };
 }

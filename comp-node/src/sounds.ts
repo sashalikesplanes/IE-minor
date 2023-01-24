@@ -15,15 +15,18 @@ export async function playSound(
 
 export async function playSoundPerEvent(
   event: MessageEvent,
-  relativePath: string
+  relativePath: string,
+  volume?: number
 ) {
   let durations: number[] = [];
-  do {
-    durations.push(getMessageDurationInMs(event));
-  } while (event.next);
+  let currentEvent: MessageEvent | null = event;
+  while (currentEvent) {
+    durations.push(getMessageDurationInMs(currentEvent));
+    currentEvent = currentEvent.next;
+  }
 
   for (let i = 0; i < durations.length; i++) {
-    playSound(relativePath, false);
+    playSound(relativePath, false, volume);
     await new Promise((resolve) => setTimeout(resolve, durations[i]));
   }
 }
