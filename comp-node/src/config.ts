@@ -1,3 +1,5 @@
+import { join } from "path";
+
 // KinectNN settings
 export const USE_CORRIDOR_CAM = true;
 export const USE_WINDOW_CAM = true;
@@ -39,5 +41,13 @@ export const SINGLE_DURATION = 1_000; // msg
 export const SINGLE_INCLUDE_BACKWARDS = false;
 
 // JSON names
-export const NODE_TO_STRIPS_MAP_NAME = "node-to-strips-map.json";
-export const NODE_TO_CAMERA_MAP_NAME = "node-to-camera-map.json";
+export const NODE_TO_STRIPS_MAP_REL_PATH = join(
+  "..",
+  "assets",
+  "node-to-strips-map.json"
+);
+export const NODE_TO_CAMERA_MAP_REL_PATH = join(
+  "..",
+  "assets",
+  "node-to-camera-map.json"
+);

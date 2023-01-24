@@ -5,10 +5,9 @@ import {
   NODE_COLOR,
   NODE_SOLID_DURATION,
   NODE_SOLID_WIDTH,
-  NODE_TO_CAMERA_MAP_NAME,
-  NODE_TO_STRIPS_MAP_NAME,
+  NODE_TO_CAMERA_MAP_REL_PATH,
+  NODE_TO_STRIPS_MAP_REL_PATH,
 } from "./config";
-import { SolidEvent } from "./events";
 import { detection$Factory } from "./freenect";
 import {
   mapNodeListToSolidEvents,
@@ -61,8 +60,9 @@ async function calibrateCameraMap() {
 
     const [x, y] = answer.split(",").map((v) => parseInt(v));
     nodeToCameraMap["window"][nodeIdx] = { x, y };
+    saveJson(NODE_TO_CAMERA_MAP_REL_PATH, nodeToCameraMap);
   }
-  saveJson(NODE_TO_CAMERA_MAP_NAME, nodeToCameraMap);
+  saveJson(NODE_TO_CAMERA_MAP_REL_PATH, nodeToCameraMap);
 
   async function drawCurrentNodeLocation(nodeIdx: number) {
     // try to open the latest result image
@@ -108,26 +108,20 @@ async function calibrateStripsMap() {
       const pixelIdx = stripPixels[j];
       const stripIdx = j;
 
-      let event: SolidEvent;
       if (pixelIdx === null) {
-        event = mapNodeStripPixelToSolidEvent(
-          50,
-          stripIdx,
-          [0, 255, 0],
-          CALIBRATION_SOLID_DURATION,
-          NODE_SOLID_WIDTH
-        );
-      } else {
-        event = mapNodeStripPixelToSolidEvent(
-          pixelIdx,
-          stripIdx,
-          NODE_COLOR,
-          CALIBRATION_SOLID_DURATION,
-          NODE_SOLID_WIDTH
-        );
+        continue;
       }
+      const event = mapNodeStripPixelToSolidEvent(
+        pixelIdx,
+        stripIdx,
+        NODE_COLOR,
+        CALIBRATION_SOLID_DURATION,
+        NODE_SOLID_WIDTH
+      );
 
       dispatchEvents({ type: "clear" });
+      console.log("Current node is ", nodeIdx);
+      console.log(event);
       dispatchEvents(event);
 
       const answer = (await askQuestion(
@@ -147,10 +141,11 @@ async function calibrateStripsMap() {
         }
         j--;
       }
+      await saveJson(NODE_TO_STRIPS_MAP_REL_PATH, nodeToStripsMap);
     }
   }
 
-  saveJson(NODE_TO_STRIPS_MAP_NAME, nodeToStripsMap);
+  await saveJson(NODE_TO_STRIPS_MAP_REL_PATH, nodeToStripsMap);
 }
 // calibrate();
 if (require.main === module) {
