@@ -865,6 +865,11 @@ finalhandler@1.2.0:
     statuses "2.0.1"
     unpipe "~1.0.0"
 
+find-exec@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/find-exec/-/find-exec-1.0.2.tgz#dd90e77ef50ab380bdb2f6cc508a386606f3d3bd"
+  integrity sha512-/cs763F5i7Nm/aG+hjBv2nJB/Bl2w0tnuZd5bbfcV+WYapn8T4ez3B87H6MgvsmdheDkitj/rHi557wvE+XylQ==
+
 follow-redirects@^1.0.0:
   version "1.15.2"
   resolved "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.15.2.tgz"
@@ -1441,6 +1446,13 @@ pixelmatch@^4.0.2:
   integrity sha512-J8B6xqiO37sU/gkcMglv6h5Jbd9xNER7aHzpfRdNmV4IbQBzBpe4l9XmbG+xPF/znacgu2jfEw+wHffaq/YkXA==
   dependencies:
     pngjs "^3.0.0"
+
+play-sound@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/play-sound/-/play-sound-1.1.5.tgz#5b44aa0ed59e2ec2f80710210ed783c79b6fb854"
+  integrity sha512-gbdF1iLNyL5r9Ne9YwARGMkrvfR4EL9G1ZLtFPLkI2tQt0kkHw5CHM5E6Gl/lDuuk/Uj/O5Q29Bi08jMK4egbA==
+  dependencies:
+    find-exec "1.0.2"
 
 pngjs@^3.0.0, pngjs@^3.3.3:
   version "3.4.0"
