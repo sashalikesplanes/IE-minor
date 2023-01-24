@@ -16,11 +16,8 @@ def create_solid_behaviour(strips, behaviours, start_time, solid_config):
         elapsed_time = current_time - start_time
         for pixel in solid_config["pixels"]:
             strips[pixel["strip_idx"]][pixel["pixel_idx"]] = (
-                strips[pixel["strip_idx"]][pixel["pixel_idx"]][0] +
                 solid_config["color"][0] * get_intensity(elapsed_time),
-                strips[pixel["strip_idx"]][pixel["pixel_idx"]][1] +
                 solid_config["color"][1] * get_intensity(elapsed_time),
-                strips[pixel["strip_idx"]][pixel["pixel_idx"]][2] +
                 solid_config["color"][2] * get_intensity(elapsed_time)
             )
 
