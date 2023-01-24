@@ -1,10 +1,10 @@
 import { MAX_PIXEL_INDEX, MIN_PIXEL_INDEX } from "./config";
 import {
+  ConstantEvent,
   linkEvents,
   MessageEvent,
   Pixel,
   setPaceForADuration,
-  SolidEvent,
 } from "./events";
 import { getSegments, StripSegment } from "./path-finding";
 import { loadCameraMap, loadStripsMap } from "./utils";
@@ -47,37 +47,56 @@ function mapDetectionToNode(detection: NanodetDetection): number | null {
   return nodeIdxToReturn;
 }
 
-export function mapNodeListToSolidEvents(
+export function mapNodeListToConstantEvents(
   nodes: number[] | number,
   color: number[],
   duration: number,
-  width: number
-): SolidEvent[] {
+  width: number,
+  fadeInDuration?: number,
+  fadeOutDuration?: number,
+  power?: number
+): ConstantEvent[] {
   if (!Array.isArray(nodes)) {
     nodes = [nodes];
   }
   return nodes.flatMap((nodeIdx) => {
     const pixelIdxPerStrip = loadStripsMap()[nodeIdx];
     return pixelIdxPerStrip.map((pixelIdx, stripIdx) =>
-      mapNodeStripPixelToSolidEvent(pixelIdx, stripIdx, color, duration, width)
+      mapNodeStripPixelToConstantEvent(
+        pixelIdx,
+        stripIdx,
+        color,
+        duration,
+        width,
+        fadeInDuration,
+        fadeOutDuration,
+        power
+      )
     );
   });
 }
 
-export function mapNodeStripPixelToSolidEvent(
+export function mapNodeStripPixelToConstantEvent(
   pixelIdx: number | null,
   stripIdx: number,
   color: number[],
   duration: number,
-  width: number
-): SolidEvent {
+  width: number,
+  fadeInDuration = 0,
+  fadeOutDuration = 0,
+  fadePower = 1
+): ConstantEvent {
+  const baseEvent = {
+    type: "constant",
+    color,
+    duration,
+    fadein_duration: fadeInDuration,
+    fadeout_duration: fadeOutDuration,
+    fade_power: fadePower,
+  } satisfies Partial<ConstantEvent>;
+
   if (pixelIdx === null) {
-    return {
-      type: "solid",
-      color: color,
-      duration: duration,
-      pixels: [],
-    };
+    return { ...baseEvent, pixels: [] };
   }
 
   // create an array of pixels based on node_width
@@ -93,12 +112,7 @@ export function mapNodeStripPixelToSolidEvent(
     pixels.push({ strip_idx: stripIdx, pixel_idx: pixelIdx + i });
   }
 
-  return {
-    type: "solid",
-    color: color,
-    duration: duration,
-    pixels,
-  };
+  return { ...baseEvent, pixels };
 }
 export function mapStripSegmentsToEvents(
   segments: StripSegment[],

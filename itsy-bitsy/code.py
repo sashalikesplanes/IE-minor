@@ -1,6 +1,6 @@
-from behaviour_factories import create_message_behaviour, create_solid_behaviour
+from behaviour_factories import create_message_behaviour, create_constant_behaviour
 from configs import strip_configs
-from time import monotonic, sleep
+from time import monotonic
 from neopixel import NeoPixel
 import json
 import usb_cdc
@@ -35,9 +35,9 @@ while True:
         if event['type'] == 'message':
             behaviours.append({'type': 'message', 'fn': create_message_behaviour(strips, behaviours,
                                                                                  monotonic(), event)})
-        elif event['type'] == 'solid':
-            behaviours.append({'type': 'solid', 'fn': create_solid_behaviour(strips, behaviours,
-                                                                             monotonic(), event)})
+        elif event['type'] == 'constant':
+            behaviours.append({'type': 'constant', 'fn': create_constant_behaviour(strips, behaviours,
+                                                                                 monotonic(), event)})
         elif event['type'] == 'clear':
             behaviours = []
             for s in strips:
@@ -50,7 +50,7 @@ while True:
 
     # Apply solid behaviours
     for behaviour in behaviours:
-        if behaviour['type'] == 'solid':
+        if behaviour['type'] == 'constant':
             if not behaviour['fn'](monotonic()):
                 behaviours.remove(behaviour)
 

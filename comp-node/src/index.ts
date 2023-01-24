@@ -4,6 +4,8 @@ import {
   singleBehaviourHandlers,
 } from "./behaviour-handlers";
 import {
+  AMBIENT_SOUND_REL_PATH,
+  AMBIENT_VOLUME,
   DETECTION_BUFFER_CREATION_INTERVAL,
   DETECTION_BUFFER_TIME_SPAN,
   NODE_COLOR,
@@ -12,20 +14,24 @@ import {
   SILENT_DETECTIONS,
 } from "./config";
 import { detection$Factory } from "./freenect";
-import { mapDetectionsToNodeList, mapNodeListToSolidEvents } from "./mappers";
+import {
+  mapDetectionsToNodeList,
+  mapNodeListToConstantEvents,
+} from "./mappers";
 import { dispatchEvents } from "./serial";
+import { playSound } from "./sounds";
 import { loadStripsMap } from "./utils";
 
 // Clear all current behaviours
 dispatchEvents({ type: "clear" });
 
 // Start ambient sound
-// playSound(AMBIENT_SOUND_REL_PATH, true);
+playSound(AMBIENT_SOUND_REL_PATH, true, AMBIENT_VOLUME);
 
 // Create the constantly on behaviour
 timer(0, NODE_SOLID_DURATION).subscribe(() => {
   const listOfAllNodes = Array.from(Array(loadStripsMap().length).keys());
-  mapNodeListToSolidEvents(
+  mapNodeListToConstantEvents(
     listOfAllNodes,
     NODE_COLOR,
     NODE_SOLID_DURATION,

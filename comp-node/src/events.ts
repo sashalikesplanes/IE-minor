@@ -5,10 +5,13 @@ export interface Pixel {
   pixel_idx: number;
 }
 
-export type SolidEvent = {
-  type: "solid";
+export type ConstantEvent = {
+  type: "constant";
   color: number[];
   duration: number;
+  fadein_duration: number;
+  fadeout_duration: number;
+  fade_power: number;
   pixels: Pixel[];
 };
 
@@ -29,7 +32,7 @@ export type ClearEvent = {
   type: "clear";
 };
 
-export type EventUnion = MessageEvent | ClearEvent | SolidEvent;
+export type EventUnion = MessageEvent | ClearEvent | ConstantEvent;
 
 export function linkEvents(events: MessageEvent[]): MessageEvent;
 export function linkEvents(events: AbstractEvent[]): AbstractEvent {

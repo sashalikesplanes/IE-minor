@@ -10,8 +10,8 @@ import {
 } from "./config";
 import { detection$Factory } from "./freenect";
 import {
-  mapNodeListToSolidEvents,
-  mapNodeStripPixelToSolidEvent,
+  mapNodeListToConstantEvents,
+  mapNodeStripPixelToConstantEvent,
 } from "./mappers";
 import { dispatchEvents } from "./serial";
 import { askQuestion, loadCameraMap, loadStripsMap, saveJson } from "./utils";
@@ -32,7 +32,7 @@ async function calibrateCameraMap() {
 
   for (let i = 0; i < loadStripsMap().length; i++) {
     const nodeIdx = i;
-    const events = mapNodeListToSolidEvents(
+    const events = mapNodeListToConstantEvents(
       nodeIdx,
       NODE_COLOR,
       NODE_SOLID_DURATION,
@@ -111,7 +111,7 @@ async function calibrateStripsMap() {
       if (pixelIdx === null) {
         continue;
       }
-      const event = mapNodeStripPixelToSolidEvent(
+      const event = mapNodeStripPixelToConstantEvent(
         pixelIdx,
         stripIdx,
         NODE_COLOR,

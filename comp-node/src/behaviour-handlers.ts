@@ -1,8 +1,12 @@
 import {
   MESSAGE_COLOR,
+  MESSAGE_DURATION_DIVIDER,
+  MESSAGE_FADE_DURATION,
+  MESSAGE_FADE_POWER,
   MESSAGE_INCLUDE_BACKWARDS,
   MESSAGE_PACE,
   MESSAGE_WIDTH,
+  NODE_SOLID_WIDTH,
   SINGLE_COLOR,
   SINGLE_INCLUDE_BACKWARDS,
   SINGLE_LED_DURATION,
@@ -12,10 +16,11 @@ import {
 } from "./config";
 import { getLinkedMessagesDurationInMs } from "./events";
 import {
+  mapNodeListToConstantEvents,
   mapNodesToEventsWithDuration,
   mapNodesToEventsWithPace,
 } from "./mappers";
-import { edges } from "./path-finding";
+import { edges, getSegments } from "./path-finding";
 import { dispatchEvents } from "./serial";
 import { playSound } from "./sounds";
 import { loadStripsMap } from "./utils";
@@ -51,7 +56,8 @@ function createMessageBehaviourHandler(key: string) {
   // create all the events to be dispatched and record the duration
   const startNode = parseInt(key.split("-")[0]);
   const endNode = parseInt(key.split("-")[1]);
-  const firstEvent = mapNodesToEventsWithPace(
+  const firstMessageEvent = mapNodesToEventsWithPace(
+    // Subsequent are linked
     startNode,
     endNode,
     MESSAGE_COLOR,
@@ -60,7 +66,26 @@ function createMessageBehaviourHandler(key: string) {
     MESSAGE_INCLUDE_BACKWARDS
   );
 
-  const totalDuration = getLinkedMessagesDurationInMs(firstEvent);
+  const totalDuration =
+    getLinkedMessagesDurationInMs(firstMessageEvent) / MESSAGE_DURATION_DIVIDER;
+
+  // Also we want to create solid events with green at each node
+
+  const nodesInMessage = getSegments(startNode, endNode).flatMap((segment) => [
+    segment.start_node,
+    segment.end_node,
+  ]);
+  const fadeInOutMessageEvents = mapNodeListToConstantEvents(
+    // [...new Set(nodesInMessage)],
+    [startNode, endNode],
+    MESSAGE_COLOR,
+    totalDuration,
+    NODE_SOLID_WIDTH,
+    MESSAGE_FADE_DURATION,
+    MESSAGE_FADE_DURATION,
+    MESSAGE_FADE_POWER
+  );
+
   let lastDispatchTime = new Date().getTime() - totalDuration - 1;
 
   return function (nodePair: number[]): void {
@@ -71,7 +96,7 @@ function createMessageBehaviourHandler(key: string) {
     if (currentKey !== key) return;
     if (new Date().getTime() - lastDispatchTime < totalDuration) return;
     lastDispatchTime = new Date().getTime();
-    dispatchEvents(firstEvent);
+    dispatchEvents([...fadeInOutMessageEvents, firstMessageEvent]);
   };
 }
 

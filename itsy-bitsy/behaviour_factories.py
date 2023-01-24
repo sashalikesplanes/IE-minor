@@ -1,31 +1,39 @@
 from math import sin, pi
 from time import monotonic
-
 from configs import NODE_COLOR
-
 from configs import INTENSITY_UPDATE_THRESHOLD
 
-
-def create_solid_behaviour(strips, behaviours, start_time, solid_config):
-    duration = (solid_config["duration"]) / 990
+def create_constant_behaviour(strips, behaviours, start_time, constant_config):
+    duration = (constant_config["duration"]) / 990
+    fadein_duration = (constant_config["fadein_duration"]) / 990
+    fadeout_duration = (constant_config["fadeout_duration"]) / 990
+    power = constant_config["fade_power"]
 
     def get_intensity(elapsed_time):
+        if elapsed_time < fadein_duration:
+            return elapsed_time ** power / fadein_duration ** power
+        elif elapsed_time > duration - fadeout_duration:
+            return (duration - elapsed_time) ** power / fadein_duration ** power
         return 1
 
-    def solid_behaviour(current_time):
+    def constant_behaviour(current_time):
         elapsed_time = current_time - start_time
-        for pixel in solid_config["pixels"]:
+        current_intensity = get_intensity(elapsed_time)
+        for pixel in constant_config["pixels"]:
             strips[pixel["strip_idx"]][pixel["pixel_idx"]] = (
-                solid_config["color"][0] * get_intensity(elapsed_time),
-                solid_config["color"][1] * get_intensity(elapsed_time),
-                solid_config["color"][2] * get_intensity(elapsed_time)
+                strips[pixel["strip_idx"]][pixel["pixel_idx"]][0] * (1 - current_intensity) +
+                constant_config["color"][0] * current_intensity,
+                strips[pixel["strip_idx"]][pixel["pixel_idx"]][1] * (1 - current_intensity) +
+                constant_config["color"][1] * current_intensity,
+                strips[pixel["strip_idx"]][pixel["pixel_idx"]][2] * (1 - current_intensity) +
+                constant_config["color"][2] * current_intensity
             )
 
         if elapsed_time > duration:
             return False
         return True
 
-    return solid_behaviour
+    return constant_behaviour
 
 
 def create_message_behaviour(strips, behaviours, start_time, message_config):
