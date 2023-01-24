@@ -22,7 +22,7 @@ export function loadJson(name: string) {
 }
 
 export const loadStripsMap = () => {
-  return loadJson(NODE_TO_STRIPS_MAP_NAME) as number[][];
+  return loadJson(NODE_TO_STRIPS_MAP_NAME) as (number | null)[][];
 };
 
 export function loadCameraMap() {

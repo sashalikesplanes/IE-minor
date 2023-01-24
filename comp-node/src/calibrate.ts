@@ -8,6 +8,7 @@ import {
   NODE_TO_CAMERA_MAP_NAME,
   NODE_TO_STRIPS_MAP_NAME,
 } from "./config";
+import { SolidEvent } from "./events";
 import { detection$Factory } from "./freenect";
 import {
   mapNodeListToSolidEvents,
@@ -107,24 +108,43 @@ async function calibrateStripsMap() {
       const pixelIdx = stripPixels[j];
       const stripIdx = j;
 
-      if (pixelIdx === null) continue;
+      let event: SolidEvent;
+      if (pixelIdx === null) {
+        event = mapNodeStripPixelToSolidEvent(
+          pixelIdx,
+          stripIdx,
+          [0, 255, 0],
+          CALIBRATION_SOLID_DURATION,
+          NODE_SOLID_WIDTH
+        );
+      } else {
+        event = mapNodeStripPixelToSolidEvent(
+          pixelIdx,
+          stripIdx,
+          NODE_COLOR,
+          CALIBRATION_SOLID_DURATION,
+          NODE_SOLID_WIDTH
+        );
+      }
 
-      const solidEvent = mapNodeStripPixelToSolidEvent(
-        pixelIdx,
-        stripIdx,
-        NODE_COLOR,
-        CALIBRATION_SOLID_DURATION,
-        NODE_SOLID_WIDTH
-      );
       dispatchEvents({ type: "clear" });
-      dispatchEvents(solidEvent);
+      dispatchEvents(event);
 
       const answer = (await askQuestion(
-        "Enter the offset then press enter or press enter to continue to next node: "
+        "Enter the offset then press enter OR enter 'null' if this one is not present OR press enter to continue to next node: "
       )) as string;
       if (answer !== "") {
+        if (answer === "null") {
+          nodeToStripsMap[nodeIdx][stripIdx] = null;
+          j--;
+          continue;
+        }
         // update the nodeToStripsMap
-        nodeToStripsMap[nodeIdx][stripIdx] = pixelIdx - parseInt(answer);
+        if (pixelIdx === null) {
+          nodeToStripsMap[nodeIdx][stripIdx] = parseInt(answer);
+        } else {
+          nodeToStripsMap[nodeIdx][stripIdx] = pixelIdx - parseInt(answer);
+        }
         j--;
       }
     }

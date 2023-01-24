@@ -34,12 +34,12 @@ nodeToStripsMap.forEach((startPixelIndices, nodeIndex) => {
       if (endIndex < MIN_PIXEL_INDEX) endIndex = MIN_PIXEL_INDEX;
       else if (endIndex > MAX_PIXEL_INDEX) endIndex = MAX_PIXEL_INDEX;
 
-      const distance = endIndex - startPixelIndex;
+      const distance = endIndex - (startPixelIndex as number);
       if (distance > 0 && distance < closestPositiveDistance) {
         closestPositiveDistance = distance;
         shortestPositiveSegment = {
           strip_idx: stripIndex,
-          start_idx: startPixelIndex,
+          start_idx: startPixelIndex as number, // already checked for null
           end_idx: endIndex,
           start_node: nodeIndex,
           end_node: otherNodeIdx,
@@ -50,7 +50,7 @@ nodeToStripsMap.forEach((startPixelIndices, nodeIndex) => {
         closestNegativeDistance = distance;
         shortestNegativeSegment = {
           strip_idx: stripIndex,
-          start_idx: startPixelIndex,
+          start_idx: startPixelIndex as number, // already checked for null
           end_idx: endIndex,
           start_node: nodeIndex,
           end_node: otherNodeIdx,
