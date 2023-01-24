@@ -18,8 +18,8 @@ import { askQuestion, loadCameraMap, loadStripsMap, saveJson } from "./utils";
 
 async function calibrate() {
   await calibrateStripsMap();
-  const SAVE_RESULTS = true;
-  const detection$ = detection$Factory(SAVE_RESULTS, true).subscribe();
+  const SILENT = true;
+  const detection$ = detection$Factory(SILENT).subscribe();
   await calibrateCameraMap();
   detection$.unsubscribe();
 }
@@ -44,8 +44,8 @@ async function calibrateCameraMap() {
 
     await drawCurrentNodeLocation(i);
     const currentPosition = [
-      nodeToCameraMap["windowCam"][nodeIdx].x,
-      nodeToCameraMap["windowCam"][nodeIdx].y,
+      nodeToCameraMap["window"][nodeIdx].x,
+      nodeToCameraMap["window"][nodeIdx].y,
     ].join(",");
     let answer = (await askQuestion(
       `Enter the x and y coordinates separated by a comma (NO SPACE!) (currently ${currentPosition}) or enter to skip: `
@@ -59,14 +59,14 @@ async function calibrateCameraMap() {
     }
 
     const [x, y] = answer.split(",").map((v) => parseInt(v));
-    nodeToCameraMap["windowCam"][nodeIdx] = { x, y };
+    nodeToCameraMap["window"][nodeIdx] = { x, y };
   }
   saveJson(NODE_TO_CAMERA_MAP_NAME, nodeToCameraMap);
 
   async function drawCurrentNodeLocation(nodeIdx: number) {
     // try to open the latest result image
-    const currentX = nodeToCameraMap["windowCam"][nodeIdx].x;
-    const currentY = nodeToCameraMap["windowCam"][nodeIdx].y;
+    const currentX = nodeToCameraMap["window"][nodeIdx].x;
+    const currentY = nodeToCameraMap["window"][nodeIdx].y;
     const basePath = join(__dirname, "..", "..", "images");
     let image;
 

@@ -26,18 +26,7 @@ const flag = Object.values(KinectNNFlag).reduce(
 );
 
 export const detection$Factory = (silent: boolean) => {
-  const detector = spawn(
-    join(__dirname, "..", "..", "kinect-nn", "build", "KinectNN"),
-    [
-      flag.toString(),
-      SCORE_THRESHOLD.toString(),
-      NMS_THRESHOLD.toString(),
-      WINDOW_CAM_PROBABILITY.toString(),
-    ],
-    {
-      cwd: join(__dirname, "..", "..", "kinect-nn", "build"),
-    }
-  );
+  let detector = createDetector();
 
   return new Observable<NanodetDetection>((subscriber) => {
     detector.stdout.on("data", (data) => {
@@ -57,8 +46,29 @@ export const detection$Factory = (silent: boolean) => {
       subscriber.error(data.toString());
     });
 
+    // Restart if we error
+    detector.on("error", (err) => {
+      subscriber.error(err);
+      detector = createDetector();
+    });
+
     return () => {
       detector.kill("SIGINT"); // SIGINT will be handled in KinectNN
     };
   });
+
+  function createDetector() {
+    return spawn(
+      join(__dirname, "..", "..", "kinect-nn", "build", "KinectNN"),
+      [
+        flag.toString(),
+        SCORE_THRESHOLD.toString(),
+        NMS_THRESHOLD.toString(),
+        WINDOW_CAM_PROBABILITY.toString(),
+      ],
+      {
+        cwd: join(__dirname, "..", "..", "kinect-nn", "build"),
+      }
+    );
+  }
 };
