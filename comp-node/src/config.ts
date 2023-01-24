@@ -13,6 +13,7 @@ export const SILENT_DETECTIONS = false;
 // Sound settings
 export const AMBIENT_SOUND_REL_PATH = join("..", "assets", "ambient.wav");
 export const SINGLE_SOUND_REL_PATH = join("..", "assets", "fav0.wav");
+export const MESSAGE_SOUND_REL_PATH = join("..", "assets", "message-short.mp3");
 export const AMBIENT_VOLUME = 0.1;
 
 // Calibration settings
@@ -41,6 +42,7 @@ export const MESSAGE_INCLUDE_BACKWARDS = true;
 export const MESSAGE_DURATION_DIVIDER = 1; // 1 / (X * numberOfSegments)
 export const MESSAGE_FADE_DURATION = 420; // ms
 export const MESSAGE_FADE_POWER = 2; // higher is more aggressive
+export const MESSAGE_FADE_IN_TIMEOUT_MULTIPLIER = 1.05;
 
 // Single behavior settings
 export const SINGLE_COLOR = [100, 50, 0];

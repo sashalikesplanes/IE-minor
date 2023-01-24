@@ -13,6 +13,7 @@ export type ConstantEvent = {
   fadeout_duration: number;
   fade_power: number;
   pixels: Pixel[];
+  next: ConstantEvent | null;
 };
 
 export interface AbstractEvent {
