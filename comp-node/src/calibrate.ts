@@ -111,7 +111,7 @@ async function calibrateStripsMap() {
       let event: SolidEvent;
       if (pixelIdx === null) {
         event = mapNodeStripPixelToSolidEvent(
-          pixelIdx,
+          50,
           stripIdx,
           [0, 255, 0],
           CALIBRATION_SOLID_DURATION,
