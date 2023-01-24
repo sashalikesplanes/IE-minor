@@ -6,14 +6,15 @@ const events_1 = require("./events");
 const mappers_1 = require("./mappers");
 const path_finding_1 = require("./path-finding");
 const serial_1 = require("./serial");
+const utils_1 = require("./utils");
 exports.singleBehaviourHandlers = new Map();
-(0, config_1.loadStripsMap)().forEach((_, nodeIdx) => {
+(0, utils_1.loadStripsMap)().forEach((_, nodeIdx) => {
     exports.singleBehaviourHandlers.set(nodeIdx, createSingleBehaviourHandler(nodeIdx));
 });
 exports.messageBehaviourHandlers = new Map();
 // for each pair of nodes, create a handler
-(0, config_1.loadStripsMap)().forEach((_, nodeIdx) => {
-    (0, config_1.loadStripsMap)().forEach((_, otherNodeIdx) => {
+(0, utils_1.loadStripsMap)().forEach((_, nodeIdx) => {
+    (0, utils_1.loadStripsMap)().forEach((_, otherNodeIdx) => {
         if (otherNodeIdx <= nodeIdx)
             return;
         const key = nodeIdx < otherNodeIdx
@@ -22,7 +23,6 @@ exports.messageBehaviourHandlers = new Map();
         exports.messageBehaviourHandlers.set(key, createMessageBehaviourHandler(key));
     });
 });
-console.log(exports.messageBehaviourHandlers.keys());
 function createMessageBehaviourHandler(key) {
     // create all the events to be dispatched and record the duration
     const startNode = parseInt(key.split("-")[0]);

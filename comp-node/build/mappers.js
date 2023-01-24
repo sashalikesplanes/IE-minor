@@ -4,6 +4,7 @@ exports.mapNodesToEventsWithDuration = exports.mapNodesToEventsWithPace = export
 const config_1 = require("./config");
 const events_1 = require("./events");
 const path_finding_1 = require("./path-finding");
+const utils_1 = require("./utils");
 function mapDetectionsToNodeList(detections) {
     const nodeList = [];
     detections.forEach((detection) => {
@@ -17,7 +18,7 @@ function mapDetectionsToNodeList(detections) {
 exports.mapDetectionsToNodeList = mapDetectionsToNodeList;
 function mapDetectionToNode(detection) {
     let nodeIdxToReturn = null;
-    (0, config_1.loadCameraMap)().windowCam.forEach((node, nodeIdx) => {
+    (0, utils_1.loadCameraMap)()[detection.source].forEach((node, nodeIdx) => {
         if (node.x > detection.x1 &&
             node.x < detection.x2 &&
             node.y > detection.y1 &&
@@ -32,7 +33,7 @@ function mapNodeListToSolidEvents(nodes, color, duration, width) {
         nodes = [nodes];
     }
     return nodes.flatMap((nodeIdx) => {
-        const pixelIdxPerStrip = (0, config_1.loadStripsMap)()[nodeIdx];
+        const pixelIdxPerStrip = (0, utils_1.loadStripsMap)()[nodeIdx];
         return pixelIdxPerStrip.map((pixelIdx, stripIdx) => mapNodeStripPixelToSolidEvent(pixelIdx, stripIdx, color, duration, width));
     });
 }

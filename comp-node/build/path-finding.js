@@ -2,8 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getSegments = exports.edges = void 0;
 const config_1 = require("./config");
+const utils_1 = require("./utils");
 exports.edges = [];
-(0, config_1.loadStripsMap)().forEach((startPixelIndices, nodeIndex) => {
+const nodeToStripsMap = (0, utils_1.loadStripsMap)();
+nodeToStripsMap.forEach((startPixelIndices, nodeIndex) => {
     startPixelIndices.forEach((startPixelIndex, stripIndex) => {
         if (startPixelIndex === null)
             return;
@@ -15,7 +17,7 @@ exports.edges = [];
         let closestNegativeDistance = -1000000;
         let shortestPositiveSegment = null;
         let shortestNegativeSegment = null;
-        (0, config_1.loadStripsMap)().forEach((endPixelIndices, otherNodeIdx) => {
+        nodeToStripsMap.forEach((endPixelIndices, otherNodeIdx) => {
             if (otherNodeIdx === nodeIndex)
                 return;
             let endIndex = endPixelIndices[stripIndex];
@@ -62,9 +64,9 @@ function findEdge(startNode, endNode) {
     return null;
 }
 function getShortestPath(startNode, endNode) {
-    const dist = new Array((0, config_1.loadStripsMap)().length).fill(1000000);
-    const prev = new Array((0, config_1.loadStripsMap)().length).fill(null);
-    const Q = new Array((0, config_1.loadStripsMap)().length).fill(0).map((_, i) => i);
+    const dist = new Array((0, utils_1.loadStripsMap)().length).fill(1000000);
+    const prev = new Array((0, utils_1.loadStripsMap)().length).fill(null);
+    const Q = new Array((0, utils_1.loadStripsMap)().length).fill(0).map((_, i) => i);
     dist[startNode] = 0;
     while (Q.length > 0) {
         const distancesInQ = Q.map((node) => [node, dist[node]]);

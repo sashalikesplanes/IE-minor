@@ -6,9 +6,9 @@
   "scripts": {
     "start:dev": "npx nodemon",
     "calibrate": "npx ts-node ./src/calibrate.ts",
-    "build": "rimraf ./build && tsc",
-    "start": "yarn build && node ./build/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rimraf ./build && tsc && cp ./src/*.json ./build",
+    "start": "node ./build/index.js",
+    "build:start": "npm run build && npm run start"
   },
   "keywords": [],
   "author": "",
