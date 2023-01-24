@@ -19,6 +19,9 @@ import { loadStripsMap } from "./utils";
 // Clear all current behaviours
 dispatchEvents({ type: "clear" });
 
+// Start ambient sound
+// playSound(AMBIENT_SOUND_REL_PATH, true);
+
 // Create the constantly on behaviour
 timer(0, NODE_SOLID_DURATION).subscribe(() => {
   const listOfAllNodes = Array.from(Array(loadStripsMap().length).keys());

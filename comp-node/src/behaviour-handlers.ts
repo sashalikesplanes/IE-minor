@@ -4,8 +4,10 @@ import {
   MESSAGE_PACE,
   MESSAGE_WIDTH,
   SINGLE_COLOR,
-  SINGLE_DURATION,
   SINGLE_INCLUDE_BACKWARDS,
+  SINGLE_LED_DURATION,
+  SINGLE_SOUND_MESSAGES,
+  SINGLE_SOUND_REL_PATH,
   SINGLE_WIDTH,
 } from "./config";
 import { getLinkedMessagesDurationInMs } from "./events";
@@ -15,6 +17,7 @@ import {
 } from "./mappers";
 import { edges } from "./path-finding";
 import { dispatchEvents } from "./serial";
+import { playSound } from "./sounds";
 import { loadStripsMap } from "./utils";
 
 export const singleBehaviourHandlers = new Map<
@@ -22,6 +25,7 @@ export const singleBehaviourHandlers = new Map<
   (nodeList: number[]) => void
 >();
 
+// For each node, create a handler
 loadStripsMap().forEach((_, nodeIdx) => {
   singleBehaviourHandlers.set(nodeIdx, createSingleBehaviourHandler(nodeIdx));
 });
@@ -31,7 +35,7 @@ export const messageBehaviourHandlers = new Map<
   (nodePair: number[]) => void
 >();
 
-// for each pair of nodes, create a handler
+// For each pair of nodes, create a handler
 loadStripsMap().forEach((_, nodeIdx) => {
   loadStripsMap().forEach((_, otherNodeIdx) => {
     if (otherNodeIdx <= nodeIdx) return;
@@ -57,8 +61,8 @@ function createMessageBehaviourHandler(key: string) {
   );
 
   const totalDuration = getLinkedMessagesDurationInMs(firstEvent);
-
   let lastDispatchTime = new Date().getTime() - totalDuration - 1;
+
   return function (nodePair: number[]): void {
     const currentKey =
       nodePair[0] < nodePair[1]
@@ -81,19 +85,29 @@ function createSingleBehaviourHandler(
       edge.end_node,
       SINGLE_COLOR,
       SINGLE_WIDTH,
-      SINGLE_DURATION,
+      SINGLE_LED_DURATION,
       SINGLE_INCLUDE_BACKWARDS
     )
   );
 
-  let lastDispatchTime = new Date().getTime() - SINGLE_DURATION - 1;
+  let lastMessageTime = new Date().getTime() - SINGLE_LED_DURATION - 1;
+  let lastSoundTime =
+    new Date().getTime() - SINGLE_LED_DURATION * SINGLE_SOUND_MESSAGES - 1;
 
   return function (nodeList: number[]): void {
     if (nodeList.length !== 1 || nodeList[0] !== nodeIdx) return;
-    console.warn("this is the single behaviour handler", nodeList);
-    if (new Date().getTime() - lastDispatchTime < SINGLE_DURATION) return;
-    lastDispatchTime = new Date().getTime();
-    console.warn("dispatching events", events);
-    dispatchEvents(events);
+
+    if (
+      new Date().getTime() - lastSoundTime >
+      SINGLE_LED_DURATION * SINGLE_SOUND_MESSAGES
+    ) {
+      lastSoundTime = new Date().getTime();
+      playSound(SINGLE_SOUND_REL_PATH, false);
+    }
+
+    if (new Date().getTime() - lastMessageTime > SINGLE_LED_DURATION) {
+      lastMessageTime = new Date().getTime();
+      dispatchEvents(events);
+    }
   };
 }

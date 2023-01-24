@@ -10,6 +10,10 @@ export const SCORE_THRESHOLD = 0.3; // lower allows for less confident detection
 export const WINDOW_CAM_PROBABILITY = 0.5; // probability of applying NN to window cam
 export const SILENT_DETECTIONS = false;
 
+// Sound settings
+export const AMBIENT_SOUND_REL_PATH = join("..", "assets", "ambient.wav");
+export const SINGLE_SOUND_REL_PATH = join("..", "assets", "fav0.wav");
+
 // Calibration settings
 export const CALIBRATION_SOLID_DURATION = 100_000; // ms
 
@@ -37,7 +41,8 @@ export const MESSAGE_INCLUDE_BACKWARDS = true;
 // Single behavior settings
 export const SINGLE_COLOR = [100, 50, 0];
 export const SINGLE_WIDTH = 3; // pixels
-export const SINGLE_DURATION = 1_000; // msg
+export const SINGLE_LED_DURATION = 1_000; // ms
+export const SINGLE_SOUND_MESSAGES = 3; // Send at most once every X messages
 export const SINGLE_INCLUDE_BACKWARDS = false;
 
 // JSON names
