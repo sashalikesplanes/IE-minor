@@ -3,5 +3,4 @@ __pycache__
 .python-version
 .ipynb_checkpoints
 node_modules
-build
 ```

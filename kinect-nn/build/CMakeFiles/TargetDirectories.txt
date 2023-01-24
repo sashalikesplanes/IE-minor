@@ -1,0 +1,3 @@
+/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/KinectNN.dir
+/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/edit_cache.dir
+/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/rebuild_cache.dir
