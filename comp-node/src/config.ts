@@ -5,9 +5,9 @@ export const USE_CORRIDOR_CAM = true;
 export const USE_WINDOW_CAM = true;
 export const SAVE_OUTPUT_IMAGE = true;
 export const SAVE_EACH_OUTPUT_IMAGE = false;
-export const NMS_THRESHOLD = 0.9; // higher allows for more detectins of same hand
+export const NMS_THRESHOLD = 0.5; // higher allows for more detectins of same hand
 export const SCORE_THRESHOLD = 0.3; // lower allows for less confident detections
-export const WINDOW_CAM_PROBABILITY = 0.5; // probability of applying NN to window cam
+export const WINDOW_CAM_PROBABILITY = 0.6; // probability of applying NN to window cam
 export const SILENT_DETECTIONS = false;
 
 // Sound settings
@@ -25,7 +25,7 @@ export const MIN_PIXEL_INDEX = 0;
 export const MAX_PIXEL_INDEX = 99;
 
 // Detection buffer settings
-export const DETECTION_BUFFER_TIME_SPAN = 500; // ms
+export const DETECTION_BUFFER_TIME_SPAN = 250; // ms
 export const DETECTION_BUFFER_CREATION_INTERVAL = 50; // ms
 
 // Solid behavior settings
