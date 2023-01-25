@@ -43,6 +43,10 @@ export const detection$Factory = (silent: boolean) => {
     });
 
     detector.stderr.on("data", (data) => {
+      if (data.toString().includes("RESTART")) {
+        detector.kill("SIGINT");
+        detector = createDetector();
+      }
       subscriber.error(data.toString());
     });
 

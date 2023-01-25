@@ -22,27 +22,28 @@ const utils_1 = require("./utils");
 function calibrate() {
     return __awaiter(this, void 0, void 0, function* () {
         yield calibrateStripsMap();
-        const SILENT = true;
+        const SILENT = false;
         const detection$ = (0, freenect_1.detection$Factory)(SILENT).subscribe();
-        yield calibrateCameraMap();
+        yield calibrateCameraMap("corridor");
+        yield calibrateCameraMap("window");
         detection$.unsubscribe();
     });
 }
-function calibrateCameraMap() {
+function calibrateCameraMap(camera) {
     return __awaiter(this, void 0, void 0, function* () {
         if ((yield (0, utils_1.askQuestion)("Press 0 to skip camera map calibration: ")) === "0")
             return;
         const nodeToCameraMap = (0, utils_1.loadCameraMap)();
         for (let i = 0; i < (0, utils_1.loadStripsMap)().length; i++) {
             const nodeIdx = i;
-            const events = (0, mappers_1.mapNodeListToSolidEvents)(nodeIdx, config_1.NODE_COLOR, config_1.NODE_SOLID_DURATION, config_1.NODE_SOLID_WIDTH);
+            const events = (0, mappers_1.mapNodeListToConstantEvents)(nodeIdx, config_1.NODE_COLOR, config_1.NODE_SOLID_DURATION, config_1.NODE_SOLID_WIDTH);
             events.forEach((e) => (e.duration = config_1.CALIBRATION_SOLID_DURATION));
             (0, serial_1.dispatchEvents)({ type: "clear" });
             (0, serial_1.dispatchEvents)(events);
             yield drawCurrentNodeLocation(i);
             const currentPosition = [
-                nodeToCameraMap["window"][nodeIdx].x,
-                nodeToCameraMap["window"][nodeIdx].y,
+                nodeToCameraMap[camera][nodeIdx].x,
+                nodeToCameraMap[camera][nodeIdx].y,
             ].join(",");
             let answer = (yield (0, utils_1.askQuestion)(`Enter the x and y coordinates separated by a comma (NO SPACE!) (currently ${currentPosition}) or enter to skip: `));
             if (answer === "")
@@ -52,19 +53,20 @@ function calibrateCameraMap() {
                 yield drawCurrentNodeLocation(i);
             }
             const [x, y] = answer.split(",").map((v) => parseInt(v));
-            nodeToCameraMap["window"][nodeIdx] = { x, y };
+            nodeToCameraMap[camera][nodeIdx] = { x, y };
+            yield (0, utils_1.saveJson)(config_1.NODE_TO_CAMERA_MAP_REL_PATH, nodeToCameraMap);
         }
-        (0, utils_1.saveJson)(config_1.NODE_TO_CAMERA_MAP_NAME, nodeToCameraMap);
+        yield (0, utils_1.saveJson)(config_1.NODE_TO_CAMERA_MAP_REL_PATH, nodeToCameraMap);
         function drawCurrentNodeLocation(nodeIdx) {
             return __awaiter(this, void 0, void 0, function* () {
                 // try to open the latest result image
-                const currentX = nodeToCameraMap["window"][nodeIdx].x;
-                const currentY = nodeToCameraMap["window"][nodeIdx].y;
-                const basePath = (0, path_1.join)(__dirname, "..", "..", "images");
+                const currentX = nodeToCameraMap[camera][nodeIdx].x;
+                const currentY = nodeToCameraMap[camera][nodeIdx].y;
+                const basePath = (0, path_1.join)(__dirname, "..", "..", "kinect-nn", "build");
                 let image;
                 while (!image) {
                     try {
-                        image = yield jimp_1.default.read((0, path_1.join)(basePath, "result.jpg"));
+                        image = yield jimp_1.default.read((0, path_1.join)(basePath, camera + "_result.jpg"));
                     }
                     catch (e) {
                         console.error(e);
@@ -98,20 +100,34 @@ function calibrateStripsMap() {
             for (let j = 0; j < stripPixels.length; j++) {
                 const pixelIdx = stripPixels[j];
                 const stripIdx = j;
-                if (pixelIdx === null)
+                if (pixelIdx === null) {
                     continue;
-                const solidEvent = (0, mappers_1.mapNodeStripPixelToSolidEvent)(pixelIdx, stripIdx, config_1.NODE_COLOR, config_1.CALIBRATION_SOLID_DURATION, config_1.NODE_SOLID_WIDTH);
+                }
+                const event = (0, mappers_1.mapNodeStripPixelToConstantEvent)(pixelIdx, stripIdx, config_1.NODE_COLOR, config_1.CALIBRATION_SOLID_DURATION, config_1.NODE_SOLID_WIDTH);
                 (0, serial_1.dispatchEvents)({ type: "clear" });
-                (0, serial_1.dispatchEvents)(solidEvent);
-                const answer = (yield (0, utils_1.askQuestion)("Enter the offset then press enter or press enter to continue to next node: "));
+                console.log("Current node is ", nodeIdx);
+                console.log(event);
+                (0, serial_1.dispatchEvents)(event);
+                const answer = (yield (0, utils_1.askQuestion)("Enter the offset then press enter OR enter 'null' if this one is not present OR press enter to continue to next node: "));
                 if (answer !== "") {
+                    if (answer === "null") {
+                        nodeToStripsMap[nodeIdx][stripIdx] = null;
+                        j--;
+                        continue;
+                    }
                     // update the nodeToStripsMap
-                    nodeToStripsMap[nodeIdx][stripIdx] = pixelIdx - parseInt(answer);
+                    if (pixelIdx === null) {
+                        nodeToStripsMap[nodeIdx][stripIdx] = parseInt(answer);
+                    }
+                    else {
+                        nodeToStripsMap[nodeIdx][stripIdx] = pixelIdx - parseInt(answer);
+                    }
                     j--;
                 }
+                yield (0, utils_1.saveJson)(config_1.NODE_TO_STRIPS_MAP_REL_PATH, nodeToStripsMap);
             }
         }
-        (0, utils_1.saveJson)(config_1.NODE_TO_STRIPS_MAP_NAME, nodeToStripsMap);
+        yield (0, utils_1.saveJson)(config_1.NODE_TO_STRIPS_MAP_REL_PATH, nodeToStripsMap);
     });
 }
 // calibrate();

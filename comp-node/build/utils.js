@@ -33,11 +33,11 @@ function loadJson(name) {
 }
 exports.loadJson = loadJson;
 const loadStripsMap = () => {
-    return loadJson(config_1.NODE_TO_STRIPS_MAP_NAME);
+    return loadJson(config_1.NODE_TO_STRIPS_MAP_REL_PATH);
 };
 exports.loadStripsMap = loadStripsMap;
 function loadCameraMap() {
-    return loadJson(config_1.NODE_TO_CAMERA_MAP_NAME);
+    return loadJson(config_1.NODE_TO_CAMERA_MAP_REL_PATH);
 }
 exports.loadCameraMap = loadCameraMap;
 function saveJson(name, object) {

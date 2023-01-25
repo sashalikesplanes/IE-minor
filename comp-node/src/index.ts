@@ -22,7 +22,7 @@ import {
   mapNodeListToConstantEvents,
 } from "./mappers";
 import { dispatchEvents } from "./serial";
-import { playSound } from "./sounds";
+import { playNarration, playSound } from "./sounds";
 import { loadStripsMap } from "./utils";
 
 // Clear all current behaviours
@@ -30,6 +30,7 @@ dispatchEvents({ type: "clear" });
 
 // Start ambient sound
 playSound(AMBIENT_SOUND_REL_PATH, true, AMBIENT_VOLUME);
+playNarration();
 
 // Too many events for it to keep track
 // edges.forEach((edge) => {

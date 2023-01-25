@@ -164,7 +164,7 @@ int main(int argc, char **argv)
     dev = freenect2.openDevice(KINECTV2_SERIAL);
     if (dev == 0)
     {
-        std::cout << "Failure connecting to kinect v2" << std::endl;
+        std::cerr << "RESTART" << std::endl;
         shutdown = true;
         return -1;
     }

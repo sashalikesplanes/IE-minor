@@ -16,6 +16,7 @@ import {
   SINGLE_LED_DURATION,
   SINGLE_SOUND_MESSAGES,
   SINGLE_SOUND_REL_PATH,
+  SINGLE_VOLUME,
   SINGLE_WIDTH,
 } from "./config";
 import { getLinkedMessagesDurationInMs } from "./events";
@@ -176,7 +177,7 @@ function createSingleBehaviourHandler(
       SINGLE_LED_DURATION * SINGLE_SOUND_MESSAGES
     ) {
       lastSoundTime = new Date().getTime();
-      playSound(SINGLE_SOUND_REL_PATH, false);
+      playSound(SINGLE_SOUND_REL_PATH, false, SINGLE_VOLUME);
     }
 
     if (new Date().getTime() - lastMessageTime > SINGLE_LED_DURATION) {

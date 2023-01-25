@@ -14,7 +14,8 @@ const serialport_1 = require("serialport");
 const getSerialPort = () => __awaiter(void 0, void 0, void 0, function* () {
     const portList = yield serialport_1.SerialPort.list();
     const portNumber = portList
-        .filter((p) => p.path.includes("tty.usbmodem"))[0]
+        .filter((p) => p.path.includes("tty.usbmodem"))
+        .filter((p) => p.path[p.path.length - 1] === "3")[0]
         .path.split("tty.usbmodem")[1];
     console.log(portNumber);
     return new serialport_1.SerialPort({

@@ -28,6 +28,10 @@ const detection$Factory = (silent) => {
             }
         });
         detector.stderr.on("data", (data) => {
+            if (data.toString().includes("RESTART")) {
+                detector.kill("SIGINT");
+                detector = createDetector();
+            }
             subscriber.error(data.toString());
         });
         // Restart if we error

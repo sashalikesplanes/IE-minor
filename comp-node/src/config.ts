@@ -6,16 +6,17 @@ export const USE_WINDOW_CAM = true;
 export const SAVE_OUTPUT_IMAGE = true;
 export const SAVE_EACH_OUTPUT_IMAGE = false;
 export const NMS_THRESHOLD = 0.5; // higher allows for more detectins of same hand
-export const SCORE_THRESHOLD = 0.3; // lower allows for less confident detections
+export const SCORE_THRESHOLD = 0.4; // lower allows for less confident detections
 export const WINDOW_CAM_PROBABILITY = 0.6; // probability of applying NN to window cam
 export const SILENT_DETECTIONS = false;
 
 // Sound settings
 export const AMBIENT_SOUND_REL_PATH = join("..", "assets", "ambient.wav");
-export const SINGLE_SOUND_REL_PATH = join("..", "assets", "fav0.wav");
-export const MESSAGE_SOUND_REL_PATH = join("..", "assets", "message-short.mp3");
+export const SINGLE_SOUND_REL_PATH = join("..", "assets", "individual.mp3");
+export const MESSAGE_SOUND_REL_PATH = join("..", "assets", "connectionnn.mp3");
 export const AMBIENT_VOLUME = 0.1;
-export const MESSAGE_VOLUME = 0.2;
+export const MESSAGE_VOLUME = 0.75;
+export const SINGLE_VOLUME = 0.75;
 
 // Calibration settings
 export const CALIBRATION_SOLID_DURATION = 100_000; // ms
