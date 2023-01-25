@@ -8,8 +8,11 @@ import {
   AMBIENT_VOLUME,
   DETECTION_BUFFER_CREATION_INTERVAL,
   DETECTION_BUFFER_TIME_SPAN,
+  MESSAGE_FADE_POWER,
   NODE_COLOR,
-  NODE_SOLID_DURATION,
+  NODE_SOLID_FADE_DURATION,
+  NODE_SOLID_MAX_INTERVAL,
+  NODE_SOLID_MIN_INTERVAL,
   NODE_SOLID_WIDTH,
   SILENT_DETECTIONS,
 } from "./config";
@@ -28,18 +31,58 @@ dispatchEvents({ type: "clear" });
 // Start ambient sound
 playSound(AMBIENT_SOUND_REL_PATH, true, AMBIENT_VOLUME);
 
-// Create the constantly on behaviour
-timer(0, NODE_SOLID_DURATION).subscribe(() => {
-  const listOfAllNodes = Array.from(Array(loadStripsMap().length).keys());
-  mapNodeListToConstantEvents(
-    listOfAllNodes,
+// Too many events for it to keep track
+// edges.forEach((edge) => {
+//   // for each edge create an infibute rabdin observable
+//   const randomInterval =
+//     PASSIVE_MESSAGE_MIN_INTERVAL + Math.random() * PASSIVE_MESSAGE_MAX_INTERVAL;
+//   range(0, 1000000)
+//     .pipe(concatMap((i) => of(i).pipe(delay(randomInterval))))
+//     .subscribe(() => {
+//       // for each interval, create a random event
+//       const event = mapNodesToEventsWithDuration(
+//         edge.start_node,
+//         edge.end_node,
+//         PASSIVE_COLOR,
+//         PASSIVE_WIDTH,
+//         PASSIVE_MESSAGE_MIN_INTERVAL +
+//           Math.random() * PASSIVE_MESSAGE_MAX_INTERVAL,
+//         false
+//       );
+//       dispatchEvents(event);
+//     });
+// });
+
+loadStripsMap().forEach((_, nodeIdx) => {
+  const randomInterval =
+    NODE_SOLID_MIN_INTERVAL + Math.random() * NODE_SOLID_MAX_INTERVAL;
+  // for each interval, create a random event
+  const event = mapNodeListToConstantEvents(
+    nodeIdx,
     NODE_COLOR,
-    NODE_SOLID_DURATION,
-    NODE_SOLID_WIDTH
-  ).forEach((event) => {
-    dispatchEvents(event);
-  });
+    randomInterval,
+    NODE_SOLID_WIDTH,
+    NODE_SOLID_FADE_DURATION,
+    NODE_SOLID_FADE_DURATION,
+    MESSAGE_FADE_POWER
+  );
+  timer(0, randomInterval).subscribe(() => dispatchEvents(event));
 });
+
+// Create the constantly on behaviour
+// timer(0, NODE_SOLID_DURATION).subscribe(() => {
+//   // Change these to be pulsing at random intervals
+//   const listOfAllNodes = Array.from(Array(loadStripsMap().length).keys());
+//   mapNodeListToConstantEvents(
+//     listOfAllNodes,
+//     NODE_COLOR,
+//     NODE_SOLID_DURATION,
+//     NODE_SOLID_WIDTH
+//   ).forEach((event) => {
+//     // change these to be pulsing at random intervals
+//     dispatchEvents(event);
+//   });
+// });
 
 // Get the buffered list of unique detections
 const detectNodeList$ = detection$Factory(SILENT_DETECTIONS).pipe(

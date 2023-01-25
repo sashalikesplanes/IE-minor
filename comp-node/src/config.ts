@@ -34,6 +34,15 @@ export const NODE_SOLID_DURATION = 1_000_000; // ms
 export const NODE_SOLID_DURATION_TEST = 500; // ms
 export const NODE_SOLID_DURATION_DELAY = 1_000; // ms
 export const NODE_SOLID_WIDTH = 1; // pixels
+export const NODE_SOLID_MIN_INTERVAL = 10_000; // ms
+export const NODE_SOLID_MAX_INTERVAL = 25_000; // ms
+export const NODE_SOLID_FADE_DURATION = 5_000; // ms
+
+// Passive behavior settings
+export const PASSIVE_MESSAGE_MIN_INTERVAL = 25_000; // ms
+export const PASSIVE_MESSAGE_MAX_INTERVAL = 100_000; // ms
+export const PASSIVE_COLOR = [50, 50, 50];
+export const PASSIVE_WIDTH = 1.5; // pixels
 
 // Message behavior settings
 export const MESSAGE_COLOR = [255, 0, 0]; // green, blue, red

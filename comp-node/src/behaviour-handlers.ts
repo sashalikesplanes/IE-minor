@@ -9,6 +9,7 @@ import {
   MESSAGE_SOUND_REL_PATH,
   MESSAGE_VOLUME,
   MESSAGE_WIDTH,
+  NODE_COLOR,
   NODE_SOLID_WIDTH,
   SINGLE_COLOR,
   SINGLE_INCLUDE_BACKWARDS,
@@ -23,7 +24,7 @@ import {
   mapNodesToEventsWithDuration,
   mapNodesToEventsWithPace,
 } from "./mappers";
-import { edges } from "./path-finding";
+import { edges, getSegments } from "./path-finding";
 import { dispatchEvents } from "./serial";
 import { playSound, playSoundPerEvent } from "./sounds";
 import { loadStripsMap } from "./utils";
@@ -82,6 +83,24 @@ function createMessageBehaviourHandler(key: string) {
     MESSAGE_FADE_POWER
   );
 
+  const nodes = getSegments(startNode, endNode).flatMap((segment) => [
+    segment.start_node,
+    segment.end_node,
+  ]);
+  const nodeSet = new Set(nodes);
+  nodeSet.delete(startNode);
+  nodeSet.delete(endNode);
+  // get all nodes apart from start end
+  const middleEvents = mapNodeListToConstantEvents(
+    [...nodeSet],
+    NODE_COLOR,
+    totalDuration,
+    NODE_SOLID_WIDTH,
+    MESSAGE_FADE_DURATION,
+    0,
+    MESSAGE_FADE_POWER
+  );
+
   mapNodeListToConstantEvents(
     [startNode, endNode],
     MESSAGE_COLOR,
@@ -108,11 +127,16 @@ function createMessageBehaviourHandler(key: string) {
       new Date().getTime() - lastDispatchTime >
       totalDuration * MESSAGE_FADE_IN_TIMEOUT_MULTIPLIER
     ) {
-      dispatchEvents([...fadeInMessageEvents, firstMessageEvent]);
+      dispatchEvents([
+        ...fadeInMessageEvents,
+        firstMessageEvent,
+        ...middleEvents,
+      ]);
     } else {
       dispatchEvents([
         ...fadeInMessageEvents.map((e) => ({ ...e, fadein_duration: 0 })),
         firstMessageEvent,
+        ...middleEvents,
       ]);
     }
 
