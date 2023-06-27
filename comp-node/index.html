@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Number Pairs</title>
+    <style>
+        body {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        form {
+            margin: 10px;
+        }
+        button {
+            padding: 10px;
+            border: none;
+            color: #fff;
+            background-color: #007BFF;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        function sendData(numbers) {
+            fetch('http://localhost:3000/messages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ numbers }),
+            });
+        }
+        const nodes = [0, 2, 4] 
+        for (const node1 of nodes) {
+            for (const node2 of nodes) {
+            const button = document.createElement("button");
+            if (node1 === node2) {
+              button.innerHTML = `${node1}`;
+              button.addEventListener('click', (e) => {
+                e.preventDefault();
+                sendData([node1])
+              })
+            } else {
+              button.innerHTML = `${node1}, ${node2}`;
+              button.addEventListener('click', (e) => {
+                e.preventDefault();
+                sendData([node1, node2])
+              })
+            }
+                document.body.appendChild(button);
+            }
+        }
+    </script>
+</body>
+</html>

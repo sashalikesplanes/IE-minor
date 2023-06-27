@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
 import { join } from "node:path";
-import { Observable } from "rxjs";
+import { map, Observable, timer } from "rxjs";
 import {
   NMS_THRESHOLD,
   SAVE_EACH_OUTPUT_IMAGE,
@@ -25,7 +25,28 @@ const flag = Object.values(KinectNNFlag).reduce(
   0
 );
 
+export interface NanodetDetection {
+  source: "window" | "corridor";
+  label: number;
+  score: number;
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+}
+
 export const detection$Factory = (silent: boolean) => {
+  return timer(0, 1000).pipe(
+    map(_ => {
+      const detection: NanodetDetection = {
+        source: "window",
+
+      }
+      return {}
+    }))
+};
+
+export const detection$Factory2 = (silent: boolean) => {
   let detector = createDetector();
 
   return new Observable<NanodetDetection>((subscriber) => {

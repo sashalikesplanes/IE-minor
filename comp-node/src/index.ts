@@ -1,36 +1,33 @@
-import { bufferTime, from, map, mergeMap, share, timer } from "rxjs";
+import { randomInt } from "node:crypto";
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import { Observable, from, interval, map, mergeMap, share, tap, timer } from "rxjs";
 import {
   messageBehaviourHandlers,
   singleBehaviourHandlers,
 } from "./behaviour-handlers";
 import {
-  AMBIENT_SOUND_REL_PATH,
-  AMBIENT_VOLUME,
-  DETECTION_BUFFER_CREATION_INTERVAL,
-  DETECTION_BUFFER_TIME_SPAN,
   MESSAGE_FADE_POWER,
   NODE_COLOR,
   NODE_SOLID_FADE_DURATION,
   NODE_SOLID_MAX_INTERVAL,
   NODE_SOLID_MIN_INTERVAL,
   NODE_SOLID_WIDTH,
-  SILENT_DETECTIONS,
 } from "./config";
-import { detection$Factory } from "./freenect";
 import {
   mapDetectionsToNodeList,
   mapNodeListToConstantEvents,
 } from "./mappers";
 import { dispatchEvents } from "./serial";
-import { playNarration, playSound } from "./sounds";
 import { loadStripsMap } from "./utils";
 
 // Clear all current behaviours
 dispatchEvents({ type: "clear" });
 
 // Start ambient sound
-playSound(AMBIENT_SOUND_REL_PATH, true, AMBIENT_VOLUME);
-playNarration();
+// playSound(AMBIENT_SOUND_REL_PATH, true, AMBIENT_VOLUME);
+// playNarration();
 
 // Too many events for it to keep track
 // edges.forEach((edge) => {
@@ -85,12 +82,46 @@ loadStripsMap().forEach((_, nodeIdx) => {
 //   });
 // });
 
-// Get the buffered list of unique detections
-const detectNodeList$ = detection$Factory(SILENT_DETECTIONS).pipe(
-  bufferTime(DETECTION_BUFFER_TIME_SPAN, DETECTION_BUFFER_CREATION_INTERVAL),
-  map(mapDetectionsToNodeList),
-  share()
-);
+// setup an express server to listen for detections
+const detectNodeList$ = new Observable<number[]>((subscriber) => {
+  const app = require('express')();
+  const bodyParser = require('body-parser');
+  app.use(cors())
+  app.use(bodyParser.json());
+
+  // Regularly push random integers into the observable
+  setInterval(() => {
+    subscriber.next([randomInt(0, 6)]);
+  }, 5000);
+
+  app.post('/messages', (req, res) => {
+    console.log(req.body)
+    // Check if the request body is an array of numbers
+    if (!req.body || !req.body.numbers || Array.isArray(req.body.numbers) && req.body.numbers.every(item => typeof item === 'number')) {
+      console.log('Received numbers:', req.body.numbers);
+
+      // Push the received numbers into the observable
+      subscriber.next(req.body.numbers);
+
+      res.status(200).send('Numbers received!');
+    } else {
+      res.status(400).send('Invalid request body!');
+    }
+  });
+
+  const port: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
+
+  app.listen(port, () => {
+    console.log(`Listening at http://localhost:${port}/`);
+  });
+
+}).pipe(tap(console.log), share());
+
+// const detectNodeList$ = detection$Factory(SILENT_DETECTIONS).pipe(
+//   bufferTime(DETECTION_BUFFER_TIME_SPAN, DETECTION_BUFFER_CREATION_INTERVAL),
+//   map(mapDetectionsToNodeList),
+//   share()
+// );
 
 // Create the single node behaviour
 singleBehaviourHandlers.forEach((handler) => {

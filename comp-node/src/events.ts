@@ -37,6 +37,7 @@ export type EventUnion = MessageEvent | ClearEvent | ConstantEvent;
 
 export function linkEvents(events: MessageEvent[]): MessageEvent;
 export function linkEvents(events: AbstractEvent[]): AbstractEvent {
+  console.log(events)
   events.reduce((prev, curr) => {
     prev.next = curr;
     return curr;

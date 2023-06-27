@@ -1,4 +1,3 @@
-const sound = require("sound-play");
 import { join } from "path";
 import { getMessageDurationInMs, MessageEvent } from "./events";
 
@@ -7,9 +6,9 @@ export async function playSound(
   loop: boolean,
   volume?: number
 ) {
-  if (!volume) volume = 1;
   do {
-    await sound.play(join(__dirname, relativePath), volume);
+    const { playAudioFile } = await import("audic");
+    await playAudioFile(join(__dirname, relativePath));
   } while (loop);
   return;
 }
