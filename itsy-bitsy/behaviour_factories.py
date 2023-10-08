@@ -42,8 +42,7 @@ def create_constant_behaviour(strips, behaviours, start_time, constant_config):
 
 
 def create_message_behaviour(strips, behaviours, start_time, message_config):
-    duration = (abs(
-        (message_config["end_idx"] - message_config["start_idx"])) + 1 + message_config['message_width'] / 2) / message_config["pace"]
+    duration = (abs( (message_config["end_idx"] - message_config["start_idx"])) + 1 + message_config['message_width'] / 2) / message_config["pace"]
 
     def get_intensity(elapsed_time, pixel_offset):
         if pixel_offset > elapsed_time * message_config["pace"]:

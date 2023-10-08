@@ -31,6 +31,7 @@ export type MessageEvent = {
 
 export type ClearEvent = {
   type: "clear";
+  next: null;
 };
 
 export type EventUnion = MessageEvent | ClearEvent | ConstantEvent;

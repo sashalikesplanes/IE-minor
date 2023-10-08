@@ -10,15 +10,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.playNarration = exports.playSoundPerEvent = exports.playSound = void 0;
-const sound = require("sound-play");
 const path_1 = require("path");
 const events_1 = require("./events");
 function playSound(relativePath, loop, volume) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (!volume)
-            volume = 1;
         do {
-            yield sound.play((0, path_1.join)(__dirname, relativePath), volume);
+            const { playAudioFile } = yield import("audic");
+            yield playAudioFile((0, path_1.join)(__dirname, relativePath));
         } while (loop);
         return;
     });

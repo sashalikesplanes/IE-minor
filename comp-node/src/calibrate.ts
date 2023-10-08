@@ -40,7 +40,7 @@ async function calibrateCameraMap(camera: "corridor" | "window") {
       NODE_SOLID_WIDTH
     );
     events.forEach((e) => (e.duration = CALIBRATION_SOLID_DURATION));
-    dispatchEvents({ type: "clear" });
+    dispatchEvents({ type: "clear", next: null });
     dispatchEvents(events);
 
     await drawCurrentNodeLocation(i);
@@ -99,7 +99,7 @@ async function calibrateStripsMap() {
 
   console.log("Calibrating strip map");
 
-  dispatchEvents({ type: "clear" });
+  dispatchEvents({ type: "clear", next: null });
   const nodeToStripsMap = loadStripsMap();
   for (let i = 0; i < nodeToStripsMap.length; i++) {
     const stripPixels = nodeToStripsMap[i];
@@ -120,7 +120,7 @@ async function calibrateStripsMap() {
         NODE_SOLID_WIDTH
       );
 
-      dispatchEvents({ type: "clear" });
+      dispatchEvents({ type: "clear", next: null });
       console.log("Current node is ", nodeIdx);
       console.log(event);
       dispatchEvents(event);

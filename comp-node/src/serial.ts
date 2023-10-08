@@ -3,7 +3,7 @@ import { EventUnion } from "./events";
 
 const getSerialPort = async () => {
   return new SerialPort({
-    path: "/dev/ttyACM1",
+    path: "/dev/ttyACM0",
     baudRate: 115200,
   });
 };
@@ -16,5 +16,5 @@ export async function dispatchEvents(event: EventUnion | EventUnion[]) {
     return;
   }
 
-  (await port).write(JSON.stringify(event) + "\n");
+  (await port).write(`${JSON.stringify(event)}\n`);
 }

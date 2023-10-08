@@ -38,7 +38,7 @@ function calibrateCameraMap(camera) {
             const nodeIdx = i;
             const events = (0, mappers_1.mapNodeListToConstantEvents)(nodeIdx, config_1.NODE_COLOR, config_1.NODE_SOLID_DURATION, config_1.NODE_SOLID_WIDTH);
             events.forEach((e) => (e.duration = config_1.CALIBRATION_SOLID_DURATION));
-            (0, serial_1.dispatchEvents)({ type: "clear" });
+            (0, serial_1.dispatchEvents)({ type: "clear", next: null });
             (0, serial_1.dispatchEvents)(events);
             yield drawCurrentNodeLocation(i);
             const currentPosition = [
@@ -92,7 +92,7 @@ function calibrateStripsMap() {
         if ((yield (0, utils_1.askQuestion)("Press 0 to skip strip map calibration: ")) === "0")
             return;
         console.log("Calibrating strip map");
-        (0, serial_1.dispatchEvents)({ type: "clear" });
+        (0, serial_1.dispatchEvents)({ type: "clear", next: null });
         const nodeToStripsMap = (0, utils_1.loadStripsMap)();
         for (let i = 0; i < nodeToStripsMap.length; i++) {
             const stripPixels = nodeToStripsMap[i];
@@ -104,7 +104,7 @@ function calibrateStripsMap() {
                     continue;
                 }
                 const event = (0, mappers_1.mapNodeStripPixelToConstantEvent)(pixelIdx, stripIdx, config_1.NODE_COLOR, config_1.CALIBRATION_SOLID_DURATION, config_1.NODE_SOLID_WIDTH);
-                (0, serial_1.dispatchEvents)({ type: "clear" });
+                (0, serial_1.dispatchEvents)({ type: "clear", next: null });
                 console.log("Current node is ", nodeIdx);
                 console.log(event);
                 (0, serial_1.dispatchEvents)(event);
