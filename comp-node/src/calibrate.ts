@@ -18,13 +18,14 @@ import { askQuestion, loadCameraMap, loadStripsMap, saveJson } from "./utils";
 
 async function calibrate() {
   await calibrateStripsMap();
-  const SILENT = true;
+  const SILENT = false;
   const detection$ = detection$Factory(SILENT).subscribe();
-  await calibrateCameraMap();
+  await calibrateCameraMap("corridor");
+  await calibrateCameraMap("window");
   detection$.unsubscribe();
 }
 
-async function calibrateCameraMap() {
+async function calibrateCameraMap(camera: "corridor" | "window") {
   if ((await askQuestion("Press 0 to skip camera map calibration: ")) === "0")
     return;
 
@@ -39,13 +40,13 @@ async function calibrateCameraMap() {
       NODE_SOLID_WIDTH
     );
     events.forEach((e) => (e.duration = CALIBRATION_SOLID_DURATION));
-    dispatchEvents({ type: "clear" });
+    dispatchEvents({ type: "clear", next: null });
     dispatchEvents(events);
 
     await drawCurrentNodeLocation(i);
     const currentPosition = [
-      nodeToCameraMap["window"][nodeIdx].x,
-      nodeToCameraMap["window"][nodeIdx].y,
+      nodeToCameraMap[camera][nodeIdx].x,
+      nodeToCameraMap[camera][nodeIdx].y,
     ].join(",");
     let answer = (await askQuestion(
       `Enter the x and y coordinates separated by a comma (NO SPACE!) (currently ${currentPosition}) or enter to skip: `
@@ -59,21 +60,21 @@ async function calibrateCameraMap() {
     }
 
     const [x, y] = answer.split(",").map((v) => parseInt(v));
-    nodeToCameraMap["window"][nodeIdx] = { x, y };
-    saveJson(NODE_TO_CAMERA_MAP_REL_PATH, nodeToCameraMap);
+    nodeToCameraMap[camera][nodeIdx] = { x, y };
+    await saveJson(NODE_TO_CAMERA_MAP_REL_PATH, nodeToCameraMap);
   }
-  saveJson(NODE_TO_CAMERA_MAP_REL_PATH, nodeToCameraMap);
+  await saveJson(NODE_TO_CAMERA_MAP_REL_PATH, nodeToCameraMap);
 
   async function drawCurrentNodeLocation(nodeIdx: number) {
     // try to open the latest result image
-    const currentX = nodeToCameraMap["window"][nodeIdx].x;
-    const currentY = nodeToCameraMap["window"][nodeIdx].y;
-    const basePath = join(__dirname, "..", "..", "images");
+    const currentX = nodeToCameraMap[camera][nodeIdx].x;
+    const currentY = nodeToCameraMap[camera][nodeIdx].y;
+    const basePath = join(__dirname, "..", "..", "kinect-nn", "build");
     let image;
 
     while (!image) {
       try {
-        image = await Jimp.read(join(basePath, "result.jpg"));
+        image = await Jimp.read(join(basePath, camera + "_result.jpg"));
       } catch (e) {
         console.error(e);
       }
@@ -98,7 +99,7 @@ async function calibrateStripsMap() {
 
   console.log("Calibrating strip map");
 
-  dispatchEvents({ type: "clear" });
+  dispatchEvents({ type: "clear", next: null });
   const nodeToStripsMap = loadStripsMap();
   for (let i = 0; i < nodeToStripsMap.length; i++) {
     const stripPixels = nodeToStripsMap[i];
@@ -119,7 +120,7 @@ async function calibrateStripsMap() {
         NODE_SOLID_WIDTH
       );
 
-      dispatchEvents({ type: "clear" });
+      dispatchEvents({ type: "clear", next: null });
       console.log("Current node is ", nodeIdx);
       console.log(event);
       dispatchEvents(event);

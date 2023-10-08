@@ -7,16 +7,20 @@ import {
   MESSAGE_INCLUDE_BACKWARDS,
   MESSAGE_PACE,
   MESSAGE_SOUND_REL_PATH,
+  MESSAGE_VOLUME,
   MESSAGE_WIDTH,
+  NODE_COLOR,
   NODE_SOLID_WIDTH,
   SINGLE_COLOR,
   SINGLE_INCLUDE_BACKWARDS,
   SINGLE_LED_DURATION,
   SINGLE_SOUND_MESSAGES,
   SINGLE_SOUND_REL_PATH,
+  SINGLE_VOLUME,
   SINGLE_WIDTH,
 } from "./config";
 import { getLinkedMessagesDurationInMs } from "./events";
+import { getSegments } from "./path-finding";
 import {
   mapNodeListToConstantEvents,
   mapNodesToEventsWithDuration,
@@ -83,6 +87,24 @@ function createMessageBehaviourHandler(key: string) {
     MESSAGE_FADE_POWER
   );
 
+  const nodes = getSegments(startNode, endNode).flatMap((segment) => [
+    segment.start_node,
+    segment.end_node,
+  ]);
+  const nodeSet = new Set(nodes);
+  nodeSet.delete(startNode);
+  nodeSet.delete(endNode);
+  // get all nodes apart from start end
+  const middleEvents = mapNodeListToConstantEvents(
+    [...nodeSet],
+    NODE_COLOR,
+    totalDuration,
+    NODE_SOLID_WIDTH,
+    MESSAGE_FADE_DURATION,
+    0,
+    MESSAGE_FADE_POWER
+  );
+
   mapNodeListToConstantEvents(
     [startNode, endNode],
     MESSAGE_COLOR,
@@ -108,13 +130,24 @@ function createMessageBehaviourHandler(key: string) {
       new Date().getTime() - lastDispatchTime >
       totalDuration * MESSAGE_FADE_IN_TIMEOUT_MULTIPLIER
     ) {
-      dispatchEvents([...fadeInMessageEvents, firstMessageEvent]);
+      dispatchEvents([
+        ...fadeInMessageEvents,
+        firstMessageEvent,
+        ...middleEvents,
+      ]);
     } else {
       dispatchEvents([
         ...fadeInMessageEvents.map((e) => ({ ...e, fadein_duration: 0 })),
         firstMessageEvent,
+        ...middleEvents,
       ]);
     }
+
+    playSoundPerEvent(
+      firstMessageEvent,
+      MESSAGE_SOUND_REL_PATH,
+      MESSAGE_VOLUME
+    );
     lastDispatchTime = new Date().getTime();
   };
 }
@@ -146,7 +179,7 @@ function createSingleBehaviourHandler(
       SINGLE_LED_DURATION * SINGLE_SOUND_MESSAGES
     ) {
       lastSoundTime = new Date().getTime();
-      playSound(SINGLE_SOUND_REL_PATH, false);
+      playSound(SINGLE_SOUND_REL_PATH, false, SINGLE_VOLUME);
     }
 
     if (new Date().getTime() - lastMessageTime > SINGLE_LED_DURATION) {

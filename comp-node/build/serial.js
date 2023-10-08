@@ -12,14 +12,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.dispatchEvents = void 0;
 const serialport_1 = require("serialport");
 const getSerialPort = () => __awaiter(void 0, void 0, void 0, function* () {
-    const portList = yield serialport_1.SerialPort.list();
-    const portNumber = portList
-        .filter((p) => p.path.includes("tty.usbmodem"))[0]
-        .path.split("tty.usbmodem")[1];
-    console.log(portNumber);
     return new serialport_1.SerialPort({
-        path: "/dev/cu.usbmodem" + portNumber,
-        baudRate: 9600,
+        path: "/dev/ttyACM0",
+        baudRate: 115200,
     });
 });
 const port = getSerialPort();
@@ -29,7 +24,7 @@ function dispatchEvents(event) {
             event.forEach((e) => dispatchEvents(e));
             return;
         }
-        (yield port).write(JSON.stringify(event) + "\n");
+        (yield port).write(`${JSON.stringify(event)}\n`);
     });
 }
 exports.dispatchEvents = dispatchEvents;

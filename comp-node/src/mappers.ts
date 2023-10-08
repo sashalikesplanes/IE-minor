@@ -160,6 +160,7 @@ export function mapNodesToEventsWithPace(
   includeBackwards: boolean
 ): MessageEvent {
   const segments = getSegments(startNode, endNode);
+  console.log('in mapNodesToEventsWithPace', startNode, endNode, segments)
   const events = mapStripSegmentsToEvents(
     segments,
     color,

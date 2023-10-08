@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.mapNodesToEventsWithDuration = exports.mapNodesToEventsWithPace = exports.mapStripSegmentsToEvents = exports.mapNodeStripPixelToSolidEvent = exports.mapNodeListToSolidEvents = exports.mapDetectionsToNodeList = void 0;
+exports.mapNodesToEventsWithDuration = exports.mapNodesToEventsWithPace = exports.mapStripSegmentsToEvents = exports.mapNodeStripPixelToConstantEvent = exports.mapNodeListToConstantEvents = exports.mapDetectionsToNodeList = void 0;
 const config_1 = require("./config");
 const events_1 = require("./events");
 const path_finding_1 = require("./path-finding");
@@ -28,24 +28,28 @@ function mapDetectionToNode(detection) {
     });
     return nodeIdxToReturn;
 }
-function mapNodeListToSolidEvents(nodes, color, duration, width) {
+function mapNodeListToConstantEvents(nodes, color, duration, width, fadeInDuration, fadeOutDuration, power) {
     if (!Array.isArray(nodes)) {
         nodes = [nodes];
     }
     return nodes.flatMap((nodeIdx) => {
         const pixelIdxPerStrip = (0, utils_1.loadStripsMap)()[nodeIdx];
-        return pixelIdxPerStrip.map((pixelIdx, stripIdx) => mapNodeStripPixelToSolidEvent(pixelIdx, stripIdx, color, duration, width));
+        return pixelIdxPerStrip.map((pixelIdx, stripIdx) => mapNodeStripPixelToConstantEvent(pixelIdx, stripIdx, color, duration, width, fadeInDuration, fadeOutDuration, power));
     });
 }
-exports.mapNodeListToSolidEvents = mapNodeListToSolidEvents;
-function mapNodeStripPixelToSolidEvent(pixelIdx, stripIdx, color, duration, width) {
+exports.mapNodeListToConstantEvents = mapNodeListToConstantEvents;
+function mapNodeStripPixelToConstantEvent(pixelIdx, stripIdx, color, duration, width, fadeInDuration = 0, fadeOutDuration = 0, fadePower = 1) {
+    const baseEvent = {
+        type: "constant",
+        color,
+        duration,
+        fadein_duration: fadeInDuration,
+        fadeout_duration: fadeOutDuration,
+        fade_power: fadePower,
+        next: null,
+    };
     if (pixelIdx === null) {
-        return {
-            type: "solid",
-            color: color,
-            duration: duration,
-            pixels: [],
-        };
+        return Object.assign(Object.assign({}, baseEvent), { pixels: [] });
     }
     // create an array of pixels based on node_width
     const pixels = [];
@@ -57,14 +61,9 @@ function mapNodeStripPixelToSolidEvent(pixelIdx, stripIdx, color, duration, widt
         }
         pixels.push({ strip_idx: stripIdx, pixel_idx: pixelIdx + i });
     }
-    return {
-        type: "solid",
-        color: color,
-        duration: duration,
-        pixels,
-    };
+    return Object.assign(Object.assign({}, baseEvent), { pixels });
 }
-exports.mapNodeStripPixelToSolidEvent = mapNodeStripPixelToSolidEvent;
+exports.mapNodeStripPixelToConstantEvent = mapNodeStripPixelToConstantEvent;
 function mapStripSegmentsToEvents(segments, color, width, pace, includeBackwards) {
     const forwardMessages = segments.map((segment) => (Object.assign(Object.assign({ type: "message" }, segment), { color, message_width: width, pace: pace, next: null })));
     if (!includeBackwards)

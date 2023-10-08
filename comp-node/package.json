@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:dev": "npx nodemon",
+    "start:dev": "nodemon --exec ts-node -- ./src/index.ts",
     "calibrate": "npx ts-node ./src/calibrate.ts",
-    "build": "rimraf ./build && tsc && cp ./src/*.json ./build",
+    "build": "rimraf ./build && tsc",
     "start": "node ./build/index.js",
     "build:start": "npm run build && npm run start"
   },
@@ -19,13 +19,18 @@
     "prettier": "^2.8.3",
     "rimraf": "^4.0.5",
     "ts-node": "^10.9.1",
-    "typescript": "^4.9.4"
+    "typescript": "^5.1.3"
   },
   "dependencies": {
+    "audic": "^3.0.2",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
     "image-size": "^1.0.2",
     "jimp": "^0.16.2",
     "multer": "^1.4.5-lts.1",
     "node-aplay": "^1.0.3",
+    "play-sound": "^1.1.5",
     "rxjs": "^7.8.0",
     "serialport": "^10.5.0",
     "sound-play": "^1.1.0"

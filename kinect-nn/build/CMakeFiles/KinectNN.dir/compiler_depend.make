@@ -384,6 +384,7 @@ CMakeFiles/KinectNN.dir/main.o: /Users/sasha/Documents/code/repos/IE-minor/kinec
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/sys/select.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/sys/_types/_uuid_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/gethostuuid.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/signal.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/thread \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/random \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/numeric \
@@ -700,6 +701,8 @@ CMakeFiles/KinectNN.dir/nanodet.o: /Users/sasha/Documents/code/repos/IE-minor/ki
 
 /Users/sasha/Documents/code/repos/ncnn/build/install/include/ncnn/cpu.h:
 
+/Users/sasha/Documents/code/repos/ncnn/build/install/include/ncnn/paramdict.h:
+
 /Users/sasha/Documents/code/repos/ncnn/build/install/include/ncnn/modelbin.h:
 
 /Users/sasha/Documents/code/repos/ncnn/build/install/include/ncnn/option.h:
@@ -747,6 +750,8 @@ CMakeFiles/KinectNN.dir/nanodet.o: /Users/sasha/Documents/code/repos/IE-minor/ki
 /usr/local/include/opencv4/opencv2/video/background_segm.hpp:
 
 /Users/sasha/Documents/code/repos/ncnn/build/install/include/ncnn/layer.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/signal.h:
 
 /usr/local/include/opencv4/opencv2/video/tracking.hpp:
 
@@ -1481,8 +1486,6 @@ CMakeFiles/KinectNN.dir/nanodet.o: /Users/sasha/Documents/code/repos/IE-minor/ki
 /usr/local/include/opencv4/opencv2/core/cvdef.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/sstream:
-
-/Users/sasha/Documents/code/repos/ncnn/build/install/include/ncnn/paramdict.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/__memory/allocator_traits.h:
 

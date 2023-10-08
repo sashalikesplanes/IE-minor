@@ -4,9 +4,9 @@ from configs import NODE_COLOR
 from configs import INTENSITY_UPDATE_THRESHOLD
 
 def create_constant_behaviour(strips, behaviours, start_time, constant_config):
-    duration = (constant_config["duration"]) / 990
-    fadein_duration = (constant_config["fadein_duration"]) / 990
-    fadeout_duration = (constant_config["fadeout_duration"]) / 990
+    duration = (constant_config["duration"]) / 1000
+    fadein_duration = (constant_config["fadein_duration"]) / 1000
+    fadeout_duration = (constant_config["fadeout_duration"]) / 1000
     power = constant_config["fade_power"]
 
     def get_intensity(elapsed_time):
@@ -14,6 +14,8 @@ def create_constant_behaviour(strips, behaviours, start_time, constant_config):
             return elapsed_time ** power / fadein_duration ** power
         elif elapsed_time > duration - fadeout_duration and elapsed_time < duration and fadeout_duration > 0:
             return (duration - elapsed_time) ** power / fadeout_duration ** power
+        elif elapsed_time > duration:
+            return 0
         return 1
 
     def constant_behaviour(current_time):
@@ -40,8 +42,7 @@ def create_constant_behaviour(strips, behaviours, start_time, constant_config):
 
 
 def create_message_behaviour(strips, behaviours, start_time, message_config):
-    duration = (abs(
-        (message_config["end_idx"] - message_config["start_idx"])) + 1 + message_config['message_width'] / 2) / message_config["pace"]
+    duration = (abs( (message_config["end_idx"] - message_config["start_idx"])) + 1 + message_config['message_width'] / 2) / message_config["pace"]
 
     def get_intensity(elapsed_time, pixel_offset):
         if pixel_offset > elapsed_time * message_config["pace"]:

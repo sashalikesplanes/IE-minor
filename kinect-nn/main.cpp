@@ -59,6 +59,7 @@ int get_window_image()
         window_image_lock.unlock();
 
         listener.release(frames);
+        std::cout << "GOT WINDOW" << std::endl;
     }
 
     dev->stop();
@@ -68,6 +69,7 @@ int get_window_image()
 
 void get_corridor_image()
 {
+    std::cout << "Launch corridor image thread" << std::endl;
     while (!shutdown)
     {
         // Setup matrixes
@@ -88,6 +90,7 @@ void get_corridor_image()
         corridor_image_lock.lock();
         raw_out_scaled_3c.copyTo(latest_corridor_image);
         corridor_image_lock.unlock();
+        std::cout << "GOT CORRIDOR" << std::endl;
     }
     freenect_sync_stop();
 }
@@ -161,7 +164,7 @@ int main(int argc, char **argv)
     dev = freenect2.openDevice(KINECTV2_SERIAL);
     if (dev == 0)
     {
-        std::cout << "Failure connecting to kinect v2" << std::endl;
+        std::cerr << "RESTART" << std::endl;
         shutdown = true;
         return -1;
     }
@@ -169,16 +172,10 @@ int main(int argc, char **argv)
     dev->start();
 
     // Launch the image fetching threads
-    if (start_corridor)
-    {
-        std::thread corridor_thread(get_corridor_image);
-        corridor_thread.detach();
-    }
-    if (start_window)
-    {
-        std::thread window_thread(get_window_image);
-        window_thread.detach();
-    }
+    std::thread corridor_thread(get_corridor_image);
+    corridor_thread.detach();
+    std::thread window_thread(get_window_image);
+    window_thread.detach();
 
     // Init NanoDet
     NanoDet detector = NanoDet("./nanodet.param", "./nanodet.bin", true);

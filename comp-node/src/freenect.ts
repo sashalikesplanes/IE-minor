@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
 import { join } from "node:path";
-import { Observable } from "rxjs";
+import { map, Observable, timer } from "rxjs";
 import {
   NMS_THRESHOLD,
   SAVE_EACH_OUTPUT_IMAGE,
@@ -43,6 +43,10 @@ export const detection$Factory = (silent: boolean) => {
     });
 
     detector.stderr.on("data", (data) => {
+      if (data.toString().includes("RESTART")) {
+        detector.kill("SIGINT");
+        detector = createDetector();
+      }
       subscriber.error(data.toString());
     });
 
