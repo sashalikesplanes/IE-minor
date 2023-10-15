@@ -1,0 +1,775 @@
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeDetermineSystem.cmake:211 (message)"
+      - "CMakeLists.txt:1 (project)"
+    message: |
+      The system is: Darwin - 20.6.0 - x86_64
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:1 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+      Compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      1
+      ld: library not found for -lSystem
+      clang: error: linker command failed with exit code 1 (use -v to see invocation)
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:1 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+      Compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc 
+      Build flags: 
+      Id flags: -c 
+      
+      The output was:
+      0
+      
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.o"
+      
+      The C compiler identification is AppleClang, found in:
+        /Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/3.27.7/CompilerIdC/CMakeCCompilerId.o
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:1 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+      Compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      1
+      ld: library not found for -lc++
+      clang: error: linker command failed with exit code 1 (use -v to see invocation)
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:1 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+      Compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ 
+      Build flags: 
+      Id flags: -c 
+      
+      The output was:
+      0
+      
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.o"
+      
+      The CXX compiler identification is AppleClang, found in:
+        /Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/3.27.7/CompilerIdCXX/CMakeCXXCompilerId.o
+      
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:57 (try_compile)"
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:1 (project)"
+    checks:
+      - "Detecting C compiler ABI info"
+    directories:
+      source: "/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-SxEL6V"
+      binary: "/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-SxEL6V"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: "11.7"
+      CMAKE_OSX_SYSROOT: "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk"
+    buildResult:
+      variable: "CMAKE_C_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-SxEL6V'
+        
+        Run Build Command(s): /usr/local/Cellar/cmake/3.27.7/bin/cmake -E env VERBOSE=1 /usr/local/bin/gmake -f Makefile cmTC_537f9/fast
+        /usr/local/bin/gmake  -f CMakeFiles/cmTC_537f9.dir/build.make CMakeFiles/cmTC_537f9.dir/build
+        gmake[1]: Entering directory '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-SxEL6V'
+        Building C object CMakeFiles/cmTC_537f9.dir/CMakeCCompilerABI.c.o
+        /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.7   -v -Wl,-v -MD -MT CMakeFiles/cmTC_537f9.dir/CMakeCCompilerABI.c.o -MF CMakeFiles/cmTC_537f9.dir/CMakeCCompilerABI.c.o.d -o CMakeFiles/cmTC_537f9.dir/CMakeCCompilerABI.c.o -c /usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeCCompilerABI.c
+        Apple clang version 13.0.0 (clang-1300.0.29.30)
+        Target: x86_64-apple-darwin20.6.0
+        Thread model: posix
+        InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+        clang: warning: -Wl,-v: 'linker' input unused [-Wunused-command-line-argument]
+         "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang" -cc1 -triple x86_64-apple-macosx11.7.0 -Wundef-prefix=TARGET_OS_ -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -Werror=implicit-function-declaration -emit-obj -mrelax-all --mrelax-relocations -disable-free -disable-llvm-verifier -discard-value-names -main-file-name CMakeCCompilerABI.c -mrelocation-model pic -pic-level 2 -mframe-pointer=all -fno-strict-return -fno-rounding-math -munwind-tables -target-sdk-version=12.1 -fvisibility-inlines-hidden-static-local-var -target-cpu penryn -tune-cpu generic -debugger-tuning=lldb -target-linker-version 711 -v -resource-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0 -dependency-file CMakeFiles/cmTC_537f9.dir/CMakeCCompilerABI.c.o.d -skip-unused-modulemap-deps -MT CMakeFiles/cmTC_537f9.dir/CMakeCCompilerABI.c.o -sys-header-deps -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -internal-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/local/include -internal-isystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/include -internal-externc-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include -internal-externc-isystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -Wno-reorder-init-list -Wno-implicit-int-float-conversion -Wno-c99-designator -Wno-final-dtor-non-final-class -Wno-extra-semi-stmt -Wno-misleading-indentation -Wno-quoted-include-in-framework-header -Wno-implicit-fallthrough -Wno-enum-enum-conversion -Wno-enum-float-conversion -Wno-elaborated-enum-base -fdebug-compilation-dir /Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-SxEL6V -ferror-limit 19 -stack-protector 1 -fstack-check -mdarwin-stkchk-strong-link -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fgnuc-version=4.2.1 -fmax-type-align=16 -fcommon -clang-vendor-feature=+nullptrToBoolConversion -clang-vendor-feature=+messageToSelfInClassMethodIdReturnType -clang-vendor-feature=+disableInferNewAvailabilityFromInit -clang-vendor-feature=+disableNeonImmediateRangeCheck -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -fno-odr-hash-protocols -clang-vendor-feature=+revert09abecef7bbf -mllvm -disable-aligned-alloc-awareness=1 -mllvm -enable-dse-memoryssa=0 -o CMakeFiles/cmTC_537f9.dir/CMakeCCompilerABI.c.o -x c /usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeCCompilerABI.c
+        clang -cc1 version 13.0.0 (clang-1300.0.29.30) default target x86_64-apple-darwin20.6.0
+        ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/local/include"
+        ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/Library/Frameworks"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/include
+         /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include
+         /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include
+         /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/System/Library/Frameworks (framework directory)
+        End of search list.
+        Linking C executable cmTC_537f9
+        /usr/local/Cellar/cmake/3.27.7/bin/cmake -E cmake_link_script CMakeFiles/cmTC_537f9.dir/link.txt --verbose=1
+        /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.7 -Wl,-search_paths_first -Wl,-headerpad_max_install_names -L/usr/local/opt/zlib/lib -v -Wl,-v CMakeFiles/cmTC_537f9.dir/CMakeCCompilerABI.c.o -o cmTC_537f9 
+        Apple clang version 13.0.0 (clang-1300.0.29.30)
+        Target: x86_64-apple-darwin20.6.0
+        Thread model: posix
+        InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+         "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld" -demangle -lto_library /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/libLTO.dylib -dynamic -arch x86_64 -platform_version macos 11.7.0 12.1 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -o cmTC_537f9 -L/usr/local/opt/zlib/lib -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_537f9.dir/CMakeCCompilerABI.c.o -lSystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/lib/darwin/libclang_rt.osx.a
+        @(#)PROGRAM:ld  PROJECT:ld64-711
+        BUILD 21:57:11 Nov 17 2021
+        configured to support archs: armv6 armv7 armv7s arm64 arm64e arm64_32 i386 x86_64 x86_64h armv6m armv7k armv7m armv7em
+        Library search paths:
+        	/usr/local/opt/zlib/lib
+        	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/lib
+        Framework search paths:
+        	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/System/Library/Frameworks/
+        gmake[1]: Leaving directory '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-SxEL6V'
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:127 (message)"
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:1 (project)"
+    message: |
+      Parsed C implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/include]
+          add: [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include]
+          add: [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include]
+        end of search list found
+        collapse include dir [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/include] ==> [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/include]
+        collapse include dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include] ==> [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include]
+        collapse include dir [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include] ==> [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include]
+        implicit include dirs: [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/include;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include;/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:152 (message)"
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:1 (project)"
+    message: |
+      Parsed C implicit link information:
+        link line regex: [^( *|.*[/\\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        ignore line: [Change Dir: '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-SxEL6V']
+        ignore line: []
+        ignore line: [Run Build Command(s): /usr/local/Cellar/cmake/3.27.7/bin/cmake -E env VERBOSE=1 /usr/local/bin/gmake -f Makefile cmTC_537f9/fast]
+        ignore line: [/usr/local/bin/gmake  -f CMakeFiles/cmTC_537f9.dir/build.make CMakeFiles/cmTC_537f9.dir/build]
+        ignore line: [gmake[1]: Entering directory '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-SxEL6V']
+        ignore line: [Building C object CMakeFiles/cmTC_537f9.dir/CMakeCCompilerABI.c.o]
+        ignore line: [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.7   -v -Wl -v -MD -MT CMakeFiles/cmTC_537f9.dir/CMakeCCompilerABI.c.o -MF CMakeFiles/cmTC_537f9.dir/CMakeCCompilerABI.c.o.d -o CMakeFiles/cmTC_537f9.dir/CMakeCCompilerABI.c.o -c /usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeCCompilerABI.c]
+        ignore line: [Apple clang version 13.0.0 (clang-1300.0.29.30)]
+        ignore line: [Target: x86_64-apple-darwin20.6.0]
+        ignore line: [Thread model: posix]
+        ignore line: [InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin]
+        ignore line: [clang: warning: -Wl -v: 'linker' input unused [-Wunused-command-line-argument]]
+        ignore line: [ "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang" -cc1 -triple x86_64-apple-macosx11.7.0 -Wundef-prefix=TARGET_OS_ -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -Werror=implicit-function-declaration -emit-obj -mrelax-all --mrelax-relocations -disable-free -disable-llvm-verifier -discard-value-names -main-file-name CMakeCCompilerABI.c -mrelocation-model pic -pic-level 2 -mframe-pointer=all -fno-strict-return -fno-rounding-math -munwind-tables -target-sdk-version=12.1 -fvisibility-inlines-hidden-static-local-var -target-cpu penryn -tune-cpu generic -debugger-tuning=lldb -target-linker-version 711 -v -resource-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0 -dependency-file CMakeFiles/cmTC_537f9.dir/CMakeCCompilerABI.c.o.d -skip-unused-modulemap-deps -MT CMakeFiles/cmTC_537f9.dir/CMakeCCompilerABI.c.o -sys-header-deps -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -internal-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/local/include -internal-isystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/include -internal-externc-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include -internal-externc-isystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -Wno-reorder-init-list -Wno-implicit-int-float-conversion -Wno-c99-designator -Wno-final-dtor-non-final-class -Wno-extra-semi-stmt -Wno-misleading-indentation -Wno-quoted-include-in-framework-header -Wno-implicit-fallthrough -Wno-enum-enum-conversion -Wno-enum-float-conversion -Wno-elaborated-enum-base -fdebug-compilation-dir /Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-SxEL6V -ferror-limit 19 -stack-protector 1 -fstack-check -mdarwin-stkchk-strong-link -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fgnuc-version=4.2.1 -fmax-type-align=16 -fcommon -clang-vendor-feature=+nullptrToBoolConversion -clang-vendor-feature=+messageToSelfInClassMethodIdReturnType -clang-vendor-feature=+disableInferNewAvailabilityFromInit -clang-vendor-feature=+disableNeonImmediateRangeCheck -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -fno-odr-hash-protocols -clang-vendor-feature=+revert09abecef7bbf -mllvm -disable-aligned-alloc-awareness=1 -mllvm -enable-dse-memoryssa=0 -o CMakeFiles/cmTC_537f9.dir/CMakeCCompilerABI.c.o -x c /usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeCCompilerABI.c]
+        ignore line: [clang -cc1 version 13.0.0 (clang-1300.0.29.30) default target x86_64-apple-darwin20.6.0]
+        ignore line: [ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/local/include"]
+        ignore line: [ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/Library/Frameworks"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/include]
+        ignore line: [ /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include]
+        ignore line: [ /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include]
+        ignore line: [ /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/System/Library/Frameworks (framework directory)]
+        ignore line: [End of search list.]
+        ignore line: [Linking C executable cmTC_537f9]
+        ignore line: [/usr/local/Cellar/cmake/3.27.7/bin/cmake -E cmake_link_script CMakeFiles/cmTC_537f9.dir/link.txt --verbose=1]
+        ignore line: [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.7 -Wl -search_paths_first -Wl -headerpad_max_install_names -L/usr/local/opt/zlib/lib -v -Wl -v CMakeFiles/cmTC_537f9.dir/CMakeCCompilerABI.c.o -o cmTC_537f9 ]
+        ignore line: [Apple clang version 13.0.0 (clang-1300.0.29.30)]
+        ignore line: [Target: x86_64-apple-darwin20.6.0]
+        ignore line: [Thread model: posix]
+        ignore line: [InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin]
+        link line: [ "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld" -demangle -lto_library /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/libLTO.dylib -dynamic -arch x86_64 -platform_version macos 11.7.0 12.1 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -o cmTC_537f9 -L/usr/local/opt/zlib/lib -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_537f9.dir/CMakeCCompilerABI.c.o -lSystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/lib/darwin/libclang_rt.osx.a]
+          arg [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld] ==> ignore
+          arg [-demangle] ==> ignore
+          arg [-lto_library] ==> ignore, skip following value
+          arg [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/libLTO.dylib] ==> skip value of -lto_library
+          arg [-dynamic] ==> ignore
+          arg [-arch] ==> ignore
+          arg [x86_64] ==> ignore
+          arg [-platform_version] ==> ignore
+          arg [macos] ==> ignore
+          arg [11.7.0] ==> ignore
+          arg [12.1] ==> ignore
+          arg [-syslibroot] ==> ignore
+          arg [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk] ==> ignore
+          arg [-o] ==> ignore
+          arg [cmTC_537f9] ==> ignore
+          arg [-L/usr/local/opt/zlib/lib] ==> dir [/usr/local/opt/zlib/lib]
+          arg [-search_paths_first] ==> ignore
+          arg [-headerpad_max_install_names] ==> ignore
+          arg [-v] ==> ignore
+          arg [CMakeFiles/cmTC_537f9.dir/CMakeCCompilerABI.c.o] ==> ignore
+          arg [-lSystem] ==> lib [System]
+          arg [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/lib/darwin/libclang_rt.osx.a] ==> lib [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/lib/darwin/libclang_rt.osx.a]
+        Library search paths: [;/usr/local/opt/zlib/lib;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/lib]
+        Framework search paths: [;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/System/Library/Frameworks/]
+        remove lib [System]
+        remove lib [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/lib/darwin/libclang_rt.osx.a]
+        collapse library dir [/usr/local/opt/zlib/lib] ==> [/usr/local/opt/zlib/lib]
+        collapse library dir [/usr/local/opt/zlib/lib] ==> [/usr/local/opt/zlib/lib]
+        collapse library dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/lib] ==> [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/lib]
+        collapse framework dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/System/Library/Frameworks/] ==> [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/System/Library/Frameworks]
+        implicit libs: []
+        implicit objs: []
+        implicit dirs: [/usr/local/opt/zlib/lib;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/lib]
+        implicit fwks: [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/System/Library/Frameworks]
+      
+      
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:57 (try_compile)"
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:1 (project)"
+    checks:
+      - "Detecting CXX compiler ABI info"
+    directories:
+      source: "/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-jpIVmq"
+      binary: "/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-jpIVmq"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: "11.7"
+      CMAKE_OSX_SYSROOT: "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk"
+    buildResult:
+      variable: "CMAKE_CXX_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-jpIVmq'
+        
+        Run Build Command(s): /usr/local/Cellar/cmake/3.27.7/bin/cmake -E env VERBOSE=1 /usr/local/bin/gmake -f Makefile cmTC_1f5b5/fast
+        /usr/local/bin/gmake  -f CMakeFiles/cmTC_1f5b5.dir/build.make CMakeFiles/cmTC_1f5b5.dir/build
+        gmake[1]: Entering directory '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-jpIVmq'
+        Building CXX object CMakeFiles/cmTC_1f5b5.dir/CMakeCXXCompilerABI.cpp.o
+        /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.7   -v -Wl,-v -MD -MT CMakeFiles/cmTC_1f5b5.dir/CMakeCXXCompilerABI.cpp.o -MF CMakeFiles/cmTC_1f5b5.dir/CMakeCXXCompilerABI.cpp.o.d -o CMakeFiles/cmTC_1f5b5.dir/CMakeCXXCompilerABI.cpp.o -c /usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeCXXCompilerABI.cpp
+        Apple clang version 13.0.0 (clang-1300.0.29.30)
+        Target: x86_64-apple-darwin20.6.0
+        Thread model: posix
+        InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+        clang: warning: -Wl,-v: 'linker' input unused [-Wunused-command-line-argument]
+         "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang" -cc1 -triple x86_64-apple-macosx11.7.0 -Wundef-prefix=TARGET_OS_ -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -Werror=implicit-function-declaration -emit-obj -mrelax-all --mrelax-relocations -disable-free -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=all -fno-strict-return -fno-rounding-math -munwind-tables -target-sdk-version=12.1 -fvisibility-inlines-hidden-static-local-var -target-cpu penryn -tune-cpu generic -debugger-tuning=lldb -target-linker-version 711 -v -resource-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0 -dependency-file CMakeFiles/cmTC_1f5b5.dir/CMakeCXXCompilerABI.cpp.o.d -skip-unused-modulemap-deps -MT CMakeFiles/cmTC_1f5b5.dir/CMakeCXXCompilerABI.cpp.o -sys-header-deps -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -stdlib=libc++ -internal-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1 -internal-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/local/include -internal-isystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/include -internal-externc-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include -internal-externc-isystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -Wno-reorder-init-list -Wno-implicit-int-float-conversion -Wno-c99-designator -Wno-final-dtor-non-final-class -Wno-extra-semi-stmt -Wno-misleading-indentation -Wno-quoted-include-in-framework-header -Wno-implicit-fallthrough -Wno-enum-enum-conversion -Wno-enum-float-conversion -Wno-elaborated-enum-base -fdeprecated-macro -fdebug-compilation-dir /Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-jpIVmq -ferror-limit 19 -stack-protector 1 -fstack-check -mdarwin-stkchk-strong-link -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fgnuc-version=4.2.1 -fno-cxx-modules -fcxx-exceptions -fexceptions -fmax-type-align=16 -fcommon -clang-vendor-feature=+nullptrToBoolConversion -clang-vendor-feature=+messageToSelfInClassMethodIdReturnType -clang-vendor-feature=+disableInferNewAvailabilityFromInit -clang-vendor-feature=+disableNeonImmediateRangeCheck -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -fno-odr-hash-protocols -clang-vendor-feature=+revert09abecef7bbf -mllvm -disable-aligned-alloc-awareness=1 -mllvm -enable-dse-memoryssa=0 -o CMakeFiles/cmTC_1f5b5.dir/CMakeCXXCompilerABI.cpp.o -x c++ /usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeCXXCompilerABI.cpp
+        clang -cc1 version 13.0.0 (clang-1300.0.29.30) default target x86_64-apple-darwin20.6.0
+        ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/local/include"
+        ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/Library/Frameworks"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1
+         /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/include
+         /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include
+         /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include
+         /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/System/Library/Frameworks (framework directory)
+        End of search list.
+        Linking CXX executable cmTC_1f5b5
+        /usr/local/Cellar/cmake/3.27.7/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1f5b5.dir/link.txt --verbose=1
+        /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.7 -Wl,-search_paths_first -Wl,-headerpad_max_install_names -L/usr/local/opt/zlib/lib -v -Wl,-v CMakeFiles/cmTC_1f5b5.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_1f5b5 
+        Apple clang version 13.0.0 (clang-1300.0.29.30)
+        Target: x86_64-apple-darwin20.6.0
+        Thread model: posix
+        InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+         "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld" -demangle -lto_library /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/libLTO.dylib -dynamic -arch x86_64 -platform_version macos 11.7.0 12.1 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -o cmTC_1f5b5 -L/usr/local/opt/zlib/lib -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_1f5b5.dir/CMakeCXXCompilerABI.cpp.o -lc++ -lSystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/lib/darwin/libclang_rt.osx.a
+        @(#)PROGRAM:ld  PROJECT:ld64-711
+        BUILD 21:57:11 Nov 17 2021
+        configured to support archs: armv6 armv7 armv7s arm64 arm64e arm64_32 i386 x86_64 x86_64h armv6m armv7k armv7m armv7em
+        Library search paths:
+        	/usr/local/opt/zlib/lib
+        	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/lib
+        Framework search paths:
+        	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/System/Library/Frameworks/
+        gmake[1]: Leaving directory '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-jpIVmq'
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:127 (message)"
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:1 (project)"
+    message: |
+      Parsed CXX implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1]
+          add: [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/include]
+          add: [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include]
+          add: [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include]
+        end of search list found
+        collapse include dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1] ==> [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1]
+        collapse include dir [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/include] ==> [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/include]
+        collapse include dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include] ==> [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include]
+        collapse include dir [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include] ==> [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include]
+        implicit include dirs: [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1;/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/include;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include;/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:152 (message)"
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:1 (project)"
+    message: |
+      Parsed CXX implicit link information:
+        link line regex: [^( *|.*[/\\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        ignore line: [Change Dir: '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-jpIVmq']
+        ignore line: []
+        ignore line: [Run Build Command(s): /usr/local/Cellar/cmake/3.27.7/bin/cmake -E env VERBOSE=1 /usr/local/bin/gmake -f Makefile cmTC_1f5b5/fast]
+        ignore line: [/usr/local/bin/gmake  -f CMakeFiles/cmTC_1f5b5.dir/build.make CMakeFiles/cmTC_1f5b5.dir/build]
+        ignore line: [gmake[1]: Entering directory '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-jpIVmq']
+        ignore line: [Building CXX object CMakeFiles/cmTC_1f5b5.dir/CMakeCXXCompilerABI.cpp.o]
+        ignore line: [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.7   -v -Wl -v -MD -MT CMakeFiles/cmTC_1f5b5.dir/CMakeCXXCompilerABI.cpp.o -MF CMakeFiles/cmTC_1f5b5.dir/CMakeCXXCompilerABI.cpp.o.d -o CMakeFiles/cmTC_1f5b5.dir/CMakeCXXCompilerABI.cpp.o -c /usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [Apple clang version 13.0.0 (clang-1300.0.29.30)]
+        ignore line: [Target: x86_64-apple-darwin20.6.0]
+        ignore line: [Thread model: posix]
+        ignore line: [InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin]
+        ignore line: [clang: warning: -Wl -v: 'linker' input unused [-Wunused-command-line-argument]]
+        ignore line: [ "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang" -cc1 -triple x86_64-apple-macosx11.7.0 -Wundef-prefix=TARGET_OS_ -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -Werror=implicit-function-declaration -emit-obj -mrelax-all --mrelax-relocations -disable-free -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=all -fno-strict-return -fno-rounding-math -munwind-tables -target-sdk-version=12.1 -fvisibility-inlines-hidden-static-local-var -target-cpu penryn -tune-cpu generic -debugger-tuning=lldb -target-linker-version 711 -v -resource-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0 -dependency-file CMakeFiles/cmTC_1f5b5.dir/CMakeCXXCompilerABI.cpp.o.d -skip-unused-modulemap-deps -MT CMakeFiles/cmTC_1f5b5.dir/CMakeCXXCompilerABI.cpp.o -sys-header-deps -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -stdlib=libc++ -internal-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1 -internal-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/local/include -internal-isystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/include -internal-externc-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include -internal-externc-isystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -Wno-reorder-init-list -Wno-implicit-int-float-conversion -Wno-c99-designator -Wno-final-dtor-non-final-class -Wno-extra-semi-stmt -Wno-misleading-indentation -Wno-quoted-include-in-framework-header -Wno-implicit-fallthrough -Wno-enum-enum-conversion -Wno-enum-float-conversion -Wno-elaborated-enum-base -fdeprecated-macro -fdebug-compilation-dir /Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-jpIVmq -ferror-limit 19 -stack-protector 1 -fstack-check -mdarwin-stkchk-strong-link -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fgnuc-version=4.2.1 -fno-cxx-modules -fcxx-exceptions -fexceptions -fmax-type-align=16 -fcommon -clang-vendor-feature=+nullptrToBoolConversion -clang-vendor-feature=+messageToSelfInClassMethodIdReturnType -clang-vendor-feature=+disableInferNewAvailabilityFromInit -clang-vendor-feature=+disableNeonImmediateRangeCheck -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -fno-odr-hash-protocols -clang-vendor-feature=+revert09abecef7bbf -mllvm -disable-aligned-alloc-awareness=1 -mllvm -enable-dse-memoryssa=0 -o CMakeFiles/cmTC_1f5b5.dir/CMakeCXXCompilerABI.cpp.o -x c++ /usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [clang -cc1 version 13.0.0 (clang-1300.0.29.30) default target x86_64-apple-darwin20.6.0]
+        ignore line: [ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/local/include"]
+        ignore line: [ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/Library/Frameworks"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1]
+        ignore line: [ /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/include]
+        ignore line: [ /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include]
+        ignore line: [ /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include]
+        ignore line: [ /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/System/Library/Frameworks (framework directory)]
+        ignore line: [End of search list.]
+        ignore line: [Linking CXX executable cmTC_1f5b5]
+        ignore line: [/usr/local/Cellar/cmake/3.27.7/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1f5b5.dir/link.txt --verbose=1]
+        ignore line: [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.7 -Wl -search_paths_first -Wl -headerpad_max_install_names -L/usr/local/opt/zlib/lib -v -Wl -v CMakeFiles/cmTC_1f5b5.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_1f5b5 ]
+        ignore line: [Apple clang version 13.0.0 (clang-1300.0.29.30)]
+        ignore line: [Target: x86_64-apple-darwin20.6.0]
+        ignore line: [Thread model: posix]
+        ignore line: [InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin]
+        link line: [ "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld" -demangle -lto_library /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/libLTO.dylib -dynamic -arch x86_64 -platform_version macos 11.7.0 12.1 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -o cmTC_1f5b5 -L/usr/local/opt/zlib/lib -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_1f5b5.dir/CMakeCXXCompilerABI.cpp.o -lc++ -lSystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/lib/darwin/libclang_rt.osx.a]
+          arg [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld] ==> ignore
+          arg [-demangle] ==> ignore
+          arg [-lto_library] ==> ignore, skip following value
+          arg [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/libLTO.dylib] ==> skip value of -lto_library
+          arg [-dynamic] ==> ignore
+          arg [-arch] ==> ignore
+          arg [x86_64] ==> ignore
+          arg [-platform_version] ==> ignore
+          arg [macos] ==> ignore
+          arg [11.7.0] ==> ignore
+          arg [12.1] ==> ignore
+          arg [-syslibroot] ==> ignore
+          arg [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk] ==> ignore
+          arg [-o] ==> ignore
+          arg [cmTC_1f5b5] ==> ignore
+          arg [-L/usr/local/opt/zlib/lib] ==> dir [/usr/local/opt/zlib/lib]
+          arg [-search_paths_first] ==> ignore
+          arg [-headerpad_max_install_names] ==> ignore
+          arg [-v] ==> ignore
+          arg [CMakeFiles/cmTC_1f5b5.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+          arg [-lc++] ==> lib [c++]
+          arg [-lSystem] ==> lib [System]
+          arg [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/lib/darwin/libclang_rt.osx.a] ==> lib [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/lib/darwin/libclang_rt.osx.a]
+        Library search paths: [;/usr/local/opt/zlib/lib;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/lib]
+        Framework search paths: [;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/System/Library/Frameworks/]
+        remove lib [System]
+        remove lib [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/lib/darwin/libclang_rt.osx.a]
+        collapse library dir [/usr/local/opt/zlib/lib] ==> [/usr/local/opt/zlib/lib]
+        collapse library dir [/usr/local/opt/zlib/lib] ==> [/usr/local/opt/zlib/lib]
+        collapse library dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/lib] ==> [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/lib]
+        collapse framework dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/System/Library/Frameworks/] ==> [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/System/Library/Frameworks]
+        implicit libs: [c++]
+        implicit objs: []
+        implicit dirs: [/usr/local/opt/zlib/lib;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/lib]
+        implicit fwks: [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/System/Library/Frameworks]
+      
+      
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/FindOpenMP.cmake:219 (try_compile)"
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/FindOpenMP.cmake:483 (_OPENMP_GET_FLAGS)"
+      - "/Users/sasha/Documents/code/repos/ncnn/build/install/lib/cmake/ncnn/ncnnConfig.cmake:8 (find_package)"
+      - "CMakeLists.txt:7 (find_package)"
+    description: "Detecting C OpenMP compiler info"
+    directories:
+      source: "/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-h2TuX9"
+      binary: "/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-h2TuX9"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: "11.7"
+      CMAKE_OSX_SYSROOT: "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk"
+    buildResult:
+      variable: "OpenMP_COMPILE_RESULT_C_fopenmplibomp"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-h2TuX9'
+        
+        Run Build Command(s): /usr/local/Cellar/cmake/3.27.7/bin/cmake -E env VERBOSE=1 /usr/local/bin/gmake -f Makefile cmTC_0bfd4/fast
+        /usr/local/bin/gmake  -f CMakeFiles/cmTC_0bfd4.dir/build.make CMakeFiles/cmTC_0bfd4.dir/build
+        gmake[1]: Entering directory '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-h2TuX9'
+        Building C object CMakeFiles/cmTC_0bfd4.dir/OpenMPTryFlag.c.o
+        /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -fopenmp=libomp -v -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.7 -MD -MT CMakeFiles/cmTC_0bfd4.dir/OpenMPTryFlag.c.o -MF CMakeFiles/cmTC_0bfd4.dir/OpenMPTryFlag.c.o.d -o CMakeFiles/cmTC_0bfd4.dir/OpenMPTryFlag.c.o -c /Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-h2TuX9/OpenMPTryFlag.c
+        Apple clang version 13.0.0 (clang-1300.0.29.30)
+        Target: x86_64-apple-darwin20.6.0
+        Thread model: posix
+        InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+        clang: error: unsupported argument 'libomp' to option 'fopenmp='
+        gmake[1]: *** [CMakeFiles/cmTC_0bfd4.dir/build.make:79: CMakeFiles/cmTC_0bfd4.dir/OpenMPTryFlag.c.o] Error 1
+        gmake[1]: Leaving directory '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-h2TuX9'
+        gmake: *** [Makefile:127: cmTC_0bfd4/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/FindOpenMP.cmake:219 (try_compile)"
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/FindOpenMP.cmake:483 (_OPENMP_GET_FLAGS)"
+      - "/Users/sasha/Documents/code/repos/ncnn/build/install/lib/cmake/ncnn/ncnnConfig.cmake:8 (find_package)"
+      - "CMakeLists.txt:7 (find_package)"
+    description: "Detecting C OpenMP compiler info"
+    directories:
+      source: "/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-acTlrh"
+      binary: "/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-acTlrh"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: "11.7"
+      CMAKE_OSX_SYSROOT: "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk"
+    buildResult:
+      variable: "OpenMP_COMPILE_RESULT_C_fopenmplibiomp5"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-acTlrh'
+        
+        Run Build Command(s): /usr/local/Cellar/cmake/3.27.7/bin/cmake -E env VERBOSE=1 /usr/local/bin/gmake -f Makefile cmTC_7de3d/fast
+        /usr/local/bin/gmake  -f CMakeFiles/cmTC_7de3d.dir/build.make CMakeFiles/cmTC_7de3d.dir/build
+        gmake[1]: Entering directory '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-acTlrh'
+        Building C object CMakeFiles/cmTC_7de3d.dir/OpenMPTryFlag.c.o
+        /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -fopenmp=libiomp5 -v -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.7 -MD -MT CMakeFiles/cmTC_7de3d.dir/OpenMPTryFlag.c.o -MF CMakeFiles/cmTC_7de3d.dir/OpenMPTryFlag.c.o.d -o CMakeFiles/cmTC_7de3d.dir/OpenMPTryFlag.c.o -c /Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-acTlrh/OpenMPTryFlag.c
+        Apple clang version 13.0.0 (clang-1300.0.29.30)
+        Target: x86_64-apple-darwin20.6.0
+        Thread model: posix
+        InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+        clang: error: unsupported argument 'libiomp5' to option 'fopenmp='
+        gmake[1]: *** [CMakeFiles/cmTC_7de3d.dir/build.make:79: CMakeFiles/cmTC_7de3d.dir/OpenMPTryFlag.c.o] Error 1
+        gmake[1]: Leaving directory '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-acTlrh'
+        gmake: *** [Makefile:127: cmTC_7de3d/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/FindOpenMP.cmake:219 (try_compile)"
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/FindOpenMP.cmake:483 (_OPENMP_GET_FLAGS)"
+      - "/Users/sasha/Documents/code/repos/ncnn/build/install/lib/cmake/ncnn/ncnnConfig.cmake:8 (find_package)"
+      - "CMakeLists.txt:7 (find_package)"
+    description: "Detecting C OpenMP compiler info"
+    directories:
+      source: "/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-y8258n"
+      binary: "/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-y8258n"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: "11.7"
+      CMAKE_OSX_SYSROOT: "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk"
+    buildResult:
+      variable: "OpenMP_COMPILE_RESULT_C_fopenmp"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-y8258n'
+        
+        Run Build Command(s): /usr/local/Cellar/cmake/3.27.7/bin/cmake -E env VERBOSE=1 /usr/local/bin/gmake -f Makefile cmTC_113a0/fast
+        /usr/local/bin/gmake  -f CMakeFiles/cmTC_113a0.dir/build.make CMakeFiles/cmTC_113a0.dir/build
+        gmake[1]: Entering directory '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-y8258n'
+        Building C object CMakeFiles/cmTC_113a0.dir/OpenMPTryFlag.c.o
+        /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -fopenmp -v -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.7 -MD -MT CMakeFiles/cmTC_113a0.dir/OpenMPTryFlag.c.o -MF CMakeFiles/cmTC_113a0.dir/OpenMPTryFlag.c.o.d -o CMakeFiles/cmTC_113a0.dir/OpenMPTryFlag.c.o -c /Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-y8258n/OpenMPTryFlag.c
+        Apple clang version 13.0.0 (clang-1300.0.29.30)
+        Target: x86_64-apple-darwin20.6.0
+        Thread model: posix
+        InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+        clang: error: unsupported option '-fopenmp'
+        gmake[1]: *** [CMakeFiles/cmTC_113a0.dir/build.make:79: CMakeFiles/cmTC_113a0.dir/OpenMPTryFlag.c.o] Error 1
+        gmake[1]: Leaving directory '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-y8258n'
+        gmake: *** [Makefile:127: cmTC_113a0/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/FindOpenMP.cmake:219 (try_compile)"
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/FindOpenMP.cmake:483 (_OPENMP_GET_FLAGS)"
+      - "/Users/sasha/Documents/code/repos/ncnn/build/install/lib/cmake/ncnn/ncnnConfig.cmake:8 (find_package)"
+      - "CMakeLists.txt:7 (find_package)"
+    description: "Detecting C OpenMP compiler info"
+    directories:
+      source: "/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-N2pBU1"
+      binary: "/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-N2pBU1"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: "11.7"
+      CMAKE_OSX_SYSROOT: "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk"
+    buildResult:
+      variable: "OpenMP_COMPILE_RESULT_C_Xclang fopenmp"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-N2pBU1'
+        
+        Run Build Command(s): /usr/local/Cellar/cmake/3.27.7/bin/cmake -E env VERBOSE=1 /usr/local/bin/gmake -f Makefile cmTC_33699/fast
+        /usr/local/bin/gmake  -f CMakeFiles/cmTC_33699.dir/build.make CMakeFiles/cmTC_33699.dir/build
+        gmake[1]: Entering directory '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-N2pBU1'
+        Building C object CMakeFiles/cmTC_33699.dir/OpenMPTryFlag.c.o
+        /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -Xclang -fopenmp -v -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.7 -MD -MT CMakeFiles/cmTC_33699.dir/OpenMPTryFlag.c.o -MF CMakeFiles/cmTC_33699.dir/OpenMPTryFlag.c.o.d -o CMakeFiles/cmTC_33699.dir/OpenMPTryFlag.c.o -c /Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-N2pBU1/OpenMPTryFlag.c
+        Apple clang version 13.0.0 (clang-1300.0.29.30)
+        Target: x86_64-apple-darwin20.6.0
+        Thread model: posix
+        InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+         "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang" -cc1 -triple x86_64-apple-macosx11.7.0 -Wundef-prefix=TARGET_OS_ -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -Werror=implicit-function-declaration -emit-obj -mrelax-all --mrelax-relocations -disable-free -disable-llvm-verifier -discard-value-names -main-file-name OpenMPTryFlag.c -mrelocation-model pic -pic-level 2 -mframe-pointer=all -fno-strict-return -fno-rounding-math -munwind-tables -target-sdk-version=12.1 -fvisibility-inlines-hidden-static-local-var -target-cpu penryn -tune-cpu generic -debugger-tuning=lldb -target-linker-version 711 -v -resource-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0 -dependency-file CMakeFiles/cmTC_33699.dir/OpenMPTryFlag.c.o.d -skip-unused-modulemap-deps -MT CMakeFiles/cmTC_33699.dir/OpenMPTryFlag.c.o -sys-header-deps -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -internal-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/local/include -internal-isystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/include -internal-externc-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include -internal-externc-isystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -Wno-reorder-init-list -Wno-implicit-int-float-conversion -Wno-c99-designator -Wno-final-dtor-non-final-class -Wno-extra-semi-stmt -Wno-misleading-indentation -Wno-quoted-include-in-framework-header -Wno-implicit-fallthrough -Wno-enum-enum-conversion -Wno-enum-float-conversion -Wno-elaborated-enum-base -fdebug-compilation-dir /Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-N2pBU1 -ferror-limit 19 -stack-protector 1 -fstack-check -mdarwin-stkchk-strong-link -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fgnuc-version=4.2.1 -fmax-type-align=16 -fcommon -fopenmp -clang-vendor-feature=+nullptrToBoolConversion -clang-vendor-feature=+messageToSelfInClassMethodIdReturnType -clang-vendor-feature=+disableInferNewAvailabilityFromInit -clang-vendor-feature=+disableNeonImmediateRangeCheck -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -fno-odr-hash-protocols -clang-vendor-feature=+revert09abecef7bbf -mllvm -disable-aligned-alloc-awareness=1 -mllvm -enable-dse-memoryssa=0 -o CMakeFiles/cmTC_33699.dir/OpenMPTryFlag.c.o -x c /Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-N2pBU1/OpenMPTryFlag.c
+        clang -cc1 version 13.0.0 (clang-1300.0.29.30) default target x86_64-apple-darwin20.6.0
+        ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/local/include"
+        ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/Library/Frameworks"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/include
+         /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include
+         /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include
+         /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/System/Library/Frameworks (framework directory)
+        End of search list.
+        /Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-N2pBU1/OpenMPTryFlag.c:2:10: fatal error: 'omp.h' file not found
+        #include <omp.h>
+                 ^~~~~~~
+        1 error generated.
+        gmake[1]: *** [CMakeFiles/cmTC_33699.dir/build.make:79: CMakeFiles/cmTC_33699.dir/OpenMPTryFlag.c.o] Error 1
+        gmake[1]: Leaving directory '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-N2pBU1'
+        gmake: *** [Makefile:127: cmTC_33699/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/FindOpenMP.cmake:219 (try_compile)"
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/FindOpenMP.cmake:483 (_OPENMP_GET_FLAGS)"
+      - "/Users/sasha/Documents/code/repos/ncnn/build/install/lib/cmake/ncnn/ncnnConfig.cmake:8 (find_package)"
+      - "CMakeLists.txt:7 (find_package)"
+    description: "Detecting CXX OpenMP compiler info"
+    directories:
+      source: "/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-4pmERY"
+      binary: "/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-4pmERY"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: "11.7"
+      CMAKE_OSX_SYSROOT: "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk"
+    buildResult:
+      variable: "OpenMP_COMPILE_RESULT_CXX_fopenmplibomp"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-4pmERY'
+        
+        Run Build Command(s): /usr/local/Cellar/cmake/3.27.7/bin/cmake -E env VERBOSE=1 /usr/local/bin/gmake -f Makefile cmTC_04b11/fast
+        /usr/local/bin/gmake  -f CMakeFiles/cmTC_04b11.dir/build.make CMakeFiles/cmTC_04b11.dir/build
+        gmake[1]: Entering directory '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-4pmERY'
+        Building CXX object CMakeFiles/cmTC_04b11.dir/OpenMPTryFlag.cpp.o
+        /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -fopenmp=libomp -v -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.7 -MD -MT CMakeFiles/cmTC_04b11.dir/OpenMPTryFlag.cpp.o -MF CMakeFiles/cmTC_04b11.dir/OpenMPTryFlag.cpp.o.d -o CMakeFiles/cmTC_04b11.dir/OpenMPTryFlag.cpp.o -c /Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-4pmERY/OpenMPTryFlag.cpp
+        Apple clang version 13.0.0 (clang-1300.0.29.30)
+        Target: x86_64-apple-darwin20.6.0
+        Thread model: posix
+        InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+        clang: error: unsupported argument 'libomp' to option 'fopenmp='
+        gmake[1]: *** [CMakeFiles/cmTC_04b11.dir/build.make:79: CMakeFiles/cmTC_04b11.dir/OpenMPTryFlag.cpp.o] Error 1
+        gmake[1]: Leaving directory '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-4pmERY'
+        gmake: *** [Makefile:127: cmTC_04b11/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/FindOpenMP.cmake:219 (try_compile)"
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/FindOpenMP.cmake:483 (_OPENMP_GET_FLAGS)"
+      - "/Users/sasha/Documents/code/repos/ncnn/build/install/lib/cmake/ncnn/ncnnConfig.cmake:8 (find_package)"
+      - "CMakeLists.txt:7 (find_package)"
+    description: "Detecting CXX OpenMP compiler info"
+    directories:
+      source: "/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-IeUd3a"
+      binary: "/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-IeUd3a"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: "11.7"
+      CMAKE_OSX_SYSROOT: "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk"
+    buildResult:
+      variable: "OpenMP_COMPILE_RESULT_CXX_fopenmplibiomp5"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-IeUd3a'
+        
+        Run Build Command(s): /usr/local/Cellar/cmake/3.27.7/bin/cmake -E env VERBOSE=1 /usr/local/bin/gmake -f Makefile cmTC_b600a/fast
+        /usr/local/bin/gmake  -f CMakeFiles/cmTC_b600a.dir/build.make CMakeFiles/cmTC_b600a.dir/build
+        gmake[1]: Entering directory '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-IeUd3a'
+        Building CXX object CMakeFiles/cmTC_b600a.dir/OpenMPTryFlag.cpp.o
+        /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -fopenmp=libiomp5 -v -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.7 -MD -MT CMakeFiles/cmTC_b600a.dir/OpenMPTryFlag.cpp.o -MF CMakeFiles/cmTC_b600a.dir/OpenMPTryFlag.cpp.o.d -o CMakeFiles/cmTC_b600a.dir/OpenMPTryFlag.cpp.o -c /Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-IeUd3a/OpenMPTryFlag.cpp
+        Apple clang version 13.0.0 (clang-1300.0.29.30)
+        Target: x86_64-apple-darwin20.6.0
+        Thread model: posix
+        InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+        clang: error: unsupported argument 'libiomp5' to option 'fopenmp='
+        gmake[1]: *** [CMakeFiles/cmTC_b600a.dir/build.make:79: CMakeFiles/cmTC_b600a.dir/OpenMPTryFlag.cpp.o] Error 1
+        gmake[1]: Leaving directory '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-IeUd3a'
+        gmake: *** [Makefile:127: cmTC_b600a/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/FindOpenMP.cmake:219 (try_compile)"
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/FindOpenMP.cmake:483 (_OPENMP_GET_FLAGS)"
+      - "/Users/sasha/Documents/code/repos/ncnn/build/install/lib/cmake/ncnn/ncnnConfig.cmake:8 (find_package)"
+      - "CMakeLists.txt:7 (find_package)"
+    description: "Detecting CXX OpenMP compiler info"
+    directories:
+      source: "/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-0P91dd"
+      binary: "/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-0P91dd"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: "11.7"
+      CMAKE_OSX_SYSROOT: "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk"
+    buildResult:
+      variable: "OpenMP_COMPILE_RESULT_CXX_fopenmp"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-0P91dd'
+        
+        Run Build Command(s): /usr/local/Cellar/cmake/3.27.7/bin/cmake -E env VERBOSE=1 /usr/local/bin/gmake -f Makefile cmTC_2c86a/fast
+        /usr/local/bin/gmake  -f CMakeFiles/cmTC_2c86a.dir/build.make CMakeFiles/cmTC_2c86a.dir/build
+        gmake[1]: Entering directory '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-0P91dd'
+        Building CXX object CMakeFiles/cmTC_2c86a.dir/OpenMPTryFlag.cpp.o
+        /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -fopenmp -v -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.7 -MD -MT CMakeFiles/cmTC_2c86a.dir/OpenMPTryFlag.cpp.o -MF CMakeFiles/cmTC_2c86a.dir/OpenMPTryFlag.cpp.o.d -o CMakeFiles/cmTC_2c86a.dir/OpenMPTryFlag.cpp.o -c /Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-0P91dd/OpenMPTryFlag.cpp
+        Apple clang version 13.0.0 (clang-1300.0.29.30)
+        Target: x86_64-apple-darwin20.6.0
+        Thread model: posix
+        InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+        clang: error: unsupported option '-fopenmp'
+        gmake[1]: *** [CMakeFiles/cmTC_2c86a.dir/build.make:79: CMakeFiles/cmTC_2c86a.dir/OpenMPTryFlag.cpp.o] Error 1
+        gmake[1]: Leaving directory '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-0P91dd'
+        gmake: *** [Makefile:127: cmTC_2c86a/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/FindOpenMP.cmake:219 (try_compile)"
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/FindOpenMP.cmake:483 (_OPENMP_GET_FLAGS)"
+      - "/Users/sasha/Documents/code/repos/ncnn/build/install/lib/cmake/ncnn/ncnnConfig.cmake:8 (find_package)"
+      - "CMakeLists.txt:7 (find_package)"
+    description: "Detecting CXX OpenMP compiler info"
+    directories:
+      source: "/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-mAcyNW"
+      binary: "/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-mAcyNW"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: "11.7"
+      CMAKE_OSX_SYSROOT: "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk"
+    buildResult:
+      variable: "OpenMP_COMPILE_RESULT_CXX_Xclang fopenmp"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-mAcyNW'
+        
+        Run Build Command(s): /usr/local/Cellar/cmake/3.27.7/bin/cmake -E env VERBOSE=1 /usr/local/bin/gmake -f Makefile cmTC_30e87/fast
+        /usr/local/bin/gmake  -f CMakeFiles/cmTC_30e87.dir/build.make CMakeFiles/cmTC_30e87.dir/build
+        gmake[1]: Entering directory '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-mAcyNW'
+        Building CXX object CMakeFiles/cmTC_30e87.dir/OpenMPTryFlag.cpp.o
+        /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -Xclang -fopenmp -v -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.7 -MD -MT CMakeFiles/cmTC_30e87.dir/OpenMPTryFlag.cpp.o -MF CMakeFiles/cmTC_30e87.dir/OpenMPTryFlag.cpp.o.d -o CMakeFiles/cmTC_30e87.dir/OpenMPTryFlag.cpp.o -c /Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-mAcyNW/OpenMPTryFlag.cpp
+        Apple clang version 13.0.0 (clang-1300.0.29.30)
+        Target: x86_64-apple-darwin20.6.0
+        Thread model: posix
+        InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+         "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang" -cc1 -triple x86_64-apple-macosx11.7.0 -Wundef-prefix=TARGET_OS_ -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -Werror=implicit-function-declaration -emit-obj -mrelax-all --mrelax-relocations -disable-free -disable-llvm-verifier -discard-value-names -main-file-name OpenMPTryFlag.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=all -fno-strict-return -fno-rounding-math -munwind-tables -target-sdk-version=12.1 -fvisibility-inlines-hidden-static-local-var -target-cpu penryn -tune-cpu generic -debugger-tuning=lldb -target-linker-version 711 -v -resource-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0 -dependency-file CMakeFiles/cmTC_30e87.dir/OpenMPTryFlag.cpp.o.d -skip-unused-modulemap-deps -MT CMakeFiles/cmTC_30e87.dir/OpenMPTryFlag.cpp.o -sys-header-deps -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -stdlib=libc++ -internal-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1 -internal-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/local/include -internal-isystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/include -internal-externc-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include -internal-externc-isystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -Wno-reorder-init-list -Wno-implicit-int-float-conversion -Wno-c99-designator -Wno-final-dtor-non-final-class -Wno-extra-semi-stmt -Wno-misleading-indentation -Wno-quoted-include-in-framework-header -Wno-implicit-fallthrough -Wno-enum-enum-conversion -Wno-enum-float-conversion -Wno-elaborated-enum-base -fdeprecated-macro -fdebug-compilation-dir /Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-mAcyNW -ferror-limit 19 -stack-protector 1 -fstack-check -mdarwin-stkchk-strong-link -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fgnuc-version=4.2.1 -fno-cxx-modules -fcxx-exceptions -fexceptions -fmax-type-align=16 -fcommon -fopenmp -clang-vendor-feature=+nullptrToBoolConversion -clang-vendor-feature=+messageToSelfInClassMethodIdReturnType -clang-vendor-feature=+disableInferNewAvailabilityFromInit -clang-vendor-feature=+disableNeonImmediateRangeCheck -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -fno-odr-hash-protocols -clang-vendor-feature=+revert09abecef7bbf -mllvm -disable-aligned-alloc-awareness=1 -mllvm -enable-dse-memoryssa=0 -o CMakeFiles/cmTC_30e87.dir/OpenMPTryFlag.cpp.o -x c++ /Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-mAcyNW/OpenMPTryFlag.cpp
+        clang -cc1 version 13.0.0 (clang-1300.0.29.30) default target x86_64-apple-darwin20.6.0
+        ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/local/include"
+        ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/Library/Frameworks"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1
+         /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/include
+         /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include
+         /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include
+         /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/System/Library/Frameworks (framework directory)
+        End of search list.
+        /Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-mAcyNW/OpenMPTryFlag.cpp:2:10: fatal error: 'omp.h' file not found
+        #include <omp.h>
+                 ^~~~~~~
+        1 error generated.
+        gmake[1]: *** [CMakeFiles/cmTC_30e87.dir/build.make:79: CMakeFiles/cmTC_30e87.dir/OpenMPTryFlag.cpp.o] Error 1
+        gmake[1]: Leaving directory '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-mAcyNW'
+        gmake: *** [Makefile:127: cmTC_30e87/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/CheckCSourceCompiles.cmake:52 (cmake_check_source_compiles)"
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/FindThreads.cmake:97 (CHECK_C_SOURCE_COMPILES)"
+      - "/usr/local/Cellar/cmake/3.27.7/share/cmake/Modules/FindThreads.cmake:163 (_threads_check_libc)"
+      - "/Users/sasha/Documents/code/repos/ncnn/build/install/lib/cmake/ncnn/ncnnConfig.cmake:14 (find_package)"
+      - "CMakeLists.txt:7 (find_package)"
+    checks:
+      - "Performing Test CMAKE_HAVE_LIBC_PTHREAD"
+    directories:
+      source: "/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-JmxYLK"
+      binary: "/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-JmxYLK"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: "11.7"
+      CMAKE_OSX_SYSROOT: "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk"
+    buildResult:
+      variable: "CMAKE_HAVE_LIBC_PTHREAD"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-JmxYLK'
+        
+        Run Build Command(s): /usr/local/Cellar/cmake/3.27.7/bin/cmake -E env VERBOSE=1 /usr/local/bin/gmake -f Makefile cmTC_008f5/fast
+        /usr/local/bin/gmake  -f CMakeFiles/cmTC_008f5.dir/build.make CMakeFiles/cmTC_008f5.dir/build
+        gmake[1]: Entering directory '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-JmxYLK'
+        Building C object CMakeFiles/cmTC_008f5.dir/src.c.o
+        /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc -DCMAKE_HAVE_LIBC_PTHREAD  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.7 -MD -MT CMakeFiles/cmTC_008f5.dir/src.c.o -MF CMakeFiles/cmTC_008f5.dir/src.c.o.d -o CMakeFiles/cmTC_008f5.dir/src.c.o -c /Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-JmxYLK/src.c
+        Linking C executable cmTC_008f5
+        /usr/local/Cellar/cmake/3.27.7/bin/cmake -E cmake_link_script CMakeFiles/cmTC_008f5.dir/link.txt --verbose=1
+        /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.7 -Wl,-search_paths_first -Wl,-headerpad_max_install_names -L/usr/local/opt/zlib/lib  CMakeFiles/cmTC_008f5.dir/src.c.o -o cmTC_008f5 
+        gmake[1]: Leaving directory '/Users/sasha/Documents/code/repos/IE-minor/kinect-nn/build/CMakeFiles/CMakeScratch/TryCompile-JmxYLK'
+        
+      exitCode: 0
+...

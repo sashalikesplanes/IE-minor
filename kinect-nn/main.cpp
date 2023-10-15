@@ -1,99 +1,99 @@
 #include <opencv2/opencv.hpp>
 #include <libfreenect2/libfreenect2.hpp>
+#include <libfreenect2/frame_listener.hpp>
 #include <libfreenect2/frame_listener_impl.h>
 #include <libfreenect2/registration.h>
 #include <libfreenect2/packet_pipeline.h>
 #include <libfreenect2/logger.h>
-#include <libfreenect/libfreenect_sync.h>
 #include <unistd.h>
 #include <iostream>
 #include <signal.h>
 #include <thread>
+#include <memory>
 #include <mutex>
 #include <random>
 #include "nanodet.h"
 
-// Hardcoded serial number for KinectV2 (window)
-std::string KINECTV2_SERIAL = "255315733947";
 
+int NUM_CAMS = 2;
+std::array<std::string, 2> KINECTV2_SERIALS = { "000304760647", "255315733947"};
 // Global matricies for sharing image data between threads
-cv::Mat latest_window_image;
-cv::Mat latest_corridor_image;
-std::mutex window_image_lock;
-std::mutex corridor_image_lock;
+std::array<cv::Mat, 2> latest_images;
+std::array<std::mutex, 2> image_locks;
+libfreenect2::Freenect2 freenect2;
+std::array<libfreenect2::Freenect2Device *, 2> devices = { 0, 0 };
 
 // Global shutdown flag
 bool shutdown = false;
 void sigint_handler(int s)
 {
     shutdown = true;
+    for (int i = 0; i < NUM_CAMS; ++i) {
+      devices[i]->stop();
+      devices[i]->close();
+    }
     exit(0);
 }
 
-// Global Freenect2 objects
-libfreenect2::Freenect2 freenect2;
-libfreenect2::Freenect2Device *dev = 0;
-libfreenect2::SyncMultiFrameListener listener(libfreenect2::Frame::Ir);
-libfreenect2::FrameMap frames;
+class MyFrameListener0 : public libfreenect2::FrameListener {
+public:
+  virtual ~MyFrameListener0() {}
 
-int get_window_image()
-{
-    while (!shutdown)
-    {
-        // Setup matrixes
-        cv::Mat raw_out_scaled;
-        cv::Mat raw_out_scaled_3c;
-
-        // Get image data
-        listener.waitForNewFrame(frames);
-        libfreenect2::Frame *ir = frames[libfreenect2::Frame::Ir];
-
-        // Convert image data
-        cv::Mat raw_out(ir->height, ir->width, CV_32FC1, ir->data);
-        raw_out.convertTo(raw_out_scaled, CV_8UC1, 255.0 / 4096.0);
-        cv::merge(std::vector<cv::Mat>(3, raw_out_scaled), raw_out_scaled_3c);
-
-        // Save image data
-        window_image_lock.lock();
-        raw_out_scaled_3c.copyTo(latest_window_image);
-        window_image_lock.unlock();
-
-        listener.release(frames);
-        std::cout << "GOT WINDOW" << std::endl;
+  virtual bool onNewFrame(libfreenect2::Frame::Type type, libfreenect2::Frame *frame) override {
+    std::cout << "Got frame idx: " << 0 << std::endl;
+    if (type != libfreenect2::Frame::Ir) {
+      std::cout << "Not IR frame" << std::endl;
+      return false;
     }
 
-    dev->stop();
-    dev->close();
-    return 0;
-}
+     cv::Mat raw_out_scaled;
+     cv::Mat raw_out_scaled_3c;
 
-void get_corridor_image()
-{
-    std::cout << "Launch corridor image thread" << std::endl;
-    while (!shutdown)
-    {
-        // Setup matrixes
-        cv::Mat raw_out_scaled;
-        cv::Mat raw_out_scaled_3c;
+    cv::Mat raw_out(frame->height, frame->width, CV_32FC1, frame->data);
+    raw_out.convertTo(raw_out_scaled, CV_8UC1, 255.0 / 4096.0);
+    cv::merge(std::vector<cv::Mat>(3, raw_out_scaled), raw_out_scaled_3c);
 
-        // Get image data
-        char *data;
-        unsigned int timestamp;
-        freenect_sync_get_video((void **)(&data), &timestamp, 0, FREENECT_VIDEO_IR_8BIT);
 
-        // Convert image data
-        cv::Mat raw_out(480, 640, CV_8UC1, data);
-        raw_out.convertTo(raw_out_scaled, -1, 10.0);
-        cv::merge(std::vector<cv::Mat>(3, raw_out_scaled), raw_out_scaled_3c);
+    // Save image data
+    image_locks[0].lock();
+    raw_out_scaled_3c.copyTo(latest_images[0]);
+    image_locks[0].unlock();
 
-        // Save image data
-        corridor_image_lock.lock();
-        raw_out_scaled_3c.copyTo(latest_corridor_image);
-        corridor_image_lock.unlock();
-        std::cout << "GOT CORRIDOR" << std::endl;
+    std::cout << "Saved frame idx: " << std::to_string(0) << std::endl;
+
+    return false; 
+  }
+};
+class MyFrameListener1 : public libfreenect2::FrameListener {
+public:
+  virtual ~MyFrameListener1() {}
+
+  virtual bool onNewFrame(libfreenect2::Frame::Type type, libfreenect2::Frame *frame) override {
+    std::cout << "Got frame idx: " << 1 << std::endl;
+    if (type != libfreenect2::Frame::Ir) {
+      std::cout << "Not IR frame" << std::endl;
+      return false;
     }
-    freenect_sync_stop();
-}
+
+     cv::Mat raw_out_scaled;
+     cv::Mat raw_out_scaled_3c;
+
+    cv::Mat raw_out(frame->height, frame->width, CV_32FC1, frame->data);
+    raw_out.convertTo(raw_out_scaled, CV_8UC1, 255.0 / 4096.0);
+    cv::merge(std::vector<cv::Mat>(3, raw_out_scaled), raw_out_scaled_3c);
+
+
+    // Save image data
+    image_locks[1].lock();
+    raw_out_scaled_3c.copyTo(latest_images[1]);
+    image_locks[1].unlock();
+
+    std::cout << "Saved frame idx: " << std::to_string(1) << std::endl;
+
+    return false; 
+  }
+};
+
 
 std::string make_dets_json(std::vector<BoxInfo> &dets, std::string source)
 {
@@ -126,8 +126,6 @@ std::string make_dets_json(std::vector<BoxInfo> &dets, std::string source)
 int main(int argc, char **argv)
 {
     // [OPTIONS]
-    bool start_corridor = false;         // 0001
-    bool start_window = false;           // 0010
     bool save_output_image = false;      // 0100
     bool save_each_output_image = false; // 1000
     float score_threshold = 0.5;
@@ -142,10 +140,6 @@ int main(int argc, char **argv)
 
     int flag = atoi(argv[1]);
 
-    if (flag & 1)
-        start_corridor = true;
-    if (flag & 2)
-        start_window = true;
     if (flag & 4)
         save_output_image = true;
     if (flag & 8)
@@ -160,22 +154,30 @@ int main(int argc, char **argv)
     shutdown = false;
     signal(SIGINT, sigint_handler);
 
-    // Start the KinectV2, and attach listeners N.B MUST BE DONE on main thread
-    dev = freenect2.openDevice(KINECTV2_SERIAL);
-    if (dev == 0)
-    {
-        std::cerr << "RESTART" << std::endl;
-        shutdown = true;
-        return -1;
-    }
-    dev->setIrAndDepthFrameListener(&listener);
-    dev->start();
+    std::cout << "Initialized" << std::endl;
 
-    // Launch the image fetching threads
-    std::thread corridor_thread(get_corridor_image);
-    corridor_thread.detach();
-    std::thread window_thread(get_window_image);
-    window_thread.detach();
+    // Start the KinectV2, and attach listeners N.B MUST BE DONE on main thread
+    for (int i = 0; i < NUM_CAMS; ++i) {
+        devices[i] = freenect2.openDevice(KINECTV2_SERIALS[i]);
+
+        std::cout << "Opened device" << std::endl;
+        if (devices[i] == 0)
+        {
+            std::cerr << "RESTART" << std::endl;
+            shutdown = true;
+            return -1;
+        }
+        
+        devices[i]->start();
+        if (i == 0) {
+          MyFrameListener0 myListener;
+          devices[i]->setIrAndDepthFrameListener(&myListener);
+        } else {
+          MyFrameListener1 myListener;
+          devices[i]->setIrAndDepthFrameListener(&myListener);
+        }
+        std::cout << "Started device: " << std::to_string(i) << std::endl;
+    }
 
     // Init NanoDet
     NanoDet detector = NanoDet("./nanodet.param", "./nanodet.bin", true);
@@ -188,21 +190,17 @@ int main(int argc, char **argv)
     int i = 0;
     while (!shutdown)
     {
+        i++;
+        int cam_idx = i % 2;
+
+        if (latest_images[cam_idx].empty())
+            continue;
+
         // Get the input image from one of the cams
         cv::Mat input_image;
-        float rand_prob = random_probability(generator);
-        if (!latest_window_image.empty() && rand_prob < window_prob)
-        {
-            window_image_lock.lock();
-            latest_window_image.copyTo(input_image);
-            window_image_lock.unlock();
-        }
-        else
-        {
-            corridor_image_lock.lock();
-            latest_corridor_image.copyTo(input_image);
-            corridor_image_lock.unlock();
-        }
+        image_locks[cam_idx].lock();
+        latest_images[cam_idx].copyTo(input_image);
+        image_locks[cam_idx].unlock();
 
         // Skip if empty to avoid crashing
         if (input_image.empty())
@@ -214,38 +212,26 @@ int main(int argc, char **argv)
         cv::Mat result_img = std::get<1>(results);
 
         // Optionally save last image
-        if (save_output_image && rand_prob < window_prob)
+        if (save_output_image)
         {
-            cv::imwrite("window_result.jpg", result_img);
-        }
-        else if (save_output_image)
-        {
-            cv::imwrite("corridor_result.jpg", result_img);
+            cv::imwrite("result_" + std::to_string(cam_idx) + ".jpg", result_img);
         }
 
         // Optionally save each image
-        if (save_each_output_image && rand_prob < window_prob)
+        if (save_each_output_image)
         {
-            cv::imwrite("window_result_" + std::to_string(i) + ".jpg", result_img);
+            cv::imwrite("result_" + std::to_string(cam_idx) + "_" + std::to_string(i) + ".jpg", result_img);
         }
-        else if (save_each_output_image)
-        {
-            cv::imwrite("corridor_result_" + std::to_string(i) + ".jpg", result_img);
-        }
-        i++;
 
         // Send results
-        std::string json_dets;
-        if (rand_prob < window_prob)
-        {
-            json_dets = make_dets_json(dets, "window");
-        }
-        else
-        {
-            json_dets = make_dets_json(dets, "corridor");
-        }
+        std::string json_dets = make_dets_json(dets, "camera_" + std::to_string(cam_idx));
 
         std::cout << json_dets << std::endl;
+    }
+
+    for (int i = 0; i < NUM_CAMS; ++i) {
+      devices[i]->stop();
+      devices[i]->close();
     }
 
     shutdown = true;
