@@ -39,6 +39,13 @@ setInterval(() => {
   console.log(message);
 
   ports.forEach((port) => {
-    port.write(message);
+    port.write(message, (err) => {
+      if (err) {
+        console.error(err);
+      }
+    });
+    port.on("error", (err) => {
+      console.error(err);
+    })
   });
 }, 3)

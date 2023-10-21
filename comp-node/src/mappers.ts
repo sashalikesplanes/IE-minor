@@ -10,7 +10,7 @@ import { getSegments, StripSegment } from "./path-finding";
 import { loadCameraMap, loadStripsMap } from "./utils";
 
 export interface NanodetDetection {
-  source: "window" | "corridor";
+  source: "camera_0" | "camera_1";
   label: number;
   score: number;
   x1: number;
