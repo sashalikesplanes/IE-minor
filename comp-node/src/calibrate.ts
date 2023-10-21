@@ -2,6 +2,7 @@ import Jimp from "jimp";
 import { join } from "path";
 import {
   CALIBRATION_SOLID_DURATION,
+  DOUBLE_LENGTH_STRIP_INDECES,
   NODE_COLOR,
   NODE_SOLID_DURATION,
   NODE_SOLID_WIDTH,
@@ -16,8 +17,8 @@ import {
 import { dispatchEvents } from "./serial";
 import { askQuestion, loadCameraMap, loadStripsMap, saveJson } from "./utils";
 
-async function calibrate() {
-  await calibrateStripsMap();
+async function calibrate(startingPixel: number | null = null) {
+  await calibrateStripsMap(startingPixel);
   const SILENT = false;
   const detection$ = detection$Factory(SILENT).subscribe();
   await calibrateCameraMap("corridor");
@@ -93,7 +94,7 @@ async function calibrateCameraMap(camera: "corridor" | "window") {
   }
 }
 
-async function calibrateStripsMap() {
+async function calibrateStripsMap(startingPixel: number | null = null) {
   if ((await askQuestion("Press 0 to skip strip map calibration: ")) === "0")
     return;
 
@@ -101,17 +102,19 @@ async function calibrateStripsMap() {
 
   dispatchEvents({ type: "clear", next: null });
   const nodeToStripsMap = loadStripsMap();
-  for (let i = 0; i < nodeToStripsMap.length; i++) {
+  for (let i = startingPixel ?? 0; i < nodeToStripsMap.length; i++) {
     const stripPixels = nodeToStripsMap[i];
     const nodeIdx = i;
 
     for (let j = 0; j < stripPixels.length; j++) {
       const pixelIdx = stripPixels[j];
-      const stripIdx = j;
-
       if (pixelIdx === null) {
         continue;
       }
+      dispatchEvents({ type: "constant", color: [100, 100, 100], duration: 10_00000, fadein_duration: 100, fadeout_duration: 100, fade_power: 1, pixels: Array(50).fill(0).map((x,i)=>({pixel_idx: i * (DOUBLE_LENGTH_STRIP_INDECES.includes(j) ? 4 : 2), strip_idx: j})),  next: null,  });
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      const stripIdx = j;
+
       const event = mapNodeStripPixelToConstantEvent(
         pixelIdx,
         stripIdx,
@@ -129,7 +132,7 @@ async function calibrateStripsMap() {
         "Enter the offset then press enter OR enter 'null' if this one is not present OR press enter to continue to next node: "
       )) as string;
       if (answer !== "") {
-        if (answer === "null") {
+        if (answer === "null" || answer === "n") {
           nodeToStripsMap[nodeIdx][stripIdx] = null;
           j--;
           continue;
@@ -148,7 +151,9 @@ async function calibrateStripsMap() {
 
   await saveJson(NODE_TO_STRIPS_MAP_REL_PATH, nodeToStripsMap);
 }
-// calibrate();
+
 if (require.main === module) {
-  calibrate();
+  const arg = process.argv[2];
+  const num = arg ? parseInt(arg) : null;
+  calibrate(num);
 }

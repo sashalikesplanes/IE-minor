@@ -1,92 +1,56 @@
+import { DOUBLE_LENGTH_STRIP_INDECES } from "./config";
 import { MessageEvent } from "./events";
 import { dispatchEvents } from "./serial";
 
+const colors = [
+  [100, 100, 100],
+  [100, 100, 100],
+  [100, 100, 100],
+  [100, 100, 100],
+  [100, 100, 100],
+  [100, 100, 100],
+  [100, 100, 100],
+  [100, 100, 100],
+  [100, 100, 100],
+]
+
 const messageBuilder = () => {
-  const initial: MessageEvent = {
+  const messages = [0].map((i) => ({
     type: "message",
-    color: [100, 0, 0],
-    message_width: 5,
+    color: colors[i],
+    message_width: 100,
     pace: 0.01,
-    start_idx: 49,
-    end_idx: 0,
-    strip_idx: 0,
+    start_idx: 0,
+    end_idx: DOUBLE_LENGTH_STRIP_INDECES.includes(i) ? 199 : 99,
+    strip_idx: i,
     start_node: 0,
     end_node: 1,
     next: {
       type: "message",
-      color: [0, 100, 0],
-      message_width: 5,
+      color: colors[i],
+      message_width: 100,
       pace: 0.01,
-      start_idx: 0,
-      end_idx: 49,
-      strip_idx: 0,
+      start_idx: DOUBLE_LENGTH_STRIP_INDECES.includes(i) ? 199 : 99,
+      end_idx: 0,
+      strip_idx: i,
       start_node: 0,
       end_node: 1,
-      next: {
-        type: "message",
-        color: [0, 0, 100],
-        message_width: 5,
-        pace: 0.01,
-        start_idx: 49,
-        end_idx: 0,
-        strip_idx: 0,
-        start_node: 0,
-        end_node: 1,
-        next: {
-          type: "message",
-          color: [100, 100, 0],
-          message_width: 5,
-          pace: 0.01,
-          start_idx: 0,
-          end_idx: 49,
-          strip_idx: 0,
-          start_node: 0,
-          end_node: 1,
-          next: {
-            type: "message",
-            color: [100, 0, 100],
-            message_width: 5,
-            pace: 0.01,
-            start_idx: 49,
-            end_idx: 0,
-            strip_idx: 0,
-            start_node: 0,
-            end_node: 1,
-            next: {
-              type: "message",
-              color: [0, 100, 100],
-              message_width: 5,
-              pace: 0.01,
-              start_idx: 0,
-              end_idx: 49,
-              strip_idx: 0,
-              start_node: 0,
-              end_node: 1,
-              next: {
-                type: "message",
-                color: [100, 100, 100],
-                message_width: 5,
-                pace: 0.01,
-                start_idx: 49,
-                end_idx: 0,
-                strip_idx: 0,
-                start_node: 0,
-                end_node: 1,
-                next: null
-              }
-            }
-          }
-        }
-      }
+      next: null
     }
-  };
-
-
-  console.log(JSON.stringify(initial));
-  return initial;
+  }));
+  return messages
 }
 
-messageBuilder();
 
+function setTimeoutAndDispatchEvents() {
 
-dispatchEvents(messageBuilder());
+  setTimeout(() => {
+    const message = JSON.parse(`{"type":"constant","color":[100,100,100],"duration":1000000,"fadein_duration":0,"fadeout_duration":0,"fade_power":1,"next":null,"pixels":[{"strip_idx":4,"pixel_idx":147},{"strip_idx":4,"pixel_idx":148},{"strip_idx":4,"pixel_idx":149}]}`)
+    // @ts-ignore
+    // dispatchEvents(messageBuilder());
+    dispatchEvents([message]);
+    setTimeoutAndDispatchEvents();
+  }, 2000);
+}
+
+setTimeoutAndDispatchEvents();

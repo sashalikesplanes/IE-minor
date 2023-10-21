@@ -56,7 +56,7 @@ function mapNodeStripPixelToConstantEvent(pixelIdx, stripIdx, color, duration, w
     for (let i = -width; i <= width; i++) {
         const currentPixelIdx = pixelIdx + i;
         if (currentPixelIdx < config_1.MIN_PIXEL_INDEX ||
-            currentPixelIdx > config_1.MAX_PIXEL_INDEX) {
+            currentPixelIdx > (config_1.DOUBLE_LENGTH_STRIP_INDECES.includes(stripIdx) ? config_1.MAX_PIXEL_INDEX * 2 : config_1.MAX_PIXEL_INDEX)) {
             continue;
         }
         pixels.push({ strip_idx: stripIdx, pixel_idx: pixelIdx + i });

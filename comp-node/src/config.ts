@@ -1,5 +1,7 @@
 import { join } from "path";
 
+export const DOUBLE_LENGTH_STRIP_INDECES = [4]
+
 // KinectNN settings
 export const USE_CORRIDOR_CAM = true;
 export const USE_WINDOW_CAM = true;
@@ -30,7 +32,7 @@ export const DETECTION_BUFFER_TIME_SPAN = 250; // ms
 export const DETECTION_BUFFER_CREATION_INTERVAL = 50; // ms
 
 // Solid behavior settings
-export const NODE_COLOR = [255, 255, 255]; // green, blue, red
+export const NODE_COLOR = [100, 100, 100]; // green, blue, red
 export const NODE_SOLID_DURATION = 1_000_000; // ms
 export const NODE_SOLID_DURATION_TEST = 500; // ms
 export const NODE_SOLID_DURATION_DELAY = 1_000; // ms

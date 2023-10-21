@@ -36,7 +36,7 @@ export function loadCameraMap() {
 }
 
 export async function saveJson(name: string, object: any) {
-  const data = JSON.stringify(object);
+  const data = JSON.stringify(object, null, 2);
   let answer = await askQuestion(
     `Are you sure sure sure you wanna save the following JSON as ${name}?\n` +
       data +

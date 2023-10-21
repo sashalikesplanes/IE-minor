@@ -9,10 +9,12 @@ nodeToStripsMap.forEach((startPixelIndices, nodeIndex) => {
     startPixelIndices.forEach((startPixelIndex, stripIndex) => {
         if (startPixelIndex === null)
             return;
-        if (startPixelIndex < config_1.MIN_PIXEL_INDEX)
+        if (startPixelIndex < config_1.MIN_PIXEL_INDEX) {
             startPixelIndex = config_1.MIN_PIXEL_INDEX;
-        else if (startPixelIndex > config_1.MAX_PIXEL_INDEX)
-            startPixelIndex = config_1.MAX_PIXEL_INDEX;
+        }
+        else if (startPixelIndex > (config_1.DOUBLE_LENGTH_STRIP_INDECES.includes(stripIndex) ? config_1.MAX_PIXEL_INDEX * 2 : config_1.MAX_PIXEL_INDEX)) {
+            startPixelIndex = config_1.DOUBLE_LENGTH_STRIP_INDECES.includes(stripIndex) ? config_1.MAX_PIXEL_INDEX * 2 : config_1.MAX_PIXEL_INDEX;
+        }
         let closestPositiveDistance = 1000000;
         let closestNegativeDistance = -1000000;
         let shortestPositiveSegment = null;
@@ -25,8 +27,9 @@ nodeToStripsMap.forEach((startPixelIndices, nodeIndex) => {
                 return;
             if (endIndex < config_1.MIN_PIXEL_INDEX)
                 endIndex = config_1.MIN_PIXEL_INDEX;
-            else if (endIndex > config_1.MAX_PIXEL_INDEX)
-                endIndex = config_1.MAX_PIXEL_INDEX;
+            else if (endIndex > (config_1.DOUBLE_LENGTH_STRIP_INDECES.includes(stripIndex) ? config_1.MAX_PIXEL_INDEX * 2 : config_1.MAX_PIXEL_INDEX)) {
+                endIndex = (config_1.DOUBLE_LENGTH_STRIP_INDECES.includes(stripIndex) ? config_1.MAX_PIXEL_INDEX * 2 : config_1.MAX_PIXEL_INDEX);
+            }
             const distance = endIndex - startPixelIndex;
             if (distance > 0 && distance < closestPositiveDistance) {
                 closestPositiveDistance = distance;

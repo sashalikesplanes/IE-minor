@@ -1,4 +1,4 @@
-import { MAX_PIXEL_INDEX, MIN_PIXEL_INDEX } from "./config";
+import { DOUBLE_LENGTH_STRIP_INDECES, MAX_PIXEL_INDEX, MIN_PIXEL_INDEX } from "./config";
 import {
   ConstantEvent,
   linkEvents,
@@ -106,7 +106,7 @@ export function mapNodeStripPixelToConstantEvent(
     const currentPixelIdx = pixelIdx + i;
     if (
       currentPixelIdx < MIN_PIXEL_INDEX ||
-      currentPixelIdx > MAX_PIXEL_INDEX
+      currentPixelIdx > (DOUBLE_LENGTH_STRIP_INDECES.includes(stripIdx) ? MAX_PIXEL_INDEX * 2 : MAX_PIXEL_INDEX)
     ) {
       continue;
     }
@@ -160,7 +160,6 @@ export function mapNodesToEventsWithPace(
   includeBackwards: boolean
 ): MessageEvent {
   const segments = getSegments(startNode, endNode);
-  console.log('in mapNodesToEventsWithPace', startNode, endNode, segments)
   const events = mapStripSegmentsToEvents(
     segments,
     color,

@@ -42,7 +42,7 @@ function loadCameraMap() {
 exports.loadCameraMap = loadCameraMap;
 function saveJson(name, object) {
     return __awaiter(this, void 0, void 0, function* () {
-        const data = JSON.stringify(object);
+        const data = JSON.stringify(object, null, 2);
         let answer = yield askQuestion(`Are you sure sure sure you wanna save the following JSON as ${name}?\n` +
             data +
             " (y/n): \n");

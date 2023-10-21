@@ -1,14 +1,18 @@
 import { SerialPort } from "serialport";
 import { EventUnion } from "./events";
 
-const getSerialPort = async () => {
+const getSerialPorts = () => {
+  return [0,1,2,3].map((i) => {
   return new SerialPort({
-    path: "/dev/ttyACM0",
+    path: `/dev/tty.usbmodemIB_${i}_1`,
     baudRate: 115200,
+  });
   });
 };
 
-const port = getSerialPort();
+const ports = getSerialPorts();
+
+const messages = [];
 
 export async function dispatchEvents(event: EventUnion | EventUnion[]) {
   if (Array.isArray(event)) {
@@ -16,5 +20,25 @@ export async function dispatchEvents(event: EventUnion | EventUnion[]) {
     return;
   }
 
-  (await port).write(`${JSON.stringify(event)}\n`);
+  if (event.type === "constant" && event.pixels.length === 0) {
+    return;
+  }
+
+  const message = JSON.stringify(event) + "\n";
+
+  messages.push(message);
 }
+
+setInterval(() => {
+  if (messages.length === 0) {
+    return;
+  }
+
+  const message = messages.shift();
+
+  console.log(message);
+
+  ports.forEach((port) => {
+    port.write(message);
+  });
+}, 3)

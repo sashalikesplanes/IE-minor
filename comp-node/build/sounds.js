@@ -14,10 +14,10 @@ const path_1 = require("path");
 const events_1 = require("./events");
 function playSound(relativePath, loop, volume) {
     return __awaiter(this, void 0, void 0, function* () {
-        do {
-            const { playAudioFile } = yield import("audic");
-            yield playAudioFile((0, path_1.join)(__dirname, relativePath));
-        } while (loop);
+        // do {
+        //   const { playAudioFile } = await import("audic");
+        //   await playAudioFile(join(__dirname, relativePath));
+        // } while (loop);
         return;
     });
 }
@@ -65,3 +65,17 @@ function playNarration() {
     });
 }
 exports.playNarration = playNarration;
+// export async function playSoundPerEvent(
+//   event: MessageEvent,
+//   relativePath: string
+// ) {
+//   let durations: number[] = [];
+//   do {
+//     durations.push(getMessageDurationInMs(event));
+//   } while (event.next);
+//
+//   for (let i = 0; i < durations.length; i++) {
+//     playSound(relativePath, false);
+//     await new Promise((resolve) => setTimeout(resolve, durations[i]));
+//   }
+// }

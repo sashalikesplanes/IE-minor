@@ -3,8 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.messageBehaviourHandlers = exports.singleBehaviourHandlers = void 0;
 const config_1 = require("./config");
 const events_1 = require("./events");
-const mappers_1 = require("./mappers");
 const path_finding_1 = require("./path-finding");
+const mappers_1 = require("./mappers");
+const path_finding_2 = require("./path-finding");
 const serial_1 = require("./serial");
 const sounds_1 = require("./sounds");
 const utils_1 = require("./utils");
@@ -32,6 +33,7 @@ function createMessageBehaviourHandler(key) {
     const firstMessageEvent = (0, mappers_1.mapNodesToEventsWithPace)(
     // Subsequent are linked
     startNode, endNode, config_1.MESSAGE_COLOR, config_1.MESSAGE_WIDTH, config_1.MESSAGE_PACE, config_1.MESSAGE_INCLUDE_BACKWARDS);
+    (0, sounds_1.playSoundPerEvent)(firstMessageEvent, config_1.MESSAGE_SOUND_REL_PATH);
     const totalDuration = (0, events_1.getLinkedMessagesDurationInMs)(firstMessageEvent) / config_1.MESSAGE_DURATION_DIVIDER;
     const fadeInMessageEvents = (0, mappers_1.mapNodeListToConstantEvents)([startNode, endNode], config_1.MESSAGE_COLOR, totalDuration, config_1.NODE_SOLID_WIDTH, config_1.MESSAGE_FADE_DURATION, 0, config_1.MESSAGE_FADE_POWER);
     const nodes = (0, path_finding_1.getSegments)(startNode, endNode).flatMap((segment) => [
@@ -75,7 +77,7 @@ function createMessageBehaviourHandler(key) {
     };
 }
 function createSingleBehaviourHandler(nodeIdx) {
-    const connectedEdges = path_finding_1.edges.filter((edge) => edge.start_node === nodeIdx);
+    const connectedEdges = path_finding_2.edges.filter((edge) => edge.start_node === nodeIdx);
     const events = connectedEdges.map((edge) => (0, mappers_1.mapNodesToEventsWithDuration)(nodeIdx, edge.end_node, config_1.SINGLE_COLOR, config_1.SINGLE_WIDTH, config_1.SINGLE_LED_DURATION, config_1.SINGLE_INCLUDE_BACKWARDS));
     let lastMessageTime = new Date().getTime() - config_1.SINGLE_LED_DURATION - 1;
     let lastSoundTime = new Date().getTime() - config_1.SINGLE_LED_DURATION * config_1.SINGLE_SOUND_MESSAGES - 1;

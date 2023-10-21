@@ -1,4 +1,4 @@
-import { MAX_PIXEL_INDEX, MIN_PIXEL_INDEX } from "./config";
+import { DOUBLE_LENGTH_STRIP_INDECES, MAX_PIXEL_INDEX, MIN_PIXEL_INDEX } from "./config";
 import { loadStripsMap } from "./utils";
 
 export interface StripSegment {
@@ -17,9 +17,11 @@ nodeToStripsMap.forEach((startPixelIndices, nodeIndex) => {
   startPixelIndices.forEach((startPixelIndex, stripIndex) => {
     if (startPixelIndex === null) return;
 
-    if (startPixelIndex < MIN_PIXEL_INDEX) startPixelIndex = MIN_PIXEL_INDEX;
-    else if (startPixelIndex > MAX_PIXEL_INDEX)
-      startPixelIndex = MAX_PIXEL_INDEX;
+    if (startPixelIndex < MIN_PIXEL_INDEX) {
+      startPixelIndex = MIN_PIXEL_INDEX;
+    } else if (startPixelIndex > (DOUBLE_LENGTH_STRIP_INDECES.includes(stripIndex) ? MAX_PIXEL_INDEX * 2 : MAX_PIXEL_INDEX)) {
+      startPixelIndex = DOUBLE_LENGTH_STRIP_INDECES.includes(stripIndex) ? MAX_PIXEL_INDEX * 2 : MAX_PIXEL_INDEX;
+    }
 
     let closestPositiveDistance = 1_000_000;
     let closestNegativeDistance = -1_000_000;
@@ -32,7 +34,9 @@ nodeToStripsMap.forEach((startPixelIndices, nodeIndex) => {
       let endIndex = endPixelIndices[stripIndex];
       if (endIndex === null) return;
       if (endIndex < MIN_PIXEL_INDEX) endIndex = MIN_PIXEL_INDEX;
-      else if (endIndex > MAX_PIXEL_INDEX) endIndex = MAX_PIXEL_INDEX;
+      else if (endIndex > (DOUBLE_LENGTH_STRIP_INDECES.includes(stripIndex) ? MAX_PIXEL_INDEX * 2 : MAX_PIXEL_INDEX)) {
+        endIndex = (DOUBLE_LENGTH_STRIP_INDECES.includes(stripIndex) ? MAX_PIXEL_INDEX * 2 : MAX_PIXEL_INDEX);
+      }
 
       const distance = endIndex - (startPixelIndex as number);
       if (distance > 0 && distance < closestPositiveDistance) {

@@ -19,9 +19,9 @@ const freenect_1 = require("./freenect");
 const mappers_1 = require("./mappers");
 const serial_1 = require("./serial");
 const utils_1 = require("./utils");
-function calibrate() {
+function calibrate(startingPixel = null) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield calibrateStripsMap();
+        yield calibrateStripsMap(startingPixel);
         const SILENT = false;
         const detection$ = (0, freenect_1.detection$Factory)(SILENT).subscribe();
         yield calibrateCameraMap("corridor");
@@ -87,22 +87,24 @@ function calibrateCameraMap(camera) {
         }
     });
 }
-function calibrateStripsMap() {
+function calibrateStripsMap(startingPixel = null) {
     return __awaiter(this, void 0, void 0, function* () {
         if ((yield (0, utils_1.askQuestion)("Press 0 to skip strip map calibration: ")) === "0")
             return;
         console.log("Calibrating strip map");
         (0, serial_1.dispatchEvents)({ type: "clear", next: null });
         const nodeToStripsMap = (0, utils_1.loadStripsMap)();
-        for (let i = 0; i < nodeToStripsMap.length; i++) {
+        for (let i = startingPixel !== null && startingPixel !== void 0 ? startingPixel : 0; i < nodeToStripsMap.length; i++) {
             const stripPixels = nodeToStripsMap[i];
             const nodeIdx = i;
             for (let j = 0; j < stripPixels.length; j++) {
                 const pixelIdx = stripPixels[j];
-                const stripIdx = j;
                 if (pixelIdx === null) {
                     continue;
                 }
+                (0, serial_1.dispatchEvents)({ type: "constant", color: [100, 100, 100], duration: 1000000, fadein_duration: 100, fadeout_duration: 100, fade_power: 1, pixels: Array(50).fill(0).map((x, i) => ({ pixel_idx: i * (config_1.DOUBLE_LENGTH_STRIP_INDECES.includes(j) ? 4 : 2), strip_idx: j })), next: null, });
+                yield new Promise((resolve) => setTimeout(resolve, 500));
+                const stripIdx = j;
                 const event = (0, mappers_1.mapNodeStripPixelToConstantEvent)(pixelIdx, stripIdx, config_1.NODE_COLOR, config_1.CALIBRATION_SOLID_DURATION, config_1.NODE_SOLID_WIDTH);
                 (0, serial_1.dispatchEvents)({ type: "clear", next: null });
                 console.log("Current node is ", nodeIdx);
@@ -110,7 +112,7 @@ function calibrateStripsMap() {
                 (0, serial_1.dispatchEvents)(event);
                 const answer = (yield (0, utils_1.askQuestion)("Enter the offset then press enter OR enter 'null' if this one is not present OR press enter to continue to next node: "));
                 if (answer !== "") {
-                    if (answer === "null") {
+                    if (answer === "null" || answer === "n") {
                         nodeToStripsMap[nodeIdx][stripIdx] = null;
                         j--;
                         continue;
@@ -130,7 +132,8 @@ function calibrateStripsMap() {
         yield (0, utils_1.saveJson)(config_1.NODE_TO_STRIPS_MAP_REL_PATH, nodeToStripsMap);
     });
 }
-// calibrate();
 if (require.main === module) {
-    calibrate();
+    const arg = process.argv[2];
+    const num = arg ? parseInt(arg) : null;
+    calibrate(num);
 }

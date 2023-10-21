@@ -10,6 +10,7 @@ import {
 import {
   MESSAGE_FADE_POWER,
   NODE_COLOR,
+  NODE_SOLID_DURATION,
   NODE_SOLID_FADE_DURATION,
   NODE_SOLID_MAX_INTERVAL,
   NODE_SOLID_MIN_INTERVAL,
@@ -51,71 +52,43 @@ dispatchEvents({ type: "clear", next: null });
 //     });
 // });
 
-loadStripsMap().forEach((_, nodeIdx) => {
-  const randomInterval =
-    NODE_SOLID_MIN_INTERVAL + Math.random() * NODE_SOLID_MAX_INTERVAL;
-  // for each interval, create a random event
-  const event = mapNodeListToConstantEvents(
-    nodeIdx,
-    NODE_COLOR,
-    randomInterval,
-    NODE_SOLID_WIDTH,
-    NODE_SOLID_FADE_DURATION,
-    NODE_SOLID_FADE_DURATION,
-    MESSAGE_FADE_POWER
-  );
-  timer(0, randomInterval).subscribe(() => dispatchEvents(event));
-});
+// loadStripsMap().forEach((_, nodeIdx) => {
+//   const randomInterval =
+//     NODE_SOLID_MIN_INTERVAL + Math.random() * NODE_SOLID_MAX_INTERVAL;
+//   // for each interval, create a random event
+//   const event = mapNodeListToConstantEvents(
+//     nodeIdx,
+//     NODE_COLOR,
+//     randomInterval,
+//     NODE_SOLID_WIDTH,
+//     NODE_SOLID_FADE_DURATION,
+//     NODE_SOLID_FADE_DURATION,
+//     MESSAGE_FADE_POWER
+//   );
+//   timer(0, randomInterval).subscribe(() => dispatchEvents(event));
+// });
 
 // Create the constantly on behaviour
-// timer(0, NODE_SOLID_DURATION).subscribe(() => {
-//   // Change these to be pulsing at random intervals
-//   const listOfAllNodes = Array.from(Array(loadStripsMap().length).keys());
-//   mapNodeListToConstantEvents(
-//     listOfAllNodes,
-//     NODE_COLOR,
-//     NODE_SOLID_DURATION,
-//     NODE_SOLID_WIDTH
-//   ).forEach((event) => {
-//     // change these to be pulsing at random intervals
-//     dispatchEvents(event);
-//   });
-// });
+timer(0, NODE_SOLID_DURATION).subscribe(() => {
+  // Change these to be pulsing at random intervals
+  const listOfAllNodes = Array.from(Array(loadStripsMap().length).keys());
+  mapNodeListToConstantEvents(
+    listOfAllNodes,
+    NODE_COLOR,
+    NODE_SOLID_DURATION,
+    NODE_SOLID_WIDTH
+  ).forEach((event) => {
+    // change these to be pulsing at random intervals
+    dispatchEvents(event);
+  });
+});
 
 // setup an express server to listen for detections
 const detectNodeList$ = new Observable<number[]>((subscriber) => {
-  const app = require('express')();
-  const bodyParser = require('body-parser');
-  app.use(cors())
-  app.use(bodyParser.json());
 
   // Regularly push random integers into the observable
-  setInterval(() => {
-    subscriber.next([randomInt(0, 6)]);
-  }, 5000);
 
-  app.post('/messages', (req, res) => {
-    console.log(req.body)
-    // Check if the request body is an array of numbers
-    if (!req.body || !req.body.numbers || Array.isArray(req.body.numbers) && req.body.numbers.every(item => typeof item === 'number')) {
-      console.log('Received numbers:', req.body.numbers);
-
-      // Push the received numbers into the observable
-      subscriber.next(req.body.numbers);
-
-      res.status(200).send('Numbers received!');
-    } else {
-      res.status(400).send('Invalid request body!');
-    }
-  });
-
-  const port: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
-
-  app.listen(port, () => {
-    console.log(`Listening at http://localhost:${port}/`);
-  });
-
-}).pipe(tap(console.log), share());
+}).pipe(share());
 
 // const detectNodeList$ = detection$Factory(SILENT_DETECTIONS).pipe(
 //   bufferTime(DETECTION_BUFFER_TIME_SPAN, DETECTION_BUFFER_CREATION_INTERVAL),

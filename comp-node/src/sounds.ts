@@ -6,10 +6,10 @@ export async function playSound(
   loop: boolean,
   volume?: number
 ) {
-  do {
-    const { playAudioFile } = await import("audic");
-    await playAudioFile(join(__dirname, relativePath));
-  } while (loop);
+  // do {
+  //   const { playAudioFile } = await import("audic");
+  //   await playAudioFile(join(__dirname, relativePath));
+  // } while (loop);
   return;
 }
 
@@ -59,17 +59,17 @@ export async function playNarration() {
   }
 }
 
-export async function playSoundPerEvent(
-  event: MessageEvent,
-  relativePath: string
-) {
-  let durations: number[] = [];
-  do {
-    durations.push(getMessageDurationInMs(event));
-  } while (event.next);
-
-  for (let i = 0; i < durations.length; i++) {
-    playSound(relativePath, false);
-    await new Promise((resolve) => setTimeout(resolve, durations[i]));
-  }
-}
+// export async function playSoundPerEvent(
+//   event: MessageEvent,
+//   relativePath: string
+// ) {
+//   let durations: number[] = [];
+//   do {
+//     durations.push(getMessageDurationInMs(event));
+//   } while (event.next);
+//
+//   for (let i = 0; i < durations.length; i++) {
+//     playSound(relativePath, false);
+//     await new Promise((resolve) => setTimeout(resolve, durations[i]));
+//   }
+// }
