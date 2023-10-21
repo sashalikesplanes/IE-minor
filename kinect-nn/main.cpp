@@ -15,8 +15,8 @@
 #include "nanodet.h"
 
 
-int NUM_CAMS = 2;
-std::array<std::string, 2> KINECTV2_SERIALS = { "000304760647", "255315733947"};
+int NUM_CAMS = 1;
+std::array<std::string, 2> KINECTV2_SERIALS = {  "255315733947", "000304760647",};
 // Global matricies for sharing image data between threads
 std::array<cv::Mat, 2> latest_images;
 std::array<std::mutex, 2> image_locks;
