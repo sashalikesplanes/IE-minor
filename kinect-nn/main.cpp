@@ -15,8 +15,8 @@
 #include "nanodet.h"
 
 
-int NUM_CAMS = 1;
-std::array<std::string, 2> KINECTV2_SERIALS = {  "255315733947", "000304760647",};
+int NUM_CAMS = 2;
+std::array<std::string, 2> KINECTV2_SERIALS = { "255315733947", "000304760647",};
 // Global matricies for sharing image data between threads
 std::array<cv::Mat, 2> latest_images;
 std::array<std::mutex, 2> image_locks;
@@ -214,7 +214,7 @@ int main(int argc, char **argv)
         // Optionally save last image
         if (save_output_image)
         {
-            cv::imwrite("result_" + std::to_string(cam_idx) + ".jpg", result_img);
+            cv::imwrite("camera_" + std::to_string(cam_idx) + "_result.jpg", result_img);
         }
 
         // Optionally save each image
