@@ -17,22 +17,26 @@ import {
 import { dispatchEvents } from "./serial";
 import { askQuestion, loadCameraMap, loadStripsMap, saveJson } from "./utils";
 
-async function calibrate(startingPixel: number | null = null) {
-  await calibrateStripsMap(startingPixel);
-  const SILENT = false;
-  const detection$ = detection$Factory(SILENT).subscribe();
-  await calibrateCameraMap("corridor");
-  await calibrateCameraMap("window");
-  detection$.unsubscribe();
+async function calibrate(type: string, startingPixel: number | null = null) {
+  if (type === "s") {
+    await calibrateStripsMap(startingPixel);
+  } else if (type === "c0") {
+    const SILENT = true;
+    const detection$ = detection$Factory(SILENT).subscribe();
+    await calibrateCameraMap("camera_0", startingPixel);
+    detection$.unsubscribe();
+  } else if (type === "c1") {
+    const SILENT = true;
+    const detection$ = detection$Factory(SILENT).subscribe();
+    await calibrateCameraMap("camera_1", startingPixel);
+    detection$.unsubscribe();
+  }
 }
 
-async function calibrateCameraMap(camera: "corridor" | "window") {
-  if ((await askQuestion("Press 0 to skip camera map calibration: ")) === "0")
-    return;
-
+async function calibrateCameraMap(camera: "camera_0" | "camera_1", startIdx = null) {
   const nodeToCameraMap = loadCameraMap();
 
-  for (let i = 0; i < loadStripsMap().length; i++) {
+  for (let i = startIdx ?? 0; i < loadStripsMap().length; i++) {
     const nodeIdx = i;
     const events = mapNodeListToConstantEvents(
       nodeIdx,
@@ -95,9 +99,6 @@ async function calibrateCameraMap(camera: "corridor" | "window") {
 }
 
 async function calibrateStripsMap(startingPixel: number | null = null) {
-  if ((await askQuestion("Press 0 to skip strip map calibration: ")) === "0")
-    return;
-
   console.log("Calibrating strip map");
 
   dispatchEvents({ type: "clear", next: null });
@@ -111,7 +112,7 @@ async function calibrateStripsMap(startingPixel: number | null = null) {
       if (pixelIdx === null) {
         continue;
       }
-      dispatchEvents({ type: "constant", color: [100, 100, 100], duration: 10_00000, fadein_duration: 100, fadeout_duration: 100, fade_power: 1, pixels: Array(50).fill(0).map((x,i)=>({pixel_idx: i * (DOUBLE_LENGTH_STRIP_INDECES.includes(j) ? 4 : 2), strip_idx: j})),  next: null,  });
+      dispatchEvents({ type: "constant", color: [100, 100, 100], duration: 10_00000, fadein_duration: 100, fadeout_duration: 100, fade_power: 1, pixels: Array(50).fill(0).map((x, i) => ({ pixel_idx: i * (DOUBLE_LENGTH_STRIP_INDECES.includes(j) ? 4 : 2), strip_idx: j })), next: null, });
       await new Promise((resolve) => setTimeout(resolve, 500));
       const stripIdx = j;
 
@@ -153,7 +154,8 @@ async function calibrateStripsMap(startingPixel: number | null = null) {
 }
 
 if (require.main === module) {
-  const arg = process.argv[2];
-  const num = arg ? parseInt(arg) : null;
-  calibrate(num);
+  const arg2 = process.argv[2];
+  const arg3 = process.argv[3];
+  const num = arg3 ? parseInt(arg3) : null;
+  calibrate(arg2, num);
 }

@@ -1,6 +1,7 @@
 import {
   MESSAGE_COLOR,
   MESSAGE_DURATION_DIVIDER,
+  MESSAGE_CONSTANT_DURATION,
   MESSAGE_FADE_DURATION,
   MESSAGE_FADE_IN_TIMEOUT_MULTIPLIER,
   MESSAGE_FADE_POWER,
@@ -18,6 +19,8 @@ import {
   SINGLE_SOUND_REL_PATH,
   SINGLE_VOLUME,
   SINGLE_WIDTH,
+  SINGLE_PULSE_MULTIPLIER,
+  MESSAGE_MULTIPLIER,
 } from "./config";
 import { getLinkedMessagesDurationInMs } from "./events";
 import { getSegments } from "./path-finding";
@@ -58,7 +61,7 @@ loadStripsMap().forEach((_, nodeIdx) => {
   });
 });
 
-function createMessageBehaviourHandler(key: string) {
+export function createMessageBehaviourHandler(key: string) {
   // create all the events to be dispatched and record the duration
   const startNode = parseInt(key.split("-")[0]);
   const endNode = parseInt(key.split("-")[1]);
@@ -72,15 +75,15 @@ function createMessageBehaviourHandler(key: string) {
     MESSAGE_INCLUDE_BACKWARDS
   );
 
-  playSoundPerEvent(firstMessageEvent, MESSAGE_SOUND_REL_PATH);
+  // playSoundPerEvent(firstMessageEvent, MESSAGE_SOUND_REL_PATH);
 
-  const totalDuration =
+  const totalDurationMs = // MESSAGE_CONSTANT_DURATION;
     getLinkedMessagesDurationInMs(firstMessageEvent) / MESSAGE_DURATION_DIVIDER;
 
   const fadeInMessageEvents = mapNodeListToConstantEvents(
     [startNode, endNode],
     MESSAGE_COLOR,
-    totalDuration,
+    totalDurationMs / 1000,
     NODE_SOLID_WIDTH,
     MESSAGE_FADE_DURATION,
     0,
@@ -98,7 +101,7 @@ function createMessageBehaviourHandler(key: string) {
   const middleEvents = mapNodeListToConstantEvents(
     [...nodeSet],
     NODE_COLOR,
-    totalDuration,
+    totalDurationMs / 1000,
     NODE_SOLID_WIDTH,
     MESSAGE_FADE_DURATION,
     0,
@@ -117,18 +120,20 @@ function createMessageBehaviourHandler(key: string) {
     fadeInMessageEvents[eventIdx].next = event;
   });
 
-  let lastDispatchTime = new Date().getTime() - totalDuration - 1;
+  let lastDispatchTime = new Date().getTime() - totalDurationMs - 1;
 
-  return function (nodePair: number[]): void {
+  return function(nodePair: number[]): void {
     const currentKey =
       nodePair[0] < nodePair[1]
         ? `${nodePair[0]}-${nodePair[1]}`
         : `${nodePair[1]}-${nodePair[0]}`;
     if (currentKey !== key) return;
-    if (new Date().getTime() - lastDispatchTime < totalDuration) return;
+    if (new Date().getTime() - lastDispatchTime < totalDurationMs / MESSAGE_MULTIPLIER) {
+      return;
+    }
     if (
       new Date().getTime() - lastDispatchTime >
-      totalDuration * MESSAGE_FADE_IN_TIMEOUT_MULTIPLIER
+      totalDurationMs * MESSAGE_FADE_IN_TIMEOUT_MULTIPLIER
     ) {
       dispatchEvents([
         ...fadeInMessageEvents,
@@ -143,11 +148,7 @@ function createMessageBehaviourHandler(key: string) {
       ]);
     }
 
-    playSoundPerEvent(
-      firstMessageEvent,
-      MESSAGE_SOUND_REL_PATH,
-      MESSAGE_VOLUME
-    );
+    playSoundPerEvent(firstMessageEvent, MESSAGE_SOUND_REL_PATH, MESSAGE_VOLUME);
     lastDispatchTime = new Date().getTime();
   };
 }
@@ -171,7 +172,7 @@ function createSingleBehaviourHandler(
   let lastSoundTime =
     new Date().getTime() - SINGLE_LED_DURATION * SINGLE_SOUND_MESSAGES - 1;
 
-  return function (nodeList: number[]): void {
+  return function(nodeList: number[]): void {
     if (nodeList.length !== 1 || nodeList[0] !== nodeIdx) return;
 
     if (
@@ -182,7 +183,7 @@ function createSingleBehaviourHandler(
       playSound(SINGLE_SOUND_REL_PATH, false, SINGLE_VOLUME);
     }
 
-    if (new Date().getTime() - lastMessageTime > SINGLE_LED_DURATION) {
+    if (new Date().getTime() - lastMessageTime > SINGLE_LED_DURATION / SINGLE_PULSE_MULTIPLIER) {
       lastMessageTime = new Date().getTime();
       dispatchEvents(events);
     }

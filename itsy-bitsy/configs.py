@@ -12,4 +12,4 @@ strip_configs = [
         "pin": board.D13,
         "num_pixels": 100,
     }
-]
+]  

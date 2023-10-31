@@ -1,13 +1,12 @@
 import { randomInt } from "node:crypto";
-import express from 'express';
-import bodyParser from 'body-parser';
-import cors from 'cors';
-import { Observable, from, interval, map, mergeMap, share, tap, timer } from "rxjs";
+import { Observable, from, interval, map, mergeMap, share, tap, timer, bufferTime } from "rxjs";
 import {
   messageBehaviourHandlers,
   singleBehaviourHandlers,
 } from "./behaviour-handlers";
 import {
+  DETECTION_BUFFER_TIME_SPAN,
+  DETECTION_BUFFER_CREATION_INTERVAL,
   MESSAGE_FADE_POWER,
   NODE_COLOR,
   NODE_SOLID_DURATION,
@@ -15,22 +14,48 @@ import {
   NODE_SOLID_MAX_INTERVAL,
   NODE_SOLID_MIN_INTERVAL,
   NODE_SOLID_WIDTH,
+  SILENT_DETECTIONS,
+  AMBIENT_SOUND_REL_PATH,
+  AMBIENT_VOLUME,
+  HEARTBEAT_LOOP_DURATION,
+  HEARTBEAT_VOLUME,
+  HEARTBEAT_DURATION,
+  HEARTBEAT_SOUND_REL_PATH,
+  TIME_MULTIPLIER,
+  HEARTBEAT_SOUND_DELAY,
+  PLAY_NARRATION,
+  LOVE_COLOR,
+  LOVE_PACE,
+  LOVE_WIDTH,
+  LOVE_DURATION,
 } from "./config";
 import {
   mapDetectionsToNodeList,
   mapNodeListToConstantEvents,
+  mapNodeListToHeatbeatEvents,
 } from "./mappers";
 import { dispatchEvents } from "./serial";
 import { loadStripsMap } from "./utils";
+import { detection$Factory } from "./freenect";
+import { playNarration, playSound } from "./sounds";
+
+// start the express server
+import { app} from "./server";
+const port: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
+app.listen(port, () => {
+  console.log(`Listening at http://localhost:${port}/`);
+});
+
 
 // Clear all current behaviours
 dispatchEvents({ type: "clear", next: null });
 
 // Start ambient sound
-// playSound(AMBIENT_SOUND_REL_PATH, true, AMBIENT_VOLUME);
-// playNarration();
+playSound(AMBIENT_SOUND_REL_PATH, true, AMBIENT_VOLUME);
+if (PLAY_NARRATION)
+  playNarration();
 
-// Too many events for it to keep track
+
 // edges.forEach((edge) => {
 //   // for each edge create an infibute rabdin observable
 //   const randomInterval =
@@ -65,36 +90,33 @@ dispatchEvents({ type: "clear", next: null });
 //     NODE_SOLID_FADE_DURATION,
 //     MESSAGE_FADE_POWER
 //   );
-//   timer(0, randomInterval).subscribe(() => dispatchEvents(event));
-// });
-
+//   timer(0, randomInterval).subscribe(() => dispatchEvents(even
 // Create the constantly on behaviour
-timer(0, NODE_SOLID_DURATION).subscribe(() => {
+timer(0, HEARTBEAT_LOOP_DURATION * 1000 / TIME_MULTIPLIER).subscribe(() => {
   // Change these to be pulsing at random intervals
+  // also replay the loop
+  setTimeout(() => {
+    playSound(HEARTBEAT_SOUND_REL_PATH, false, HEARTBEAT_VOLUME);
+  }, HEARTBEAT_SOUND_DELAY * 1000 / TIME_MULTIPLIER);
   const listOfAllNodes = Array.from(Array(loadStripsMap().length).keys());
-  mapNodeListToConstantEvents(
+  const totalEvent = mapNodeListToHeatbeatEvents(
     listOfAllNodes,
     NODE_COLOR,
-    NODE_SOLID_DURATION,
     NODE_SOLID_WIDTH
-  ).forEach((event) => {
-    // change these to be pulsing at random intervals
-    dispatchEvents(event);
+  ).reduce((acc, curr) => {
+    acc.pixels.push(...curr.pixels);
+    return acc;
   });
+
+  dispatchEvents(totalEvent);
 });
 
-// setup an express server to listen for detections
-const detectNodeList$ = new Observable<number[]>((subscriber) => {
+const detectNodeList$ = detection$Factory(SILENT_DETECTIONS).pipe(
+  bufferTime(DETECTION_BUFFER_TIME_SPAN, DETECTION_BUFFER_CREATION_INTERVAL),
+  map(mapDetectionsToNodeList),
+  share()
+);
 
-  // Regularly push random integers into the observable
-
-}).pipe(share());
-
-// const detectNodeList$ = detection$Factory(SILENT_DETECTIONS).pipe(
-//   bufferTime(DETECTION_BUFFER_TIME_SPAN, DETECTION_BUFFER_CREATION_INTERVAL),
-//   map(mapDetectionsToNodeList),
-//   share()
-// );
 
 // Create the single node behaviour
 singleBehaviourHandlers.forEach((handler) => {

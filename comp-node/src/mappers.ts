@@ -1,6 +1,7 @@
-import { DOUBLE_LENGTH_STRIP_INDECES, MAX_PIXEL_INDEX, MIN_PIXEL_INDEX } from "./config";
+import { DOUBLE_LENGTH_STRIP_INDECES, HEARTBEAT_DIMNESS, HEARTBEAT_DURATION, HEARTBEAT_FIRST_PULSE_ATTACK_DURATION, HEARTBEAT_FIRST_PULSE_DECAY_DURATION, HEARTBEAT_LOOP_DURATION, HEARTBEAT_SECOND_PULSE_ATTACK_DURATION, HEARTBEAT_SECOND_PULSE_DECAY_DURATION, MAX_PIXEL_INDEX, MIN_PIXEL_INDEX } from "./config";
 import {
   ConstantEvent,
+  HeartbeatEvent,
   linkEvents,
   MessageEvent,
   Pixel,
@@ -76,6 +77,65 @@ export function mapNodeListToConstantEvents(
   });
 }
 
+export function mapNodeListToHeatbeatEvents(
+  nodes: number[] | number,
+  color: number[],
+  width: number,
+): HeartbeatEvent[] {
+  if (!Array.isArray(nodes)) {
+    nodes = [nodes];
+  }
+  return nodes.flatMap((nodeIdx) => {
+    const pixelIdxPerStrip = loadStripsMap()[nodeIdx];
+    return pixelIdxPerStrip.map((pixelIdx, stripIdx) =>
+      mapNodeStripPixelToHeartbeatEvent(
+        pixelIdx,
+        stripIdx,
+        color,
+        width,
+      )
+    );
+  });
+}
+
+export function mapNodeStripPixelToHeartbeatEvent(
+  pixelIdx: number | null,
+  stripIdx: number,
+  color: number[],
+  width: number,
+): HeartbeatEvent {
+  const baseEvent = {
+    type: "heartbeat",
+    color,
+    duration: HEARTBEAT_DURATION,
+    first_pulse_attack: HEARTBEAT_FIRST_PULSE_ATTACK_DURATION,
+    first_pulse_decay: HEARTBEAT_FIRST_PULSE_DECAY_DURATION,
+    second_pulse_attack: HEARTBEAT_SECOND_PULSE_ATTACK_DURATION,
+    second_pulse_decay: HEARTBEAT_SECOND_PULSE_DECAY_DURATION,
+    loop_duration: HEARTBEAT_DURATION,
+    dimness: HEARTBEAT_DIMNESS,
+    next: null,
+  } satisfies Partial<HeartbeatEvent>;
+
+  if (pixelIdx === null) {
+    return { ...baseEvent, pixels: [] };
+  }
+
+  // create an array of pixels based on node_width
+  const pixels: Pixel[] = [];
+  for (let i = -width; i <= width; i++) {
+    const currentPixelIdx = pixelIdx + i;
+    if (
+      currentPixelIdx < MIN_PIXEL_INDEX ||
+      currentPixelIdx > (DOUBLE_LENGTH_STRIP_INDECES.includes(stripIdx) ? MAX_PIXEL_INDEX * 2 : MAX_PIXEL_INDEX)
+    ) {
+      continue;
+    }
+    pixels.push({ strip_idx: stripIdx, pixel_idx: pixelIdx + i });
+  }
+
+  return { ...baseEvent, pixels };
+}
 export function mapNodeStripPixelToConstantEvent(
   pixelIdx: number | null,
   stripIdx: number,

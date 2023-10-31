@@ -1,5 +1,8 @@
 import { SerialPort } from "serialport";
+import { LOVE_COLOR } from "./config";
 import { EventUnion } from "./events";
+import { mikeState } from './state';
+
 
 const getSerialPorts = () => {
   return [0,1,2,3].map((i) => {
@@ -15,6 +18,7 @@ const ports = getSerialPorts();
 const messages = [];
 
 export async function dispatchEvents(event: EventUnion | EventUnion[]) {
+  console.log("dispatching events")
   if (Array.isArray(event)) {
     event.forEach((e) => dispatchEvents(e));
     return;
@@ -22,6 +26,12 @@ export async function dispatchEvents(event: EventUnion | EventUnion[]) {
 
   if (event.type === "constant" && event.pixels.length === 0) {
     return;
+  }
+
+  if (mikeState.isInLove) {
+    event = JSON.parse(JSON.stringify(event));
+    // @ts-ignore, we know it is not an array
+    event.color = LOVE_COLOR;
   }
 
   const message = JSON.stringify(event) + "\n";
@@ -48,4 +58,4 @@ setInterval(() => {
       console.error(err);
     })
   });
-}, 3)
+}, 5)

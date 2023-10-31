@@ -6,12 +6,20 @@ const config_1 = require("./config");
 const mappers_1 = require("./mappers");
 const serial_1 = require("./serial");
 const utils_1 = require("./utils");
+const freenect_1 = require("./freenect");
+const sounds_1 = require("./sounds");
+// start the express server
+const server_1 = require("./server");
+const port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
+server_1.app.listen(port, () => {
+    console.log(`Listening at http://localhost:${port}/`);
+});
 // Clear all current behaviours
 (0, serial_1.dispatchEvents)({ type: "clear", next: null });
 // Start ambient sound
-// playSound(AMBIENT_SOUND_REL_PATH, true, AMBIENT_VOLUME);
-// playNarration();
-// Too many events for it to keep track
+(0, sounds_1.playSound)(config_1.AMBIENT_SOUND_REL_PATH, true, config_1.AMBIENT_VOLUME);
+if (config_1.PLAY_NARRATION)
+    (0, sounds_1.playNarration)();
 // edges.forEach((edge) => {
 //   // for each edge create an infibute rabdin observable
 //   const randomInterval =
@@ -45,26 +53,22 @@ const utils_1 = require("./utils");
 //     NODE_SOLID_FADE_DURATION,
 //     MESSAGE_FADE_POWER
 //   );
-//   timer(0, randomInterval).subscribe(() => dispatchEvents(event));
-// });
+//   timer(0, randomInterval).subscribe(() => dispatchEvents(even
 // Create the constantly on behaviour
-(0, rxjs_1.timer)(0, config_1.NODE_SOLID_DURATION).subscribe(() => {
+(0, rxjs_1.timer)(0, config_1.HEARTBEAT_LOOP_DURATION * 1000 / config_1.TIME_MULTIPLIER).subscribe(() => {
     // Change these to be pulsing at random intervals
+    // also replay the loop
+    setTimeout(() => {
+        (0, sounds_1.playSound)(config_1.HEARTBEAT_SOUND_REL_PATH, false, config_1.HEARTBEAT_VOLUME);
+    }, config_1.HEARTBEAT_SOUND_DELAY * 1000 / config_1.TIME_MULTIPLIER);
     const listOfAllNodes = Array.from(Array((0, utils_1.loadStripsMap)().length).keys());
-    (0, mappers_1.mapNodeListToConstantEvents)(listOfAllNodes, config_1.NODE_COLOR, config_1.NODE_SOLID_DURATION, config_1.NODE_SOLID_WIDTH).forEach((event) => {
-        // change these to be pulsing at random intervals
-        (0, serial_1.dispatchEvents)(event);
+    const totalEvent = (0, mappers_1.mapNodeListToHeatbeatEvents)(listOfAllNodes, config_1.NODE_COLOR, config_1.NODE_SOLID_WIDTH).reduce((acc, curr) => {
+        acc.pixels.push(...curr.pixels);
+        return acc;
     });
+    (0, serial_1.dispatchEvents)(totalEvent);
 });
-// setup an express server to listen for detections
-const detectNodeList$ = new rxjs_1.Observable((subscriber) => {
-    // Regularly push random integers into the observable
-}).pipe((0, rxjs_1.share)());
-// const detectNodeList$ = detection$Factory(SILENT_DETECTIONS).pipe(
-//   bufferTime(DETECTION_BUFFER_TIME_SPAN, DETECTION_BUFFER_CREATION_INTERVAL),
-//   map(mapDetectionsToNodeList),
-//   share()
-// );
+const detectNodeList$ = (0, freenect_1.detection$Factory)(config_1.SILENT_DETECTIONS).pipe((0, rxjs_1.bufferTime)(config_1.DETECTION_BUFFER_TIME_SPAN, config_1.DETECTION_BUFFER_CREATION_INTERVAL), (0, rxjs_1.map)(mappers_1.mapDetectionsToNodeList), (0, rxjs_1.share)());
 // Create the single node behaviour
 behaviour_handlers_1.singleBehaviourHandlers.forEach((handler) => {
     detectNodeList$.subscribe(handler);

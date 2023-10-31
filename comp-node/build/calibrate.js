@@ -19,22 +19,29 @@ const freenect_1 = require("./freenect");
 const mappers_1 = require("./mappers");
 const serial_1 = require("./serial");
 const utils_1 = require("./utils");
-function calibrate(startingPixel = null) {
+function calibrate(type, startingPixel = null) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield calibrateStripsMap(startingPixel);
-        const SILENT = false;
-        const detection$ = (0, freenect_1.detection$Factory)(SILENT).subscribe();
-        yield calibrateCameraMap("corridor");
-        yield calibrateCameraMap("window");
-        detection$.unsubscribe();
+        if (type === "s") {
+            yield calibrateStripsMap(startingPixel);
+        }
+        else if (type === "c0") {
+            const SILENT = true;
+            const detection$ = (0, freenect_1.detection$Factory)(SILENT).subscribe();
+            yield calibrateCameraMap("camera_0", startingPixel);
+            detection$.unsubscribe();
+        }
+        else if (type === "c1") {
+            const SILENT = true;
+            const detection$ = (0, freenect_1.detection$Factory)(SILENT).subscribe();
+            yield calibrateCameraMap("camera_1", startingPixel);
+            detection$.unsubscribe();
+        }
     });
 }
-function calibrateCameraMap(camera) {
+function calibrateCameraMap(camera, startIdx = null) {
     return __awaiter(this, void 0, void 0, function* () {
-        if ((yield (0, utils_1.askQuestion)("Press 0 to skip camera map calibration: ")) === "0")
-            return;
         const nodeToCameraMap = (0, utils_1.loadCameraMap)();
-        for (let i = 0; i < (0, utils_1.loadStripsMap)().length; i++) {
+        for (let i = startIdx !== null && startIdx !== void 0 ? startIdx : 0; i < (0, utils_1.loadStripsMap)().length; i++) {
             const nodeIdx = i;
             const events = (0, mappers_1.mapNodeListToConstantEvents)(nodeIdx, config_1.NODE_COLOR, config_1.NODE_SOLID_DURATION, config_1.NODE_SOLID_WIDTH);
             events.forEach((e) => (e.duration = config_1.CALIBRATION_SOLID_DURATION));
@@ -89,8 +96,6 @@ function calibrateCameraMap(camera) {
 }
 function calibrateStripsMap(startingPixel = null) {
     return __awaiter(this, void 0, void 0, function* () {
-        if ((yield (0, utils_1.askQuestion)("Press 0 to skip strip map calibration: ")) === "0")
-            return;
         console.log("Calibrating strip map");
         (0, serial_1.dispatchEvents)({ type: "clear", next: null });
         const nodeToStripsMap = (0, utils_1.loadStripsMap)();
@@ -133,7 +138,8 @@ function calibrateStripsMap(startingPixel = null) {
     });
 }
 if (require.main === module) {
-    const arg = process.argv[2];
-    const num = arg ? parseInt(arg) : null;
-    calibrate(num);
+    const arg2 = process.argv[2];
+    const arg3 = process.argv[3];
+    const num = arg3 ? parseInt(arg3) : null;
+    calibrate(arg2, num);
 }

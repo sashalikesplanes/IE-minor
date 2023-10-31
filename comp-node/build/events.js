@@ -2,6 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.reverseMessage = exports.getLinkedMessagesDurationInMs = exports.setPaceForADuration = exports.getMessageDurationInMs = exports.linkEvents = void 0;
 function linkEvents(events) {
+    if (events.length === 0) {
+        return { type: "null", next: null };
+    }
     events.reduce((prev, curr) => {
         prev.next = curr;
         return curr;

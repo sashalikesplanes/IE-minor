@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.mapNodesToEventsWithDuration = exports.mapNodesToEventsWithPace = exports.mapStripSegmentsToEvents = exports.mapNodeStripPixelToConstantEvent = exports.mapNodeListToConstantEvents = exports.mapDetectionsToNodeList = void 0;
+exports.mapNodesToEventsWithDuration = exports.mapNodesToEventsWithPace = exports.mapStripSegmentsToEvents = exports.mapNodeStripPixelToConstantEvent = exports.mapNodeStripPixelToHeartbeatEvent = exports.mapNodeListToHeatbeatEvents = exports.mapNodeListToConstantEvents = exports.mapDetectionsToNodeList = void 0;
 const config_1 = require("./config");
 const events_1 = require("./events");
 const path_finding_1 = require("./path-finding");
@@ -38,6 +38,45 @@ function mapNodeListToConstantEvents(nodes, color, duration, width, fadeInDurati
     });
 }
 exports.mapNodeListToConstantEvents = mapNodeListToConstantEvents;
+function mapNodeListToHeatbeatEvents(nodes, color, width) {
+    if (!Array.isArray(nodes)) {
+        nodes = [nodes];
+    }
+    return nodes.flatMap((nodeIdx) => {
+        const pixelIdxPerStrip = (0, utils_1.loadStripsMap)()[nodeIdx];
+        return pixelIdxPerStrip.map((pixelIdx, stripIdx) => mapNodeStripPixelToHeartbeatEvent(pixelIdx, stripIdx, color, width));
+    });
+}
+exports.mapNodeListToHeatbeatEvents = mapNodeListToHeatbeatEvents;
+function mapNodeStripPixelToHeartbeatEvent(pixelIdx, stripIdx, color, width) {
+    const baseEvent = {
+        type: "heartbeat",
+        color,
+        duration: config_1.HEARTBEAT_DURATION,
+        first_pulse_attack: config_1.HEARTBEAT_FIRST_PULSE_ATTACK_DURATION,
+        first_pulse_decay: config_1.HEARTBEAT_FIRST_PULSE_DECAY_DURATION,
+        second_pulse_attack: config_1.HEARTBEAT_SECOND_PULSE_ATTACK_DURATION,
+        second_pulse_decay: config_1.HEARTBEAT_SECOND_PULSE_DECAY_DURATION,
+        loop_duration: config_1.HEARTBEAT_DURATION,
+        dimness: config_1.HEARTBEAT_DIMNESS,
+        next: null,
+    };
+    if (pixelIdx === null) {
+        return Object.assign(Object.assign({}, baseEvent), { pixels: [] });
+    }
+    // create an array of pixels based on node_width
+    const pixels = [];
+    for (let i = -width; i <= width; i++) {
+        const currentPixelIdx = pixelIdx + i;
+        if (currentPixelIdx < config_1.MIN_PIXEL_INDEX ||
+            currentPixelIdx > (config_1.DOUBLE_LENGTH_STRIP_INDECES.includes(stripIdx) ? config_1.MAX_PIXEL_INDEX * 2 : config_1.MAX_PIXEL_INDEX)) {
+            continue;
+        }
+        pixels.push({ strip_idx: stripIdx, pixel_idx: pixelIdx + i });
+    }
+    return Object.assign(Object.assign({}, baseEvent), { pixels });
+}
+exports.mapNodeStripPixelToHeartbeatEvent = mapNodeStripPixelToHeartbeatEvent;
 function mapNodeStripPixelToConstantEvent(pixelIdx, stripIdx, color, duration, width, fadeInDuration = 0, fadeOutDuration = 0, fadePower = 1) {
     const baseEvent = {
         type: "constant",

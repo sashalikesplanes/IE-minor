@@ -1,3 +1,4 @@
+import { createMessageBehaviourHandler } from "./behaviour-handlers";
 import { DOUBLE_LENGTH_STRIP_INDECES } from "./config";
 import { MessageEvent } from "./events";
 import { dispatchEvents } from "./serial";
@@ -15,11 +16,11 @@ const colors = [
 ]
 
 const messageBuilder = () => {
-  const messages = [0].map((i) => ({
+  const messages = [0,1,2,3,4,5,6,7].map((i) => ({
     type: "message",
     color: colors[i],
-    message_width: 100,
-    pace: 0.01,
+    message_width: 10,
+    pace: 20,
     start_idx: 0,
     end_idx: DOUBLE_LENGTH_STRIP_INDECES.includes(i) ? 199 : 99,
     strip_idx: i,
@@ -28,8 +29,8 @@ const messageBuilder = () => {
     next: {
       type: "message",
       color: colors[i],
-      message_width: 100,
-      pace: 0.01,
+      message_width: 10,
+      pace: 20,
       start_idx: DOUBLE_LENGTH_STRIP_INDECES.includes(i) ? 199 : 99,
       end_idx: 0,
       strip_idx: i,
@@ -41,16 +42,18 @@ const messageBuilder = () => {
   return messages
 }
 
+const handler = createMessageBehaviourHandler("0-8");
+dispatchEvents({ type: "clear", next: null });
 
 function setTimeoutAndDispatchEvents() {
 
   setTimeout(() => {
-    const message = JSON.parse(`{"type":"constant","color":[100,100,100],"duration":1000000,"fadein_duration":0,"fadeout_duration":0,"fade_power":1,"next":null,"pixels":[{"strip_idx":4,"pixel_idx":147},{"strip_idx":4,"pixel_idx":148},{"strip_idx":4,"pixel_idx":149}]}`)
+    // const message = JSON.parse(`{"type":"constant","color":[100,100,100],"duration":1000000,"fadein_duration":0,"fadeout_duration":0,"fade_power":1,"next":null,"pixels":[{"strip_idx":4,"pixel_idx":147},{"strip_idx":4,"pixel_idx":148},{"strip_idx":4,"pixel_idx":149}]}`)
+    // dispatchEvents([message]);
     // @ts-ignore
-    // dispatchEvents(messageBuilder());
-    dispatchEvents([message]);
+    handler([0,8])
     setTimeoutAndDispatchEvents();
-  }, 2000);
+  }, 1000);
 }
 
 setTimeoutAndDispatchEvents();
